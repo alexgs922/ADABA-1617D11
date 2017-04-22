@@ -1,7 +1,5 @@
-package funcionalTesting;
 
-import java.util.Collection;
-import java.util.Date;
+package funcionalTesting;
 
 import javax.transaction.Transactional;
 import javax.validation.ConstraintViolationException;
@@ -9,23 +7,20 @@ import javax.validation.ConstraintViolationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.util.Assert;
 
 import services.ChorbiService;
 import services.CreditCardService;
-import services.TemplateService;
 import utilities.AbstractTest;
 import domain.BrandName;
 import domain.Chorbi;
 import domain.CreditCard;
-import domain.Template;
-import form.RegistrationForm;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:spring/junit.xml" })
+@ContextConfiguration(locations = {
+	"classpath:spring/junit.xml"
+})
 @Transactional
 public class CreditCardServiceTest extends AbstractTest {
 
@@ -33,31 +28,22 @@ public class CreditCardServiceTest extends AbstractTest {
 	// ---------------------------------------------------------------------------------
 
 	@Autowired
-	private ChorbiService chorbiService;
+	private ChorbiService		chorbiService;
 
 	@Autowired
-	private CreditCardService creditCardService;
+	private CreditCardService	creditCardService;
 
-	
+
 	//Edit the creditCard from a chorbie
-	protected void template(
-			final String username,
-			final int chorbiId,
-			BrandName brandName,
-			int cvvCode,
-			int expirationMonth,
-			int expirationYear,
-			String holderName,
-			String number,
-			final Class<?> expected) {
+	protected void template(final String username, final int chorbiId, final BrandName brandName, final int cvvCode, final int expirationMonth, final int expirationYear, final String holderName, final String number, final Class<?> expected) {
 		Class<?> caught;
 
 		caught = null;
 		try {
 
 			this.authenticate(username);
-			Chorbi chorbi = this.chorbiService.findOne(chorbiId);
-			CreditCard c = chorbi.getCreditCard();
+			final Chorbi chorbi = this.chorbiService.findOne(chorbiId);
+			final CreditCard c = chorbi.getCreditCard();
 			c.setBrandName(brandName);
 			c.setCvvCode(cvvCode);
 			c.setExpirationMonth(expirationMonth);
@@ -78,24 +64,28 @@ public class CreditCardServiceTest extends AbstractTest {
 	public void ChangeCreditCardInformation() {
 
 		final Object testingData[][] = {
-				// Cambiar la creditCard valida
-				{ "chorbi1", 63, BrandName.VISA,151,12,2019,"Alvaro Gonzalez Jimenez","4024007166826882",null},
-				// Cambiar la credit card con un cvv no valido
-				{ "chorbi1", 63, BrandName.VISA,01,12,2019,"Alvaro Gonzalez Jimenez","4024007166826882",ConstraintViolationException.class},
-				// Cambiar la credit card con un numero no valido
-				{ "chorbi1", 63, BrandName.VISA,151,12,2015,"Alvaro Gonzalez Jimenez","1233342314321444",ConstraintViolationException.class},
-				// Cambiar la credit card con un campo en blanco
-				{ "chorbi1", 63, BrandName.VISA,151,12,2015," ","4024007166826882",ConstraintViolationException.class},
-				
+			// Cambiar la creditCard valida
+			{
+				"chorbi1", 63, BrandName.VISA, 151, 12, 2019, "Alvaro Gonzalez Jimenez", "4024007166826882", null
+			},
+			// Cambiar la credit card con un cvv no valido
+			{
+				"chorbi1", 63, BrandName.VISA, 01, 12, 2019, "Alvaro Gonzalez Jimenez", "4024007166826882", ConstraintViolationException.class
+			},
+			// Cambiar la credit card con un numero no valido
+			{
+				"chorbi1", 63, BrandName.VISA, 151, 12, 2015, "Alvaro Gonzalez Jimenez", "1233342314321444", ConstraintViolationException.class
+			},
+			// Cambiar la credit card con un campo en blanco
+			{
+				"chorbi1", 63, BrandName.VISA, 151, 12, 2015, " ", "4024007166826882", ConstraintViolationException.class
+			},
+
 		};
 
 		for (int i = 0; i < testingData.length; i++)
-			this.template((String) testingData[i][0],
-					(int) testingData[i][1], 
-					(BrandName) testingData[i][2], (int) testingData[i][3],
-					(int) testingData[i][4], (int) testingData[i][5],
-					(String) testingData[i][6],(String) testingData[i][7],
-					(Class<?>) testingData[i][8]);
+			this.template((String) testingData[i][0], (int) testingData[i][1], (BrandName) testingData[i][2], (int) testingData[i][3], (int) testingData[i][4], (int) testingData[i][5], (String) testingData[i][6], (String) testingData[i][7],
+				(Class<?>) testingData[i][8]);
 
 	}
 }

@@ -1,32 +1,21 @@
 
 package domain;
 
-import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
-import javax.persistence.Index;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 
-import org.hibernate.annotations.OptimisticLock;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
-import org.junit.runners.Parameterized.Parameters;
-import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Access(AccessType.PROPERTY)
-public class Event{
+public class Event {
 
 	//Constructors ---------------------------------------------------------------------------
 
@@ -37,85 +26,81 @@ public class Event{
 
 	//Attributes ---------------------------------------------------------------------------
 
-	private String			title;
-	private Date			moment;
-	private String 			description;
-	private String			picture;
-	private int 			numberSeatsOffered;
-	
+	private String	title;
+	private Date	moment;
+	private String	description;
+	private String	picture;
+	private int		numberSeatsOffered;
+
+
 	//Getters & Setters ----------------------------------------------------------------------
-	
+
 	@NotBlank
 	public String getTitle() {
-		return title;
+		return this.title;
 	}
 
-	public void setTitle(String title) {
+	public void setTitle(final String title) {
 		this.title = title;
 	}
 	@NotNull
 	public Date getMoment() {
-		return moment;
+		return this.moment;
 	}
 
-	public void setMoment(Date moment) {
+	public void setMoment(final Date moment) {
 		this.moment = moment;
 	}
 	@NotBlank
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 	@URL
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 
 	public String getPicture() {
-		return picture;
+		return this.picture;
 	}
 
-	public void setPicture(String picture) {
+	public void setPicture(final String picture) {
 		this.picture = picture;
 	}
 
 	public int getNumberSeatsOffered() {
-		return numberSeatsOffered;
+		return this.numberSeatsOffered;
 	}
 
-	public void setNumberSeatsOffered(int numberSeatsOffered) {
+	public void setNumberSeatsOffered(final int numberSeatsOffered) {
 		this.numberSeatsOffered = numberSeatsOffered;
 	}
 
-	
-	
-	//Relationships
-	
-	private Organises organises;
-	private Registers registers;
 
-	
-	@ManyToOne(optional=true)
+	//Relationships
+
+	private Organises	organises;
+	private Registers	registers;
+
+
+	@ManyToOne(optional = true)
 	@Valid
 	public Organises getOrganises() {
-		return organises;
+		return this.organises;
 	}
 
-	public void setOrganises(Organises organises) {
+	public void setOrganises(final Organises organises) {
 		this.organises = organises;
 	}
 
-	
 	@ManyToOne
 	@Valid
 	public Registers getRegisters() {
-		return registers;
+		return this.registers;
 	}
 
-	public void setRegisters(Registers registers) {
+	public void setRegisters(final Registers registers) {
 		this.registers = registers;
 	}
-	
-	
-	
-	
+
 }

@@ -1,3 +1,4 @@
+
 package funcionalTesting;
 
 import java.util.Collection;
@@ -9,7 +10,6 @@ import javax.validation.ConstraintViolationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
@@ -22,7 +22,9 @@ import domain.Template;
 import form.RegistrationForm;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "classpath:spring/junit.xml" })
+@ContextConfiguration(locations = {
+	"classpath:spring/junit.xml"
+})
 @Transactional
 public class ChorbiServiceTest extends AbstractTest {
 
@@ -30,12 +32,12 @@ public class ChorbiServiceTest extends AbstractTest {
 	// ---------------------------------------------------------------------------------
 
 	@Autowired
-	private ChorbiService chorbiService;
+	private ChorbiService	chorbiService;
 
 	@Autowired
-	private TemplateService templateService;
+	private TemplateService	templateService;
 
-	
+
 	// CASO DE USO 1: BROWSE THE LIST OF CHORBIES WHO HAVE REGISTERED TO THE
 	// SYSTEM
 	// ---------------------------------------------------------------------------------
@@ -44,8 +46,7 @@ public class ChorbiServiceTest extends AbstractTest {
 	// los baneados, para los chorbies, y los banneados inclusive para el admin.
 	// Según nuestro populate.xml debería mostrar 5 chorbies sin bannear, 6
 	// incluyendo los banneados y el chorbi3 es el banneado.
-	protected void templateListUseCase1(final String username,
-			final int option, final Class<?> expected) {
+	protected void templateListUseCase1(final String username, final int option, final Class<?> expected) {
 		Class<?> caught;
 
 		caught = null;
@@ -64,18 +65,8 @@ public class ChorbiServiceTest extends AbstractTest {
 
 				Assert.isTrue(res.size() == 6);
 				for (final Chorbi chorbi : res) {
-					Assert.isTrue((chorbi.getUserAccount().getUsername()
-							.equals("chorbi1"))
-							|| (chorbi.getUserAccount().getUsername()
-									.equals("chorbi2"))
-							|| (chorbi.getUserAccount().getUsername()
-									.equals("chorbi3"))
-							|| (chorbi.getUserAccount().getUsername()
-									.equals("chorbi4"))
-							|| (chorbi.getUserAccount().getUsername()
-									.equals("chorbi5"))
-							|| (chorbi.getUserAccount().getUsername()
-									.equals("chorbi6")));
+					Assert.isTrue((chorbi.getUserAccount().getUsername().equals("chorbi1")) || (chorbi.getUserAccount().getUsername().equals("chorbi2")) || (chorbi.getUserAccount().getUsername().equals("chorbi3"))
+						|| (chorbi.getUserAccount().getUsername().equals("chorbi4")) || (chorbi.getUserAccount().getUsername().equals("chorbi5")) || (chorbi.getUserAccount().getUsername().equals("chorbi6")));
 					if (chorbi.getUserAccount().getUsername().equals("chorbi3"))
 						Assert.isTrue(chorbi.isBan() == true);
 					else
@@ -86,16 +77,8 @@ public class ChorbiServiceTest extends AbstractTest {
 
 				for (final Chorbi chorbi : res) {
 					Assert.isTrue(chorbi.isBan() == false);
-					Assert.isTrue((chorbi.getUserAccount().getUsername()
-							.equals("chorbi1"))
-							|| (chorbi.getUserAccount().getUsername()
-									.equals("chorbi2"))
-							|| (chorbi.getUserAccount().getUsername()
-									.equals("chorbi4"))
-							|| (chorbi.getUserAccount().getUsername()
-									.equals("chorbi5"))
-							|| (chorbi.getUserAccount().getUsername()
-									.equals("chorbi6")));
+					Assert.isTrue((chorbi.getUserAccount().getUsername().equals("chorbi1")) || (chorbi.getUserAccount().getUsername().equals("chorbi2")) || (chorbi.getUserAccount().getUsername().equals("chorbi4"))
+						|| (chorbi.getUserAccount().getUsername().equals("chorbi5")) || (chorbi.getUserAccount().getUsername().equals("chorbi6")));
 				}
 
 				Assert.isTrue(res.size() == 5);
@@ -116,53 +99,59 @@ public class ChorbiServiceTest extends AbstractTest {
 
 		final Object testingData[][] = {
 
-				// Para el caso de uso probaremos que:
-				// (Para chorbies)
-				// 1. Se recojan de la base de datos el número correcto total de
-				// chorbies que debería (5)
-				// 2. El usuario que accede esté logueado en el sistema
-				// 3. No se muestre en el listado ningun chorbi banneado ( sin
-				// chorbi3)
-				// 4. Que los chorbies que se deben mostrar sean los correctos
-				// (mediante el username)
+			// Para el caso de uso probaremos que:
+			// (Para chorbies)
+			// 1. Se recojan de la base de datos el número correcto total de
+			// chorbies que debería (5)
+			// 2. El usuario que accede esté logueado en el sistema
+			// 3. No se muestre en el listado ningun chorbi banneado ( sin
+			// chorbi3)
+			// 4. Que los chorbies que se deben mostrar sean los correctos
+			// (mediante el username)
 
-				// Para el caso de uso probaremos que:
-				// (Para admin)
-				// 1. Se recojan de la base de datos el número correcto total de
-				// chorbies que debería (6)
-				// 2. El usuario que accede esté logueado en el sistema
-				// 3. Se muestren en el listado los chorbies banneados (incluido
-				// chorbi3)
-				// 4. Que los chorbies que se deben mostrar sean los correctos
-				// (mediante el username)
-				// 5. Que el chorbi baneado sea el correcto (chorbi3)
+			// Para el caso de uso probaremos que:
+			// (Para admin)
+			// 1. Se recojan de la base de datos el número correcto total de
+			// chorbies que debería (6)
+			// 2. El usuario que accede esté logueado en el sistema
+			// 3. Se muestren en el listado los chorbies banneados (incluido
+			// chorbi3)
+			// 4. Que los chorbies que se deben mostrar sean los correctos
+			// (mediante el username)
+			// 5. Que el chorbi baneado sea el correcto (chorbi3)
 
-				// DETALLES DE CADA PRUEBA:
-				// 1. Se deben recoger datos correctos, sin ningun chorbi
-				// banneado y con un size de 5
-				// 2. Se deben recoger datos incorrectos, aparecen chorbies
-				// banneados y el size no es 5
-				// 3. No se recogen los datos y se produce una excepción porque
-				// no hay ningún usuario logueado en el sistema
-				// 4. Se deben recoger datos correctos para el listado de admin
-				// (incluyendo los baneados), ya que el admin está autenticado
-				// 5. No se recogen los datos correctos, pues no aparecen los
-				// chorbies banneados
-				// 6. No se deben recoger datos, ya que el chorbi 3 está
-				// banneado y no se puede loguear.
+			// DETALLES DE CADA PRUEBA:
+			// 1. Se deben recoger datos correctos, sin ningun chorbi
+			// banneado y con un size de 5
+			// 2. Se deben recoger datos incorrectos, aparecen chorbies
+			// banneados y el size no es 5
+			// 3. No se recogen los datos y se produce una excepción porque
+			// no hay ningún usuario logueado en el sistema
+			// 4. Se deben recoger datos correctos para el listado de admin
+			// (incluyendo los baneados), ya que el admin está autenticado
+			// 5. No se recogen los datos correctos, pues no aparecen los
+			// chorbies banneados
+			// 6. No se deben recoger datos, ya que el chorbi 3 está
+			// banneado y no se puede loguear.
 
-				{ "chorbi1", 1, null },
-				{ "chorbi2", 2, IllegalArgumentException.class },
-				{ null, 1, IllegalArgumentException.class },
-				{ "admin", 2, null },
-				{ "admin", 1, IllegalArgumentException.class },
-				{ "chorbi3", 1, IllegalArgumentException.class }
+			{
+				"chorbi1", 1, null
+			}, {
+				"chorbi2", 2, IllegalArgumentException.class
+			}, {
+				null, 1, IllegalArgumentException.class
+			}, {
+				"admin", 2, null
+			}, {
+				"admin", 1, IllegalArgumentException.class
+			}, {
+				"chorbi3", 1, IllegalArgumentException.class
+			}
 
 		};
 
 		for (int i = 0; i < testingData.length; i++)
-			this.templateListUseCase1((String) testingData[i][0],
-					(int) testingData[i][1], (Class<?>) testingData[i][2]);
+			this.templateListUseCase1((String) testingData[i][0], (int) testingData[i][1], (Class<?>) testingData[i][2]);
 
 	}
 
@@ -187,8 +176,7 @@ public class ChorbiServiceTest extends AbstractTest {
 	// Igual que en el caso anterior, no deben mostrarse los chorbies banneados
 
 	// Option controlará si el listado es del primer tipo o del segundo
-	protected void templateListUseCase2(final String username,
-			final int resultsSize, final int option, final Class<?> expected) {
+	protected void templateListUseCase2(final String username, final int resultsSize, final int option, final Class<?> expected) {
 
 		Class<?> caught;
 		caught = null;
@@ -203,8 +191,7 @@ public class ChorbiServiceTest extends AbstractTest {
 			if (option == 1)
 				res = this.chorbiService.findAllChorbiesWhoLikeThem(principal);
 			else
-				res = this.chorbiService
-						.findAllChorbiesWhoLikedByThisUser(principal);
+				res = this.chorbiService.findAllChorbiesWhoLikedByThisUser(principal);
 
 			Assert.isTrue(res.size() == resultsSize);
 
@@ -230,38 +217,54 @@ public class ChorbiServiceTest extends AbstractTest {
 
 		final Object testingData[][] = {
 
-				// Para el caso de uso probaremos que:
-				// 1. Se recojan de la base de datos el número correcto total de
-				// chorbies que debería para cada uno y en cada opción
-				// 2. El usuario que accede esté logueado en el sistema
-				// 3. No se muestre en el listado ningun chorbi banneado (sin
-				// chorbi3)
-				// 4. Que los chorbies que se deben mostrar sean los correctos
-				// (mediante el username)
-				// 5. Que no se puede acceder a los datos del chorbi3, por estar
-				// banneado
+			// Para el caso de uso probaremos que:
+			// 1. Se recojan de la base de datos el número correcto total de
+			// chorbies que debería para cada uno y en cada opción
+			// 2. El usuario que accede esté logueado en el sistema
+			// 3. No se muestre en el listado ningun chorbi banneado (sin
+			// chorbi3)
+			// 4. Que los chorbies que se deben mostrar sean los correctos
+			// (mediante el username)
+			// 5. Que no se puede acceder a los datos del chorbi3, por estar
+			// banneado
 
-				// DETALLES DE CADA PRUEBA:
-				// 1 a 10 --> resultados positivos: comprobando que se recoja la
-				// cantidad de chorbies correcta para cada caso y que no estén
-				// banneados.
-				// 11 y 12 --> resultados negativos : no se debe poder acceder a
-				// esta información, ya que el chorbi3 no se puede autenticar al
-				// estar banneado
-				{ "chorbi1", 1, 1, null }, { "chorbi1", 1, 2, null },
-				{ "chorbi2", 1, 1, null }, { "chorbi2", 1, 2, null },
-				{ "chorbi4", 0, 1, null }, { "chorbi4", 0, 2, null },
-				{ "chorbi5", 0, 1, null }, { "chorbi5", 0, 2, null },
-				{ "chorbi6", 0, 1, null }, { "chorbi6", 0, 2, null },
-				{ "chorbi3", 1, 1, IllegalArgumentException.class },
-				{ "chorbi3", 1, 2, IllegalArgumentException.class }
+			// DETALLES DE CADA PRUEBA:
+			// 1 a 10 --> resultados positivos: comprobando que se recoja la
+			// cantidad de chorbies correcta para cada caso y que no estén
+			// banneados.
+			// 11 y 12 --> resultados negativos : no se debe poder acceder a
+			// esta información, ya que el chorbi3 no se puede autenticar al
+			// estar banneado
+			{
+				"chorbi1", 1, 1, null
+			}, {
+				"chorbi1", 1, 2, null
+			}, {
+				"chorbi2", 1, 1, null
+			}, {
+				"chorbi2", 1, 2, null
+			}, {
+				"chorbi4", 0, 1, null
+			}, {
+				"chorbi4", 0, 2, null
+			}, {
+				"chorbi5", 0, 1, null
+			}, {
+				"chorbi5", 0, 2, null
+			}, {
+				"chorbi6", 0, 1, null
+			}, {
+				"chorbi6", 0, 2, null
+			}, {
+				"chorbi3", 1, 1, IllegalArgumentException.class
+			}, {
+				"chorbi3", 1, 2, IllegalArgumentException.class
+			}
 
 		};
 
 		for (int i = 0; i < testingData.length; i++)
-			this.templateListUseCase2((String) testingData[i][0],
-					(int) testingData[i][1], (int) testingData[i][2],
-					(Class<?>) testingData[i][3]);
+			this.templateListUseCase2((String) testingData[i][0], (int) testingData[i][1], (int) testingData[i][2], (Class<?>) testingData[i][3]);
 
 	}
 
@@ -271,8 +274,7 @@ public class ChorbiServiceTest extends AbstractTest {
 	// Baneamos a un chorbi, y posteriomente comprobamos que el chorbi ha sido
 	// banneado correctamente, es decir cuando
 	// su atributo booleano ban es true
-	protected void templateBanChorbiUseCase5(final String username,
-			final Chorbi chorbi, final boolean result, final Class<?> expected) {
+	protected void templateBanChorbiUseCase5(final String username, final Chorbi chorbi, final boolean result, final Class<?> expected) {
 
 		Class<?> caught;
 		caught = null;
@@ -328,27 +330,28 @@ public class ChorbiServiceTest extends AbstractTest {
 																		// banneado
 
 		final Object testingData[][] = {
-				// TEST POSITIVO: Bannear un chorbi que aun no esta baneado, y
-				// comprobar que el resultado es correcto.
-				{ "admin", chorbi1, true, null },
-				// TEST NEGATIVO: Bannear un un chorbi que ya ha sido banneado y
-				// comprobar que salta correctamente la excepción.
-				{ "admin", chorbi2, true, IllegalArgumentException.class }
+			// TEST POSITIVO: Bannear un chorbi que aun no esta baneado, y
+			// comprobar que el resultado es correcto.
+			{
+				"admin", chorbi1, true, null
+			},
+			// TEST NEGATIVO: Bannear un un chorbi que ya ha sido banneado y
+			// comprobar que salta correctamente la excepción.
+			{
+				"admin", chorbi2, true, IllegalArgumentException.class
+			}
 
 		};
 
 		for (int i = 0; i < testingData.length; i++)
-			this.templateBanChorbiUseCase5((String) testingData[i][0],
-					(Chorbi) testingData[i][1], (boolean) testingData[i][2],
-					(Class<?>) testingData[i][3]);
+			this.templateBanChorbiUseCase5((String) testingData[i][0], (Chorbi) testingData[i][1], (boolean) testingData[i][2], (Class<?>) testingData[i][3]);
 
 	}
 
 	// Permitimos a un chorbi, y posteriomente comprobamos que el chorbi ha sido
 	// permitido correctamente, es decir cuando
 	// su atributo booleano ban es false
-	protected void templateUnbanChorbiUseCase5(final String username,
-			final Chorbi chorbi, final boolean result, final Class<?> expected) {
+	protected void templateUnbanChorbiUseCase5(final String username, final Chorbi chorbi, final boolean result, final Class<?> expected) {
 
 		Class<?> caught;
 		caught = null;
@@ -403,20 +406,22 @@ public class ChorbiServiceTest extends AbstractTest {
 																		// banneado
 
 		final Object testingData[][] = {
-				// TEST POSITIVO: Permitir un chorbi que esta baneado, y
-				// comprobar que el resultado es correcto.
-				{ "admin", chorbi1, false, null },
-				// TEST NEGATIVO: Permitir un chorbi que ya se le permite entrar
-				// en el sistema y comprobar que salta correctamente la
-				// excepción.
-				{ "admin", chorbi2, false, IllegalArgumentException.class }
+			// TEST POSITIVO: Permitir un chorbi que esta baneado, y
+			// comprobar que el resultado es correcto.
+			{
+				"admin", chorbi1, false, null
+			},
+			// TEST NEGATIVO: Permitir un chorbi que ya se le permite entrar
+			// en el sistema y comprobar que salta correctamente la
+			// excepción.
+			{
+				"admin", chorbi2, false, IllegalArgumentException.class
+			}
 
 		};
 
 		for (int i = 0; i < testingData.length; i++)
-			this.templateUnbanChorbiUseCase5((String) testingData[i][0],
-					(Chorbi) testingData[i][1], (boolean) testingData[i][2],
-					(Class<?>) testingData[i][3]);
+			this.templateUnbanChorbiUseCase5((String) testingData[i][0], (Chorbi) testingData[i][1], (boolean) testingData[i][2], (Class<?>) testingData[i][3]);
 
 	}
 
@@ -430,13 +435,8 @@ public class ChorbiServiceTest extends AbstractTest {
 
 	}
 
-	protected void template(final String username, final String password,
-			final String passwordCheck, final String phone,
-			final boolean termsOfUse, final String name, final String email,
-			final Date birthDate, final String city, final String country,
-			final String description, String genre, String state,
-			String province, String surName, String picture, String relation,
-			final Class<?> expected) {
+	protected void template(final String username, final String password, final String passwordCheck, final String phone, final boolean termsOfUse, final String name, final String email, final Date birthDate, final String city, final String country,
+		final String description, final String genre, final String state, final String province, final String surName, final String picture, final String relation, final Class<?> expected) {
 
 		Class<?> caught;
 
@@ -444,7 +444,7 @@ public class ChorbiServiceTest extends AbstractTest {
 		try {
 
 			this.chorbiService.create();
-			RegistrationForm reg = new RegistrationForm();
+			final RegistrationForm reg = new RegistrationForm();
 
 			reg.setUsername(username);
 			reg.setPassword(password);
@@ -467,8 +467,8 @@ public class ChorbiServiceTest extends AbstractTest {
 			reg.setState(state);
 
 			reg.setTermsOfUse(termsOfUse);
-			Chorbi chorbi = this.chorbiService.reconstruct(reg);
-			Template template = this.templateService.create();
+			final Chorbi chorbi = this.chorbiService.reconstruct(reg);
+			final Template template = this.templateService.create();
 			this.chorbiService.saveAndFlush(chorbi, template);
 			this.chorbiService.flush();
 
@@ -484,46 +484,38 @@ public class ChorbiServiceTest extends AbstractTest {
 	public void RegisterAChorbie() {
 
 		final Object testingData[][] = {
-				// Crear un usuario valido
-				{ "customerPrueba", "customerPrueba1", "customerPrueba1",
-						"+954670441", true, "customerPrueba",
-						"customerPrueba@gmail.com",new Date(1220227200),"Seville","Spain","Decription","MALE","Spain",
-						"Seville","customerPrueba1","http://www.google.com","LOVE", null },
-				// Crear un usuario que tiene campos en blanco
-				{ " ", " ", "customerPrueba1",
-								"+954670441", true, "customerPrueba",
-								"customerPrueba@gmail.com",new Date(1220227200),"Seville","Spain","Decription","MALE","Spain",
-								"Seville","customerPrueba1","http://www.google.com","LOVE", ConstraintViolationException.class },
-				// Crear un usuario que tiene un telefono no valido
-				{ "customerPrueba2", "customerPrueba1", "customerPrueba1",
-									"+95402", true, "customerPrueba",
-									"customerPrueba@gmail.com",new Date(1220227200),"Seville","Spain","Decription","MALE","Spain",
-									"Seville","customerPrueba1","http://www.google.com","LOVE", ConstraintViolationException.class },
-				// Crear un usuario que tiene un mail no valido
-				{ "customerPrueb3", "customerPrueba1", "customerPrueba1",
-										"+954670441", true, "customerPrueba",
-										"customerPrueba",new Date(1220227200),"Seville","Spain","Decription","MALE","Spain",
-										"Seville","customerPrueba1","http://www.google.com","LOVE", 
-										ConstraintViolationException.class },
-				// Crear un usuario que no ha aceptado las condiciones y
-				// terminos de uso
-				{ "customerPrueb4", "customerPrueba1", "customerPrueba1",
-							"+954670441", false, "customerPrueba",
-							"customerPrueba@gmail.com",new Date(1220227200),"Seville","Spain","Decription","MALE","Spain",
-							"Seville","customerPrueba1","http://www.google.com","LOVE", 
-							ConstraintViolationException.class } };
+			// Crear un usuario valido
+			{
+				"customerPrueba", "customerPrueba1", "customerPrueba1", "+954670441", true, "customerPrueba", "customerPrueba@gmail.com", new Date(1220227200), "Seville", "Spain", "Decription", "MALE", "Spain", "Seville", "customerPrueba1",
+				"http://www.google.com", "LOVE", null
+			},
+			// Crear un usuario que tiene campos en blanco
+			{
+				" ", " ", "customerPrueba1", "+954670441", true, "customerPrueba", "customerPrueba@gmail.com", new Date(1220227200), "Seville", "Spain", "Decription", "MALE", "Spain", "Seville", "customerPrueba1", "http://www.google.com", "LOVE",
+				ConstraintViolationException.class
+			},
+			// Crear un usuario que tiene un telefono no valido
+			{
+				"customerPrueba2", "customerPrueba1", "customerPrueba1", "+95402", true, "customerPrueba", "customerPrueba@gmail.com", new Date(1220227200), "Seville", "Spain", "Decription", "MALE", "Spain", "Seville", "customerPrueba1",
+				"http://www.google.com", "LOVE", ConstraintViolationException.class
+			},
+			// Crear un usuario que tiene un mail no valido
+			{
+				"customerPrueb3", "customerPrueba1", "customerPrueba1", "+954670441", true, "customerPrueba", "customerPrueba", new Date(1220227200), "Seville", "Spain", "Decription", "MALE", "Spain", "Seville", "customerPrueba1", "http://www.google.com",
+				"LOVE", ConstraintViolationException.class
+			},
+			// Crear un usuario que no ha aceptado las condiciones y
+			// terminos de uso
+			{
+				"customerPrueb4", "customerPrueba1", "customerPrueba1", "+954670441", false, "customerPrueba", "customerPrueba@gmail.com", new Date(1220227200), "Seville", "Spain", "Decription", "MALE", "Spain", "Seville", "customerPrueba1",
+				"http://www.google.com", "LOVE", ConstraintViolationException.class
+			}
+		};
 
 		for (int i = 0; i < testingData.length; i++)
-			this.template((String) testingData[i][0],
-					(String) testingData[i][1], (String) testingData[i][2],
-					(String) testingData[i][3], (boolean) testingData[i][4],
-					(String) testingData[i][5], (String) testingData[i][6],
-					(Date) testingData[i][7],(String) testingData[i][8],
-					(String) testingData[i][9],(String) testingData[i][10],
-					(String) testingData[i][11],(String) testingData[i][12],
-					(String) testingData[i][13],(String) testingData[i][14],
-					(String) testingData[i][15],(String) testingData[i][16],
-					(Class<?>) testingData[i][17]);
+			this.template((String) testingData[i][0], (String) testingData[i][1], (String) testingData[i][2], (String) testingData[i][3], (boolean) testingData[i][4], (String) testingData[i][5], (String) testingData[i][6], (Date) testingData[i][7],
+				(String) testingData[i][8], (String) testingData[i][9], (String) testingData[i][10], (String) testingData[i][11], (String) testingData[i][12], (String) testingData[i][13], (String) testingData[i][14], (String) testingData[i][15],
+				(String) testingData[i][16], (Class<?>) testingData[i][17]);
 
 	}
 }
