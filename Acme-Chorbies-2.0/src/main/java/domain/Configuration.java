@@ -21,7 +21,8 @@ public class Configuration extends DomainEntity {
 	private int	hour;
 	private int	minute;
 	private int	second;
-
+	private double managersFee;
+	private double chorbiesFee;
 
 	//Getters & Setters ----------------------------------------------------------------------
 
@@ -49,4 +50,22 @@ public class Configuration extends DomainEntity {
 		this.second = second;
 	}
 
+	public double getManagersFee() {
+		return managersFee;
+	}
+
+	public void setManagersFee(double managersFee) {
+		this.managersFee = managersFee;
+	}
+
+	public double getChorbiesFee() {
+		return chorbiesFee;
+	}
+
+	public void setChorbiesFee(double chorbiesFee) {
+		this.chorbiesFee = chorbiesFee;
+	}
+
+	
+	
 }

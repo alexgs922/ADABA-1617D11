@@ -14,6 +14,7 @@ import javax.persistence.TemporalType;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.Range;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
@@ -34,7 +35,7 @@ public class Taste extends DomainEntity {
 
 	private Date	moment;
 	private String	comment;
-
+	private int 	stars;
 
 	//Getters & Setters ----------------------------------------------------------------------
 
@@ -56,7 +57,18 @@ public class Taste extends DomainEntity {
 		this.comment = comment;
 	}
 
+	@Range(max=3,min=0)
+	public int getStars() {
+		return stars;
+	}
 
+	public void setStars(int stars) {
+		this.stars = stars;
+	}
+
+	
+	
+	
 	//Relationship
 
 	private Chorbi	chorbi;

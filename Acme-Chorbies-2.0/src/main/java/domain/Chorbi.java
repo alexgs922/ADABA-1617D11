@@ -44,7 +44,7 @@ public class Chorbi extends Actor {
 	private Genre			genre;
 	private boolean			ban;
 	private Coordinate		coordinate;
-
+	private double 			totalFeeAmount;
 
 	//Getters & Setters ----------------------------------------------------------------------
 
@@ -111,6 +111,16 @@ public class Chorbi extends Actor {
 		this.coordinate = coordinate;
 	}
 
+	@Valid
+	@NotNull
+	public double getTotalFeeAmount() {
+		return this.totalFeeAmount;
+	}
+
+	public void setTotalFeeAmount(final double totalFeeAmount) {
+		this.totalFeeAmount = totalFeeAmount;
+	}
+	
 
 	//Relationships
 	private Collection<Chirp>	chirpReceives;
