@@ -51,6 +51,30 @@ public class Organises extends Actor {
 	}
 	
 	//Relationships
+	private Manager organizer;
+	private Collection<Event> events;
+
+	
+	
+	@ManyToOne(optional = false)
+	@Valid
+	@NotNull
+	public Manager getOrganizer() {
+		return organizer;
+	}
+	public void setOrganizer(Manager organizer) {
+		this.organizer = organizer;
+	}
+
+	@OneToMany(mappedBy="organises")
+	@Valid
+	public Collection<Event> getEvents() {
+		return events;
+	}
+	public void setEvents(Collection<Event> events) {
+		this.events = events;
+	}
+	
 	
 	
 	

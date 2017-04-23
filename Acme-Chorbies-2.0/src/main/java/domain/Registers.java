@@ -8,6 +8,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.Index;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -51,4 +52,20 @@ public class Registers extends Actor {
 	//Relationships
 
 
+	private Collection<Chorbi> chorbi;
+
+
+	@OneToMany
+	@Valid
+	public Collection<Chorbi> getChorbi() {
+		return chorbi;
+	}
+
+
+	public void setChorbi(Collection<Chorbi> chorbi) {
+		this.chorbi = chorbi;
+	}
+	
+	
+	
 }

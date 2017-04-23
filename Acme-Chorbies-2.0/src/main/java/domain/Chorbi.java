@@ -125,7 +125,6 @@ public class Chorbi extends Actor {
 	//Relationships
 	private Collection<Chirp>	chirpReceives;
 	private Collection<Chirp>	chirpWrites;
-	private CreditCard			creditCard;
 	private Collection<Taste>	givenTastes;
 	private Template			template;
 
@@ -146,15 +145,6 @@ public class Chorbi extends Actor {
 
 	public void setChirpWrites(final Collection<Chirp> chirpWrites) {
 		this.chirpWrites = chirpWrites;
-	}
-
-	@OneToOne(optional = true)
-	public CreditCard getCreditCard() {
-		return this.creditCard;
-	}
-
-	public void setCreditCard(final CreditCard creditCard) {
-		this.creditCard = creditCard;
 	}
 
 	@OneToMany

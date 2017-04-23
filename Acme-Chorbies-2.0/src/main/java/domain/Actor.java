@@ -77,6 +77,19 @@ public class Actor extends DomainEntity {
 
 	//Relationships
 
+	private CreditCard			creditCard;
+
+	@OneToOne(optional = true)
+	public CreditCard getCreditCard() {
+		return this.creditCard;
+	}
+
+	public void setCreditCard(final CreditCard creditCard) {
+		this.creditCard = creditCard;
+	}
+
+	
+	
 	private UserAccount	userAccount;
 
 

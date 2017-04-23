@@ -8,6 +8,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.Index;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -17,6 +18,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import org.hibernate.annotations.OptimisticLock;
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
 import org.junit.runners.Parameterized.Parameters;
@@ -87,5 +89,33 @@ public class Event{
 	
 	
 	//Relationships
+	
+	private Organises organises;
+	private Registers registers;
+
+	
+	@ManyToOne(optional=true)
+	@Valid
+	public Organises getOrganises() {
+		return organises;
+	}
+
+	public void setOrganises(Organises organises) {
+		this.organises = organises;
+	}
+
+	
+	@ManyToOne
+	@Valid
+	public Registers getRegisters() {
+		return registers;
+	}
+
+	public void setRegisters(Registers registers) {
+		this.registers = registers;
+	}
+	
+	
+	
 	
 }
