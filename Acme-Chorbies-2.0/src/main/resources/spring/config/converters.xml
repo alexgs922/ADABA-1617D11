@@ -53,11 +53,7 @@
 		<bean class="converters.EventToStringConverter" />
 		<bean class="converters.StringToEventConverter" />
 		
-		<bean class="converters.OrganisesToStringConverter" />
-		<bean class="converters.StringToOrganisesConverter" />
 		
-		<bean class="converters.RegistersToStringConverter" />
-		<bean class="converters.StringToRegistersConverter" />
 
 		
 	</util:list>

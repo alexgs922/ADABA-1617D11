@@ -8,12 +8,15 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
 import javax.persistence.Index;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.Valid;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
@@ -44,9 +47,20 @@ public class Chorbi extends Actor {
 	private Genre			genre;
 	private boolean			ban;
 	private Coordinate		coordinate;
+	private double			totalChargedFee;
 
 
 	//Getters & Setters ----------------------------------------------------------------------
+
+	@Min(0)
+	@Digits(integer = 32, fraction = 2)
+	public double getTotalChargedFee() {
+		return this.totalChargedFee;
+	}
+
+	public void setTotalChargedFee(final double totalChargedFee) {
+		this.totalChargedFee = totalChargedFee;
+	}
 
 	@NotBlank
 	@URL
@@ -113,22 +127,22 @@ public class Chorbi extends Actor {
 
 
 	//Relationships
-	private Collection<Chirp>		chirpReceives;
-	private Collection<Chirp>		chirpWrites;
-	private Collection<Taste>		givenTastes;
-	private Template				template;
-	private Collection<Registers>	registers;
+	private Collection<Chirp>	chirpReceives;
+	private Collection<Chirp>	chirpWrites;
+	private Collection<Taste>	givenTastes;
+	private Template			template;
+	private Collection<Event>	events;
 
 
 	@Valid
 	@NotNull
-	@OneToMany(mappedBy = "chorbi")
-	public Collection<Registers> getRegisters() {
-		return this.registers;
+	@ManyToMany(mappedBy = "registered")
+	public Collection<Event> getEvents() {
+		return this.events;
 	}
 
-	public void setRegisters(final Collection<Registers> registers) {
-		this.registers = registers;
+	public void setEvents(final Collection<Event> events) {
+		this.events = events;
 	}
 
 	@OneToMany(mappedBy = "recipient")

@@ -96,6 +96,43 @@
 		</property>
 	</bean>
 
+	<bean id="userAccount8" class="security.UserAccount">
+		<property name="username" value="manager1" />
+		<property name="password" value="c240642ddef994358c96da82c0361a58" />
+		<property name="authorities">
+			<list>
+				<bean class="security.Authority">
+					<property name="authority" value="MANAGER" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="userAccount9" class="security.UserAccount">
+		<property name="username" value="manager2" />
+		<property name="password" value="8df5127cd164b5bc2d2b78410a7eea0c" />
+		<property name="authorities">
+			<list>
+				<bean class="security.Authority">
+					<property name="authority" value="MANAGER" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="userAccount10" class="security.UserAccount">
+		<property name="username" value="manager3" />
+		<property name="password" value="2d3a5db4a2a9717b43698520a8de57d0" />
+		<property name="authorities">
+			<list>
+				<bean class="security.Authority">
+					<property name="authority" value="MANAGER" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+
 
 
 	<!-- Other domain beans come here -->
@@ -193,7 +230,7 @@
 
 	</bean>
 
-  	<bean id="coordinateChorbi2" class="domain.Coordinate">
+	<bean id="coordinateChorbi2" class="domain.Coordinate">
 		<property name="country" value="España" />
 		<property name="state" value="España" />
 		<property name="province" value="Huelva" />
@@ -201,14 +238,10 @@
 
 	</bean>
 
-<!--  	<bean id="coordinateTemplate2.1" class="domain.Coordinate">
-		<property name="country" value="España" />
-		<property name="state" value="España" />
-		<property name="province" value="Sevilla" />
-		<property name="city" value="Sevilla" />
-
-	</bean>
--->	
+	<!-- <bean id="coordinateTemplate2.1" class="domain.Coordinate"> <property 
+		name="country" value="España" /> <property name="state" value="España" /> 
+		<property name="province" value="Sevilla" /> <property name="city" value="Sevilla" 
+		/> </bean> -->
 
 	<bean id="coordinateChorbi3" class="domain.Coordinate">
 		<property name="country" value="España" />
@@ -231,18 +264,304 @@
 		<property name="city" value="Huelva" />
 
 	</bean>
-<!--
-	<bean id="coordinateTemplate5.1" class="domain.Coordinate">
-		<property name="country" value="Colombia" />
-		<property name="city" value="Medellín" />
-	</bean>
--->	
+	<!-- <bean id="coordinateTemplate5.1" class="domain.Coordinate"> <property 
+		name="country" value="Colombia" /> <property name="city" value="Medellín" 
+		/> </bean> -->
 
 	<bean id="coordinateChorbi6" class="domain.Coordinate">
 		<property name="country" value="España" />
 		<property name="city" value="Cádiz" />
 
 	</bean>
+
+	<!-- EVENTS -->
+
+	<bean id="event1" class="domain.Event">
+		<property name="title" value="Evento 1" />
+		<property name="moment" value="08/25/2016 12:00" />
+		<property name="description"
+			value="Evento 1 destinado al montañismo (en el pasado)" />
+		<property name="picture"
+			value="https://c1.staticflickr.com/4/3780/33348560780_e4f2630c8b_m.jpg" />
+		<property name="numberSeatsOffered" value="10" />
+		<property name="manager" ref="manager1" />
+		<property name="registered">
+			<list>
+
+				<ref bean="chorbi1" />
+				<ref bean="chorbi2" />
+				<ref bean="chorbi3" />
+				<ref bean="chorbi4" />
+				<ref bean="chorbi5" />
+				<ref bean="chorbi6" />
+
+			</list>
+
+		</property>
+		<property name="totalChargedFee" value="1.00" />
+
+
+	</bean>
+
+	<bean id="event2" class="domain.Event">
+		<property name="title" value="Evento 2" />
+		<property name="moment" value="02/25/2017 12:00" />
+		<property name="description"
+			value="Evento 2 destinado a visita playa (en el pasado)" />
+		<property name="picture"
+			value="https://c1.staticflickr.com/4/3637/3357716385_8030394343_m.jpg" />
+		<property name="numberSeatsOffered" value="55" />
+		<property name="manager" ref="manager2" />
+		<property name="registered">
+			<list>
+
+				<ref bean="chorbi1" />
+				<ref bean="chorbi2" />
+				<ref bean="chorbi3" />
+				<ref bean="chorbi4" />
+
+
+			</list>
+
+		</property>
+		<property name="totalChargedFee" value="1.00" />
+
+
+	</bean>
+
+	<bean id="event3" class="domain.Event">
+		<property name="title" value="Evento 3" />
+		<property name="moment" value="01/10/2017 20:00" />
+		<property name="description"
+			value="Evento 3, cena de post-navidad, (en el pasado)" />
+		<property name="picture"
+			value="https://c1.staticflickr.com/1/615/23732062921_aa3810c8fc_m.jpg" />
+		<property name="numberSeatsOffered" value="25" />
+		<property name="manager" ref="manager3" />
+		<property name="registered">
+			<list>
+
+				<ref bean="chorbi1" />
+				<ref bean="chorbi2" />
+				<ref bean="chorbi3" />
+				<ref bean="chorbi4" />
+				<ref bean="chorbi5" />
+
+
+			</list>
+
+		</property>
+		<property name="totalChargedFee" value="2.25" />
+
+
+	</bean>
+
+	<bean id="event4" class="domain.Event">
+		<property name="title" value="Evento 4" />
+		<property name="moment" value="04/30/2017 12:00" />
+		<property name="description"
+			value="Evento 4, feria de abril de sevilla, (en vigor)" />
+		<property name="picture"
+			value="https://c1.staticflickr.com/3/2321/2159267372_d62826c256_m.jpg" />
+		<property name="numberSeatsOffered" value="35" />
+		<property name="manager" ref="manager3" />
+		<property name="registered">
+			<list>
+
+				<ref bean="chorbi1" />
+				<ref bean="chorbi2" />
+				<ref bean="chorbi3" />
+				<ref bean="chorbi4" />
+				<ref bean="chorbi5" />
+				<ref bean="chorbi6" />
+
+			</list>
+
+		</property>
+		<property name="totalChargedFee" value="2.00" />
+
+
+	</bean>
+
+	<bean id="event5" class="domain.Event">
+		<property name="title" value="Evento 5" />
+		<property name="moment" value="04/29/2017 12:00" />
+		<property name="description" value="Evento 5, pescaito en la feria, (en vigor)" />
+		<property name="picture"
+			value="https://c1.staticflickr.com/8/7576/16303010852_a4fec1cb97_m.jpg" />
+		<property name="numberSeatsOffered" value="20" />
+		<property name="manager" ref="manager1" />
+		<property name="registered">
+			<list>
+
+				<ref bean="chorbi1" />
+				<ref bean="chorbi2" />
+				<ref bean="chorbi3" />
+				<ref bean="chorbi4" />
+				<ref bean="chorbi5" />
+				<ref bean="chorbi6" />
+
+			</list>
+
+		</property>
+		<property name="totalChargedFee" value="1.20" />
+
+
+	</bean>
+
+	<bean id="event6" class="domain.Event">
+		<property name="title" value="Evento 6" />
+		<property name="moment" value="05/15/2017 10:00" />
+		<property name="description"
+			value="Evento 6, excursión a la mezquita de Córdoba, (en vigor)" />
+		<property name="picture"
+			value="https://c1.staticflickr.com/4/3943/33481200305_4bdd445f1d_m.jpg" />
+		<property name="numberSeatsOffered" value="30" />
+		<property name="manager" ref="manager1" />
+		<property name="registered">
+			<list>
+
+				<ref bean="chorbi1" />
+				<ref bean="chorbi2" />
+				<ref bean="chorbi3" />
+
+
+			</list>
+
+		</property>
+		<property name="totalChargedFee" value="1.00" />
+
+
+	</bean>
+
+	<bean id="event7" class="domain.Event">
+		<property name="title" value="Evento 7" />
+		<property name="moment" value="07/25/2017 10:00" />
+		<property name="description" value="Evento 7, visita a Cádiz" />
+		<property name="picture"
+			value="https://c1.staticflickr.com/3/2779/32866117936_89ae4e7f4d_m.jpg" />
+		<property name="numberSeatsOffered" value="21" />
+		<property name="manager" ref="manager1" />
+		<property name="registered">
+			<list>
+
+
+				<ref bean="chorbi5" />
+				<ref bean="chorbi6" />
+
+			</list>
+
+		</property>
+		<property name="totalChargedFee" value="1.30" />
+
+
+	</bean>
+
+	<bean id="event8" class="domain.Event">
+		<property name="title" value="Evento 8" />
+		<property name="moment" value="08/15/2017 09:00" />
+		<property name="description" value=" Evento 8, visita a Mallorca" />
+		<property name="picture"
+			value="https://c1.staticflickr.com/9/8231/30010974775_a43bcf07fe_m.jpg" />
+		<property name="numberSeatsOffered" value="48" />
+		<property name="manager" ref="manager3" />
+		<property name="registered">
+			<list>
+
+
+				<ref bean="chorbi3" />
+
+
+
+			</list>
+
+		</property>
+		<property name="totalChargedFee" value="1.00" />
+
+
+	</bean>
+
+	<bean id="event9" class="domain.Event">
+		<property name="title" value="Evento 9" />
+		<property name="moment" value="09/07/2017 09:00" />
+		<property name="description" value="Evento 9, fiesta" />
+		<property name="picture"
+			value="https://c1.staticflickr.com/3/2563/5758775767_7ab3729b69_m.jpg" />
+		<property name="numberSeatsOffered" value="16" />
+		<property name="manager" ref="manager2" />
+		<property name="registered">
+			<list>
+
+			</list>
+
+		</property>
+		<property name="totalChargedFee" value="1.00" />
+
+
+	</bean>
+
+
+
+	<!-- MANAGERS -->
+
+	<bean id="manager1" class="domain.Manager">
+		<property name="userAccount" ref="userAccount8" />
+		<property name="name" value="Manager 1" />
+		<property name="surName" value="Manager 1 surname" />
+		<property name="email" value="manager1@acmechorbi.com" />
+		<property name="phone" value="+52 689745212" />
+		<property name="company" value="companyManager1" />
+		<property name="vatNumber" value="ESA12345678" />
+		<property name="events">
+			<list>
+				<ref bean="event1" />
+				<ref bean="event5" />
+				<ref bean="event6" />
+				<ref bean="event7" />
+
+			</list>
+		</property>
+
+	</bean>
+
+	<bean id="manager2" class="domain.Manager">
+		<property name="userAccount" ref="userAccount9" />
+		<property name="name" value="Manager 2" />
+		<property name="surName" value="Manager 2 surname" />
+		<property name="email" value="manager2@acmechorbi.com" />
+		<property name="phone" value="+52 689715212" />
+		<property name="company" value="companyManager2" />
+		<property name="vatNumber" value="ESA12341678" />
+		<property name="events">
+			<list>
+				<ref bean="event2" />
+				<ref bean="event9" />
+
+			</list>
+		</property>
+
+	</bean>
+
+	<bean id="manager3" class="domain.Manager">
+		<property name="userAccount" ref="userAccount10" />
+		<property name="name" value="Manager 3" />
+		<property name="surName" value="Manager 3 surname" />
+		<property name="email" value="manager3@acmechorbi.com" />
+		<property name="phone" value="+52 689915212" />
+		<property name="company" value="companyManager3" />
+		<property name="vatNumber" value="ESA13341678" />
+		<property name="events">
+			<list>
+				<ref bean="event3" />
+				<ref bean="event4" />
+				<ref bean="event8" />
+
+			</list>
+		</property>
+
+	</bean>
+
+
 
 	<!-- TEMPLATES -->
 
@@ -252,8 +571,8 @@
 		<property name="genre" value="MALE" />
 		<property name="keyword" value="male" />
 		<property name="moment" value="2017/04/02 17:00" />
-		<property name="coordinate" ref="coordinateTemplate1.1"/>
-			
+		<property name="coordinate" ref="coordinateTemplate1.1" />
+
 
 		<property name="chorbies">
 			<list>
@@ -272,7 +591,7 @@
 		<property name="genre" value="MALE" />
 		<property name="keyword" value="male" />
 		<property name="moment" value="2017/03/25 16:00" />
-		<property name="coordinate" ref="coordinateTemplate1.2"/>
+		<property name="coordinate" ref="coordinateTemplate1.2" />
 
 		<property name="chorbies">
 			<list>
@@ -289,7 +608,7 @@
 		<property name="genre" value="MALE" />
 		<property name="keyword" value="male" />
 		<property name="moment" value="2017/02/25 20:00" />
-		
+
 
 		<property name="chorbies">
 			<list>
@@ -320,7 +639,7 @@
 		<property name="approximatedAge" value="25" />
 		<property name="genre" value="FEMALE" />
 		<property name="moment" value="2017/02/12 20:00" />
-		<property name="coordinate" ref="coordinateTemplate1.3"/>
+		<property name="coordinate" ref="coordinateTemplate1.3" />
 
 		<property name="chorbies">
 			<list>
@@ -383,6 +702,20 @@
 		</property>
 		<property name="coordinate" ref="coordinateChorbi1" />
 		<property name="template" ref="templateChorbi1" />
+		<property name="events">
+			<list>
+				
+				<ref bean="event1" />
+				<ref bean="event2" />
+				<ref bean="event3" />
+				<ref bean="event4" />
+				<ref bean="event5" />
+				<ref bean="event6" />
+				
+
+			</list>
+		</property>
+		<property name="totalChargedFee" value="20" />
 
 
 	</bean>
@@ -420,6 +753,19 @@
 		</property>
 		<property name="coordinate" ref="coordinateChorbi2" />
 		<property name="template" ref="templateChorbi2" />
+		<property name="events">
+			<list>
+				
+				<ref bean="event1" />
+				<ref bean="event2" />
+				<ref bean="event3" />
+				<ref bean="event4" />
+				<ref bean="event5" />
+				<ref bean="event6" />
+
+			</list>
+		</property>
+		<property name="totalChargedFee" value="20" />
 
 
 	</bean>
@@ -457,6 +803,20 @@
 		</property>
 		<property name="coordinate" ref="coordinateChorbi3" />
 		<property name="template" ref="templateChorbi3" />
+		<property name="events">
+			<list>
+				
+				<ref bean="event1" />
+				<ref bean="event2" />
+				<ref bean="event3" />
+				<ref bean="event4" />
+				<ref bean="event5" />
+				<ref bean="event6" />
+				<ref bean="event8" />
+
+			</list>
+		</property>
+		<property name="totalChargedFee" value="20" />
 
 
 	</bean>
@@ -494,6 +854,20 @@
 		</property>
 		<property name="coordinate" ref="coordinateChorbi4" />
 		<property name="template" ref="templateChorbi4" />
+		<property name="events">
+			<list>
+				
+				<ref bean="event1" />
+				<ref bean="event2" />
+				<ref bean="event3" />
+				<ref bean="event4" />
+				<ref bean="event5" />
+				
+				
+				
+			</list>
+		</property>
+		<property name="totalChargedFee" value="20" />
 
 	</bean>
 
@@ -530,6 +904,19 @@
 		</property>
 		<property name="coordinate" ref="coordinateChorbi5" />
 		<property name="template" ref="templateChorbi5" />
+		<property name="events">
+			<list>
+				
+				<ref bean="event1" />
+				<ref bean="event3" />
+				<ref bean="event4" />
+				<ref bean="event5" />
+				<ref bean="event7" />
+			
+
+			</list>
+		</property>
+		<property name="totalChargedFee" value="20" />
 
 	</bean>
 
@@ -566,6 +953,18 @@
 		</property>
 		<property name="coordinate" ref="coordinateChorbi6" />
 		<property name="template" ref="templateChorbi6" />
+		<property name="events">
+			<list>
+				
+				<ref bean="event1" />
+				<ref bean="event4" />
+				<ref bean="event5" />
+				<ref bean="event7" />
+
+				
+			</list>
+		</property>
+		<property name="totalChargedFee" value="20" />
 
 	</bean>
 
@@ -625,6 +1024,7 @@
 		<property name="moment" value="2017/02/03 15:00" />
 		<property name="comment" value="commenttaste1" />
 		<property name="chorbi" ref="chorbi2" />
+		<property name="stars" value="3" />
 
 	</bean>
 
@@ -632,6 +1032,7 @@
 		<property name="moment" value="2017/02/01 21:00" />
 		<property name="comment" value="commenttaste2" />
 		<property name="chorbi" ref="chorbi3" />
+		<property name="stars" value="2" />
 
 	</bean>
 
@@ -639,6 +1040,7 @@
 		<property name="moment" value="2017/03/22 09:00" />
 		<property name="comment" value="commenttaste3" />
 		<property name="chorbi" ref="chorbi1" />
+		<property name="stars" value="1" />
 
 	</bean>
 
@@ -646,6 +1048,7 @@
 		<property name="moment" value="2017/01/07 22:00" />
 		<property name="comment" value="commenttaste4" />
 		<property name="chorbi" ref="chorbi1" />
+		<property name="stars" value="2" />
 
 	</bean>
 
@@ -656,6 +1059,8 @@
 		<property name="hour" value="12" />
 		<property name="minute" value="0" />
 		<property name="second" value="0" />
+		<property name="managersFee" value="1.00" />
+		<property name="chorbiesFee" value="10.00" />
 	</bean>
 
 
@@ -665,45 +1070,45 @@
 		<property name="url"
 			value="https://c1.staticflickr.com/3/2875/32662160373_4a9e9e2b1f_b.jpg" />
 	</bean>
-	
+
 	<bean id="banner2" class="domain.Banner">
 		<property name="url"
 			value="https://c1.staticflickr.com/3/2835/33836359206_666352964c_b.jpg" />
 	</bean>
-	
+
 	<bean id="banner3" class="domain.Banner">
 		<property name="url"
 			value="https://c1.staticflickr.com/4/3841/33063993293_cc0957ce3f_b.jpg" />
 	</bean>
-	
+
 	<bean id="banner4" class="domain.Banner">
 		<property name="url"
 			value="https://c1.staticflickr.com/4/3944/34058733666_d972d5f2cb.jpg" />
-	</bean>	
-	
+	</bean>
+
 	<bean id="banner5" class="domain.Banner">
 		<property name="url"
 			value="https://c1.staticflickr.com/4/3871/33063992743_d71862cda2_b.jpg" />
-	</bean>	
-	
+	</bean>
+
 	<bean id="banner6" class="domain.Banner">
 		<property name="url"
 			value="https://c1.staticflickr.com/4/3856/33836359616_62d6c795f0_b.jpg" />
-	</bean>	
-	
+	</bean>
+
 	<bean id="banner7" class="domain.Banner">
 		<property name="url"
 			value="https://c1.staticflickr.com/3/2823/33080045763_b0e55e61bc_b.jpg" />
-	</bean>	
-	
+	</bean>
+
 	<bean id="banner8" class="domain.Banner">
 		<property name="url"
 			value="https://c1.staticflickr.com/3/2829/33049748344_e3ed738946_b.jpg" />
 	</bean>
-	
+
 	<bean id="banner9" class="domain.Banner">
 		<property name="url"
 			value="https://c1.staticflickr.com/3/2884/33080045703_17bf18ba03_b.jpg" />
 	</bean>
-	
+
 </beans>

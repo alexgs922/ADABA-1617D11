@@ -7,10 +7,12 @@ import java.util.Date;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.validation.Valid;
+import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
@@ -36,9 +38,20 @@ public class Event extends DomainEntity {
 	private String	description;
 	private String	picture;
 	private int		numberSeatsOffered;
+	private double	totalChargedFee;
 
 
 	//Getters & Setters ----------------------------------------------------------------------
+
+	@Min(0)
+	@Digits(integer = 32, fraction = 2)
+	public double getTotalChargedFee() {
+		return this.totalChargedFee;
+	}
+
+	public void setTotalChargedFee(final double totalChargedFee) {
+		this.totalChargedFee = totalChargedFee;
+	}
 
 	@NotBlank
 	public String getTitle() {
@@ -55,6 +68,8 @@ public class Event extends DomainEntity {
 	public Date getMoment() {
 		return this.moment;
 	}
+
+	//Habrá que controlar en la implementación que este momento sea futuro, pues no se pueden organizar eventos en el pasado
 
 	public void setMoment(final Date moment) {
 		this.moment = moment;
@@ -89,30 +104,30 @@ public class Event extends DomainEntity {
 
 	//Relationships
 
-	private Collection<Organises>	organises;
-	private Collection<Registers>	registers;
+	private Manager				manager;
+	private Collection<Chorbi>	registered;
 
 
 	@Valid
 	@NotNull
-	@OneToMany(mappedBy = "event")
-	public Collection<Organises> getOrganises() {
-		return this.organises;
+	@ManyToOne(optional = false)
+	public Manager getManager() {
+		return this.manager;
 	}
 
-	public void setOrganises(final Collection<Organises> organises) {
-		this.organises = organises;
+	public void setManager(final Manager manager) {
+		this.manager = manager;
 	}
 
 	@Valid
 	@NotNull
-	@OneToMany(mappedBy = "event")
-	public Collection<Registers> getRegisters() {
-		return this.registers;
+	@ManyToMany
+	public Collection<Chorbi> getRegistered() {
+		return this.registered;
 	}
 
-	public void setRegisters(final Collection<Registers> registers) {
-		this.registers = registers;
+	public void setRegistered(final Collection<Chorbi> registered) {
+		this.registered = registered;
 	}
 
 }

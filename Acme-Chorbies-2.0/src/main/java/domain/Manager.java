@@ -54,18 +54,18 @@ public class Manager extends Actor {
 
 	//Relationships
 
-	Collection<Organises>	organises;
+	Collection<Event>	events;
 
 
 	@Valid
 	@NotNull
-	@OneToMany(mappedBy = "organizer")
-	public Collection<Organises> getOrganises() {
-		return this.organises;
+	@OneToMany(mappedBy = "manager")
+	public Collection<Event> getEvents() {
+		return this.events;
 	}
 
-	public void setOrganises(final Collection<Organises> organises) {
-		this.organises = organises;
+	public void setEvents(final Collection<Event> events) {
+		this.events = events;
 	}
 
 }
