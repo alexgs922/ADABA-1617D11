@@ -46,6 +46,18 @@
 
 		<bean class="converters.BannerToStringConverter" />
 		<bean class="converters.StringToBannerConverter" />
+		
+		<bean class="converters.ManagerToStringConverter" />
+		<bean class="converters.StringToManagerConverter" />
+		
+		<bean class="converters.EventToStringConverter" />
+		<bean class="converters.StringToEventConverter" />
+		
+		<bean class="converters.OrganisesToStringConverter" />
+		<bean class="converters.StringToOrganisesConverter" />
+		
+		<bean class="converters.RegistersToStringConverter" />
+		<bean class="converters.StringToRegistersConverter" />
 
 		
 	</util:list>
