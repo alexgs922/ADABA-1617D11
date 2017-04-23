@@ -4,6 +4,8 @@ package domain;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
 
 @Entity
 @Access(AccessType.PROPERTY)
@@ -18,11 +20,12 @@ public class Configuration extends DomainEntity {
 
 	//Attributes ---------------------------------------------------------------------------
 
-	private int	hour;
-	private int	minute;
-	private int	second;
-	private double managersFee;
-	private double chorbiesFee;
+	private int		hour;
+	private int		minute;
+	private int		second;
+	private double	managersFee;
+	private double	chorbiesFee;
+
 
 	//Getters & Setters ----------------------------------------------------------------------
 
@@ -50,22 +53,24 @@ public class Configuration extends DomainEntity {
 		this.second = second;
 	}
 
+	@Min(0)
+	@Digits(integer = 32, fraction = 2)
 	public double getManagersFee() {
-		return managersFee;
+		return this.managersFee;
 	}
 
-	public void setManagersFee(double managersFee) {
+	public void setManagersFee(final double managersFee) {
 		this.managersFee = managersFee;
 	}
 
+	@Min(0)
+	@Digits(integer = 32, fraction = 2)
 	public double getChorbiesFee() {
-		return chorbiesFee;
+		return this.chorbiesFee;
 	}
 
-	public void setChorbiesFee(double chorbiesFee) {
+	public void setChorbiesFee(final double chorbiesFee) {
 		this.chorbiesFee = chorbiesFee;
 	}
 
-	
-	
 }

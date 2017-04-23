@@ -1,13 +1,14 @@
 
 package domain;
 
-import java.util.Collection;
-
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.ManyToOne;
 import javax.validation.Valid;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Access(AccessType.PROPERTY)
@@ -27,6 +28,8 @@ public class Registers extends Actor {
 
 	//Getters & Setters ----------------------------------------------------------------------
 
+	@Min(0)
+	@Digits(integer = 32, fraction = 2)
 	public double getChargedFee() {
 		return this.chargedFee;
 	}
@@ -38,17 +41,27 @@ public class Registers extends Actor {
 
 	//Relationships
 
-	private Collection<Chorbi>	chorbi;
+	private Chorbi	chorbi;
+	private Event	event;
 
 
-	@OneToMany
+	@ManyToOne(optional = false)
 	@Valid
-	public Collection<Chorbi> getChorbi() {
+	@NotNull
+	public Chorbi getChorbi() {
 		return this.chorbi;
 	}
-
-	public void setChorbi(final Collection<Chorbi> chorbi) {
+	public void setChorbi(final Chorbi chorbi) {
 		this.chorbi = chorbi;
+	}
+
+	@ManyToOne(optional = false)
+	@Valid
+	public Event getEvent() {
+		return this.event;
+	}
+	public void setEvent(final Event event) {
+		this.event = event;
 	}
 
 }

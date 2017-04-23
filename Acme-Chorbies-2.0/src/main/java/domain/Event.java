@@ -1,21 +1,26 @@
 
 package domain;
 
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Access(AccessType.PROPERTY)
-public class Event {
+public class Event extends DomainEntity {
 
 	//Constructors ---------------------------------------------------------------------------
 
@@ -43,7 +48,10 @@ public class Event {
 	public void setTitle(final String title) {
 		this.title = title;
 	}
+
 	@NotNull
+	@Temporal(TemporalType.TIMESTAMP)
+	@DateTimeFormat(pattern = "dd/MM/yyyy HH:mm")
 	public Date getMoment() {
 		return this.moment;
 	}
@@ -55,11 +63,12 @@ public class Event {
 	public String getDescription() {
 		return this.description;
 	}
-	@URL
+
 	public void setDescription(final String description) {
 		this.description = description;
 	}
 
+	@URL
 	public String getPicture() {
 		return this.picture;
 	}
@@ -68,6 +77,7 @@ public class Event {
 		this.picture = picture;
 	}
 
+	@Min(0)
 	public int getNumberSeatsOffered() {
 		return this.numberSeatsOffered;
 	}
@@ -79,27 +89,29 @@ public class Event {
 
 	//Relationships
 
-	private Organises	organises;
-	private Registers	registers;
+	private Collection<Organises>	organises;
+	private Collection<Registers>	registers;
 
 
-	@ManyToOne(optional = true)
 	@Valid
-	public Organises getOrganises() {
+	@NotNull
+	@OneToMany(mappedBy = "event")
+	public Collection<Organises> getOrganises() {
 		return this.organises;
 	}
 
-	public void setOrganises(final Organises organises) {
+	public void setOrganises(final Collection<Organises> organises) {
 		this.organises = organises;
 	}
 
-	@ManyToOne
 	@Valid
-	public Registers getRegisters() {
+	@NotNull
+	@OneToMany(mappedBy = "event")
+	public Collection<Registers> getRegisters() {
 		return this.registers;
 	}
 
-	public void setRegisters(final Registers registers) {
+	public void setRegisters(final Collection<Registers> registers) {
 		this.registers = registers;
 	}
 

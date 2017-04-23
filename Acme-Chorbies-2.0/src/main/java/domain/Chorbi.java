@@ -44,7 +44,7 @@ public class Chorbi extends Actor {
 	private Genre			genre;
 	private boolean			ban;
 	private Coordinate		coordinate;
-	private double 			totalFeeAmount;
+
 
 	//Getters & Setters ----------------------------------------------------------------------
 
@@ -111,23 +111,25 @@ public class Chorbi extends Actor {
 		this.coordinate = coordinate;
 	}
 
-	@Valid
-	@NotNull
-	public double getTotalFeeAmount() {
-		return this.totalFeeAmount;
-	}
-
-	public void setTotalFeeAmount(final double totalFeeAmount) {
-		this.totalFeeAmount = totalFeeAmount;
-	}
-	
 
 	//Relationships
-	private Collection<Chirp>	chirpReceives;
-	private Collection<Chirp>	chirpWrites;
-	private Collection<Taste>	givenTastes;
-	private Template			template;
+	private Collection<Chirp>		chirpReceives;
+	private Collection<Chirp>		chirpWrites;
+	private Collection<Taste>		givenTastes;
+	private Template				template;
+	private Collection<Registers>	registers;
 
+
+	@Valid
+	@NotNull
+	@OneToMany(mappedBy = "chorbi")
+	public Collection<Registers> getRegisters() {
+		return this.registers;
+	}
+
+	public void setRegisters(final Collection<Registers> registers) {
+		this.registers = registers;
+	}
 
 	@OneToMany(mappedBy = "recipient")
 	public Collection<Chirp> getChirpReceives() {
