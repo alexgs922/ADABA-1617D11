@@ -36,7 +36,7 @@
 	
 	<security:authorize access="isAuthenticated()">
 		<display:column>
-			<a href="chorbi/listsRegisteredFrom.do?eventId=${row.id}"> <spring:message
+			<a href="event/listsRegisteredFrom.do?eventId=${row.id}"> <spring:message
 					code="event.chorbies.past" />
 			</a>
 
@@ -66,7 +66,7 @@
 	
 	<security:authorize access="isAuthenticated()">
 		<display:column>
-			<a href="chorbi/listsRegisteredFrom.do?eventId=${row.id}"> <spring:message
+			<a href="event/listsRegisteredFrom.do?eventId=${row.id}"> <spring:message
 					code="event.chorbies" />
 			</a>
 
@@ -96,7 +96,7 @@
 	
 	<security:authorize access="isAuthenticated()">
 		<display:column>
-			<a href="chorbi/listsRegisteredFrom.do?eventId=${row.id}"> <spring:message
+			<a href="event/listsRegisteredFrom.do?eventId=${row.id}"> <spring:message
 					code="event.chorbies" />
 			</a>
 

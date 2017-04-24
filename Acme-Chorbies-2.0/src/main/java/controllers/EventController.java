@@ -11,9 +11,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import services.EventService;
+import domain.Chorbi;
 import domain.Event;
 
 @Controller
@@ -68,6 +70,23 @@ public class EventController extends AbstractController {
 		result.addObject("current", new Date());
 		result.addObject("tohighlight", aux);
 		result.addObject("togray", toGray);
+
+		return result;
+
+	}
+
+	//List chorbies registered in this event
+	@RequestMapping(value = "/listsRegisteredFrom", method = RequestMethod.GET)
+	public ModelAndView listsRegisteredFrom(@RequestParam final int eventId) {
+		ModelAndView result;
+		Collection<Chorbi> chorbies;
+		Event event;
+		event = this.eventService.findOne(eventId);
+		chorbies = event.getRegistered();
+
+		result = new ModelAndView("chorbi/list");
+		result.addObject("chorbies", chorbies);
+		result.addObject("requestURI", "event/listsRegisteredFrom.do?chorbiId=" + eventId);
 
 		return result;
 
