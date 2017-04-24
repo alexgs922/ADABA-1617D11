@@ -51,6 +51,25 @@
 		</display:column>
 	</security:authorize>
 	
+	<security:authorize access="hasRole('MANAGER')">
+		<display:column>
+		
+		<spring:message code="event.notEdit" var="notEdit" />
+		<p class="text-muted"><jstl:out value="${notEdit}"></jstl:out></p>
+			
+
+		</display:column>
+	</security:authorize>
+	
+	<security:authorize access="hasRole('MANAGER')">
+		<display:column>
+			
+			<spring:message code="event.notDelete" var="notDelete" />
+			<p class="text-muted"><jstl:out value="${notDelete}"></jstl:out></p>
+
+		</display:column>
+	</security:authorize>
+	
 	
 	</jstl:when>
 	
@@ -90,7 +109,31 @@
 		</display:column>
 	</security:authorize>
 	
+	
+	
+	<security:authorize access="hasRole('MANAGER')">
+		<display:column>
+		
+			<jstl:if test="${principal.events.contains(row)}">
+			<a href="event/manager/edit.do?eventId=${row.id}"><spring:message
+					code="event.edit" />
+			</a>
+			</jstl:if>
 
+		</display:column>
+	</security:authorize>
+	
+	<security:authorize access="hasRole('MANAGER')">
+		<display:column>
+			<jstl:if test="${principal.events.contains(row)}">
+			<a href="event/manager/delete.do?eventId=${row.id}"><spring:message
+					code="event.delete" />
+			</a>
+			</jstl:if>
+
+		</display:column>
+	</security:authorize>
+	
 	</jstl:when>
 	
 	<jstl:when test="${!togray.contains(row) and !tohighlight.contains(row)}">
@@ -125,6 +168,30 @@
 		<display:column>
 			<a href="manager/display.do?managerId=${row.manager.id}"> <jstl:out value="${row.manager.name}"></jstl:out>
 			</a>
+
+		</display:column>
+	</security:authorize>
+	
+
+	<security:authorize access="hasRole('MANAGER')">
+		<display:column>
+		
+			<jstl:if test="${principal.events.contains(row)}">
+			<a href="event/manager/edit.do?eventId=${row.id}"><spring:message
+					code="event.edit" />
+			</a>
+			</jstl:if>
+
+		</display:column>
+	</security:authorize>
+	
+	<security:authorize access="hasRole('MANAGER')">
+		<display:column>
+			<jstl:if test="${principal.events.contains(row)}">
+			<a href="event/manager/delete.do?eventId=${row.id}"><spring:message
+					code="event.delete" />
+			</a>
+			</jstl:if>
 
 		</display:column>
 	</security:authorize>
