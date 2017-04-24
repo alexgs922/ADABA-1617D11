@@ -65,7 +65,10 @@
 		<%-- <jstl:out value="${tasteAuxdef.moment}" /> --%>
 	</display:column>
 
-
+	<spring:message code="taste.stars" var="tasteStars" />
+	<display:column title="${tasteStars}" sortable="false">
+		<jstl:out value="${tasteAuxdef.stars}" />
+	</display:column>
 
 
 	<security:authorize access="isAuthenticated()">

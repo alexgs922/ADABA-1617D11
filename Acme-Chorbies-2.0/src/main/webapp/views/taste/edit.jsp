@@ -16,6 +16,10 @@
 	<acme:textbox code="taste.comment" path="comment" />
 	
 	<br>
+	
+	<acme:number min="0" max="3" step="1" code="taste.stars" path="stars"/>
+	
+	<br>
 
 	&nbsp; <acme:submit name="save" code="taste.save" /> &nbsp;&nbsp;
 
