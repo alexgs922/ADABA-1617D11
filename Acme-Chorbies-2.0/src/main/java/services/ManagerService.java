@@ -2,6 +2,7 @@
 package services;
 
 import java.util.Collection;
+import java.util.HashSet;
 
 import javax.transaction.Transactional;
 
@@ -12,10 +13,14 @@ import org.springframework.util.Assert;
 import org.springframework.validation.Validator;
 
 import repositories.ManagerRepository;
+import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
+import domain.Chorbi;
+import domain.Coordinate;
 import domain.Manager;
+import form.RegistrationFormManager;
 
 @Service
 @Transactional
@@ -47,7 +52,38 @@ public class ManagerService {
 	}
 
 	//TODO reconstruct de manager
+	public Manager reconstruct(RegistrationFormManager form){
+		Manager result;
+		UserAccount userAccount;
+		Authority authority;
+		Collection<Authority> authorities;
+		String pwdHash;
+		
+		result = this.create();
+		authorities = new HashSet<Authority>();
+		userAccount = new UserAccount();
+		
+		result.setName(form.getName());
+		result.setSurName(form.getSurName());
+		result.setPhone(form.getPhone());
+		result.setEmail(form.getEmail());
+		
+		result.setCompany(form.getCompany());
+		result.setVatNumber(form.getVatNumber());
+		
+		authority = new Authority();
+		authority.setAuthority(Authority.MANAGER);
+		authorities.add(authority);
+		pwdHash = this.encoder.encodePassword(form.getPassword(), null);
+		userAccount.setAuthorities(authorities);
+		userAccount.setPassword(pwdHash);
+		userAccount.setUsername(form.getUsername());
+		result.setUserAccount(userAccount);
 
+		return result;
+		
+	}
+		
 	public Manager findOne(final int managerId) {
 		Manager res;
 		final Actor principal = this.actorService.findByPrincipal();

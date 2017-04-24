@@ -31,6 +31,7 @@
 		<value>/views/template/tiles.xml</value>
 		<value>/views/chirp/tiles.xml</value>
 		<value>/views/banner/tiles.xml</value>
+		<value>/views/manager/tiles.xml</value>
 		<value>/views/configuration/tiles.xml</value>
 	</util:list>
 

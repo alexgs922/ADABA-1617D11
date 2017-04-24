@@ -58,7 +58,6 @@ public class Manager extends Actor {
 
 
 	@Valid
-	@NotNull
 	@OneToMany(mappedBy = "manager")
 	public Collection<Event> getEvents() {
 		return this.events;
