@@ -12,7 +12,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 
-<display:table pagesize="5" class="displaytag" name="events" requestURI="${requestURI}" id="row">
+<display:table pagesize="5" keepStatus="true" sort="list" class="displaytag" name="events" requestURI="${requestURI}" id="row">
 	
 	<jstl:choose>
 	<jstl:when test="${togray.contains(row)}">
@@ -33,6 +33,15 @@
 	
 	<spring:message code="event.numberSeatsOffered" var="eventnumberSeatsOffered" />
 	<display:column property="numberSeatsOffered" title="${eventnumberSeatsOffered}" sortable="true" class="text-muted"/>
+	
+	<security:authorize access="isAuthenticated()">
+		<display:column>
+			<a href="chorbi/listsRegisteredFrom.do?eventId=${row.id}"> <spring:message
+					code="event.chorbies.past" />
+			</a>
+
+		</display:column>
+	</security:authorize>
 	
 	</jstl:when>
 	
@@ -55,6 +64,15 @@
 	<spring:message code="event.numberSeatsOffered" var="eventnumberSeatsOffered" />
 	<display:column property="numberSeatsOffered" title="${eventnumberSeatsOffered}" sortable="true" class="text-bold"/>
 	
+	<security:authorize access="isAuthenticated()">
+		<display:column>
+			<a href="chorbi/listsRegisteredFrom.do?eventId=${row.id}"> <spring:message
+					code="event.chorbies" />
+			</a>
+
+		</display:column>
+	</security:authorize>
+	
 	</jstl:when>
 	
 	<jstl:when test="${!togray.contains(row) and !tohighlight.contains(row)}">
@@ -75,6 +93,15 @@
 	
 	<spring:message code="event.numberSeatsOffered" var="eventnumberSeatsOffered" />
 	<display:column property="numberSeatsOffered" title="${eventnumberSeatsOffered}" sortable="true" class="text-normal"/>
+	
+	<security:authorize access="isAuthenticated()">
+		<display:column>
+			<a href="chorbi/listsRegisteredFrom.do?eventId=${row.id}"> <spring:message
+					code="event.chorbies" />
+			</a>
+
+		</display:column>
+	</security:authorize>
 	
 	</jstl:when>
 	
