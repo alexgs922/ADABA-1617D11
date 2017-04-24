@@ -17,3 +17,15 @@
 	color: red;
 	font-weight: bolder;
 }
+
+.text-muted {
+    color: #777;
+}
+
+.text-bold {
+    font-weight:bold;
+}
+
+.text-normal{
+    font-weight:lighter;
+}

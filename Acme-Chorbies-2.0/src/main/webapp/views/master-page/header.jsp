@@ -79,6 +79,8 @@
 						code="master.page.login" /></a></li>
 			<li><a class="fNiv" href="chorbi/register.do"><spring:message
 						code="master.page.register" /></a></li>
+			<li><a class="fNiv" href="event/list.do"><spring:message
+						code="master.page.listEvents" /></a></li>
 
 
 		</security:authorize>
@@ -87,6 +89,8 @@
 
 			<li><a class="fNiv" href="chorbi/list.do"><spring:message
 						code="master.page.know.people" /></a></li>
+			<li><a class="fNiv" href="event/list.do"><spring:message
+						code="master.page.listEvents" /></a></li>
 
 
 

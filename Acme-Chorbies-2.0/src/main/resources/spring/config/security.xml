@@ -93,6 +93,9 @@
 			access="hasRole('CHORBI')" />
 		<security:intercept-url pattern="/chirp/reply.do"
 			access="hasRole('CHORBI')" />
+			
+		<!-- EVENTS -->
+		<security:intercept-url pattern="/event/list.do" access="permitAll" /> 
 
 
 
