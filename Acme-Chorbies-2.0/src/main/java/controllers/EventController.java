@@ -208,7 +208,7 @@ public class EventController extends AbstractController {
 				Assert.notNull(m.getCreditCard());
 				Assert.isTrue(this.creditCardService.validateDate(m.getCreditCard().getExpirationMonth(), m.getCreditCard().getExpirationYear()));
 
-				this.eventService.save(event);
+				this.eventService.save2(event);
 				result = new ModelAndView("redirect:/event/myEvents.do");
 
 			} catch (final IllegalArgumentException ccerror) {

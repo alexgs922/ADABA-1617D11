@@ -126,12 +126,18 @@ public class EventService {
 		return result;
 	}
 
-	public Event save(Event event) {
+	public Event save(final Event event) {
+		return this.eventRepository.save(event);
+	}
+
+	public Event save2(Event event) {
 		Assert.notNull(event);
 		final Date current = new Date();
 		final Manager m = this.managerService.findByPrincipal();
 		Assert.isTrue(event.getMoment().after(current));
-		m.setTotalChargedFee(m.getTotalChargedFee() + 1);
+		final double feeCurrent = this.configurationService.findConfiguration().getManagersFee();
+		event.setTotalChargedFee(feeCurrent);
+		m.setTotalChargedFee(m.getTotalChargedFee() + feeCurrent);
 		event = this.eventRepository.save(event);
 		this.managerService.save(m);
 		return event;
@@ -180,7 +186,6 @@ public class EventService {
 
 			result.setManager(manager);
 			result.setRegistered(registered);
-			result.setTotalChargedFee(this.configurationService.findConfiguration().getManagersFee());
 
 			this.validator.validate(event, bindingResult);
 
