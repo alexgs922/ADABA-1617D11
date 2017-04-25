@@ -127,8 +127,6 @@ public class Chorbi extends Actor {
 
 
 	//Relationships
-	private Collection<Chirp>	chirpReceives;
-	private Collection<Chirp>	chirpWrites;
 	private Collection<Taste>	givenTastes;
 	private Template			template;
 	private Collection<Event>	events;
@@ -143,24 +141,6 @@ public class Chorbi extends Actor {
 
 	public void setEvents(final Collection<Event> events) {
 		this.events = events;
-	}
-
-	@OneToMany(mappedBy = "recipient")
-	public Collection<Chirp> getChirpReceives() {
-		return this.chirpReceives;
-	}
-
-	public void setChirpReceives(final Collection<Chirp> chirpReceives) {
-		this.chirpReceives = chirpReceives;
-	}
-
-	@OneToMany(mappedBy = "sender")
-	public Collection<Chirp> getChirpWrites() {
-		return this.chirpWrites;
-	}
-
-	public void setChirpWrites(final Collection<Chirp> chirpWrites) {
-		this.chirpWrites = chirpWrites;
 	}
 
 	@OneToMany

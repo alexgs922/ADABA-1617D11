@@ -12,8 +12,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
 import repositories.ChirpRepository;
+import domain.Actor;
 import domain.Chirp;
 import domain.Chorbi;
+import domain.Event;
 
 @Service
 @Transactional
@@ -31,6 +33,12 @@ public class ChirpService {
 
 	@Autowired
 	private TasteService	tasteService;
+
+	@Autowired
+	private EventService	eventService;
+
+	@Autowired
+	private ActorService	actorService;
 
 	@Autowired
 	private Validator		validator;
@@ -55,7 +63,6 @@ public class ChirpService {
 
 	public Chirp create(final Chorbi c) {
 		Chirp res;
-		final Chorbi c1 = this.chorbiService.findByPrincipal();
 
 		res = new Chirp();
 
@@ -69,6 +76,28 @@ public class ChirpService {
 
 		Chirp result;
 		final Chorbi t = this.chorbiService.findByPrincipal();
+
+		result = chirp;
+		final String text = this.tasteService.checkContactInfo(chirp.getText());
+		final String subject = this.tasteService.checkContactInfo(chirp.getSubject());
+
+		result.setRecipient(chirp.getRecipient());
+		result.setSender(t);
+		result.setText(text);
+		result.setSubject(subject);
+		result.setAttachments(chirp.getAttachments());
+		result.setMoment(new Date(System.currentTimeMillis() - 1000));
+		result.setCopy(chirp.isCopy());
+		this.validator.validate(result, binding);
+
+		return result;
+
+	}
+
+	public Chirp reconstruct2(final Chirp chirp, final BindingResult binding) {
+
+		Chirp result;
+		final Actor t = this.actorService.findByPrincipal();
 
 		result = chirp;
 		final String text = this.tasteService.checkContactInfo(chirp.getText());
@@ -143,7 +172,7 @@ public class ChirpService {
 		chirp2.setAttachments(m.getAttachments());
 		chirp2.setRecipient(m.getRecipient());
 		chirp2.setSender(m.getSender());
-		chirp1.setCopy(true);
+		chirp2.setCopy(true);
 
 		final Collection<Chirp> cr = m.getRecipient().getChirpReceives();
 		cr.add(chirp1);
@@ -158,6 +187,46 @@ public class ChirpService {
 
 	}
 
+	public void saveBulk(final Chirp m, final Event v) {
+		Assert.notNull(m);
+
+		final Actor t = this.actorService.findByPrincipal();
+
+		final Chirp chirp1 = new Chirp();
+		chirp1.setSubject(m.getSubject());
+		chirp1.setText(m.getText());
+		chirp1.setMoment(m.getMoment());
+		chirp1.setAttachments(m.getAttachments());
+		chirp1.setRecipient(m.getRecipient());
+		chirp1.setSender(m.getSender());
+		chirp1.setCopy(true);
+
+		final Collection<Chirp> cs = m.getSender().getChirpWrites();
+		cs.add(chirp1);
+
+		this.chirpRepository.save(chirp1);
+
+		final Collection<Chorbi> cc = v.getRegistered();
+		for (final Chorbi c : cc) {
+
+			final Chirp chirp2 = new Chirp();
+			chirp2.setSubject(m.getSubject());
+			chirp2.setText(m.getText());
+			chirp2.setMoment(m.getMoment());
+			chirp2.setAttachments(m.getAttachments());
+			chirp2.setRecipient(c);
+			chirp2.setSender(m.getSender());
+			chirp2.setCopy(false);
+
+			final Collection<Chirp> cr = c.getChirpReceives();
+			cr.add(chirp2);
+			this.chirpRepository.save(chirp2);
+
+		}
+
+		Assert.isTrue(t.getId() == m.getSender().getId());
+
+	}
 	public void deleteReceived(final Chirp m) {
 		final Chorbi principal = this.chorbiService.findByPrincipal();
 		Assert.notNull(m);

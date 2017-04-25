@@ -22,8 +22,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import services.ChirpService;
 import services.ChorbiService;
+import services.EventService;
 import domain.Chirp;
 import domain.Chorbi;
+import domain.Event;
 
 @Controller
 @RequestMapping("/chirp")
@@ -34,6 +36,9 @@ public class ChirpController extends AbstractController {
 
 	@Autowired
 	private ChorbiService	chorbiService;
+
+	@Autowired
+	private EventService	eventService;
 
 
 	// Constructors -----------------------------------------------------------
@@ -96,6 +101,19 @@ public class ChirpController extends AbstractController {
 		return result;
 	}
 
+	@RequestMapping(value = "/chirp/bulkChirp", method = RequestMethod.GET)
+	public ModelAndView createBulk(@RequestParam final int eventId) {
+		ModelAndView result;
+		Chirp chirp;
+
+		final Event c = this.eventService.findOne(eventId);
+		chirp = this.chirpService.create();
+
+		result = new ModelAndView("chirp/bulkChirp");
+
+		return result;
+	}
+
 	@RequestMapping(value = "/create", method = RequestMethod.POST, params = "save")
 	public ModelAndView save(Chirp chirpToEdit, final BindingResult binding) {
 
@@ -132,6 +150,37 @@ public class ChirpController extends AbstractController {
 			try {
 
 				this.chirpService.save(chirpToEdit);
+
+			} catch (final Throwable th) {
+				result = this.createEditModelAndView2(chirpToEdit, "chirp.commit.error");
+
+				result.addObject("chirp", chirpToEdit);
+
+				return result;
+			}
+
+			result = new ModelAndView("redirect:/chirp/listReceivedMessages.do");
+
+		}
+
+		return result;
+	}
+
+	@RequestMapping(value = "/chirp/bulkChirp", method = RequestMethod.POST, params = "save")
+	public ModelAndView saveBulk(Chirp chirpToEdit, final BindingResult binding, @RequestParam final int eventId) {
+
+		ModelAndView result;
+
+		chirpToEdit = this.chirpService.reconstruct2(chirpToEdit, binding);
+		if (binding.hasErrors()) {
+			result = this.createEditModelAndView2(chirpToEdit);
+
+			result.addObject("chirp", chirpToEdit);
+
+		} else {
+			try {
+				final Event event = this.eventService.findOne(eventId);
+				this.chirpService.saveBulk(chirpToEdit, event);
 
 			} catch (final Throwable th) {
 				result = this.createEditModelAndView2(chirpToEdit, "chirp.commit.error");

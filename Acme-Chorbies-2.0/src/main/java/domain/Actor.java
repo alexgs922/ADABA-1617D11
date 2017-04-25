@@ -1,10 +1,13 @@
 
 package domain;
 
+import java.util.Collection;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -77,7 +80,8 @@ public class Actor extends DomainEntity {
 
 	//Relationships
 
-	private CreditCard			creditCard;
+	private CreditCard	creditCard;
+
 
 	@OneToOne(optional = true)
 	public CreditCard getCreditCard() {
@@ -88,8 +92,7 @@ public class Actor extends DomainEntity {
 		this.creditCard = creditCard;
 	}
 
-	
-	
+
 	private UserAccount	userAccount;
 
 
@@ -102,6 +105,29 @@ public class Actor extends DomainEntity {
 
 	public void setUserAccount(final UserAccount userAccount) {
 		this.userAccount = userAccount;
+	}
+
+
+	private Collection<Chirp>	chirpReceives;
+	private Collection<Chirp>	chirpWrites;
+
+
+	@OneToMany(mappedBy = "recipient")
+	public Collection<Chirp> getChirpReceives() {
+		return this.chirpReceives;
+	}
+
+	public void setChirpReceives(final Collection<Chirp> chirpReceives) {
+		this.chirpReceives = chirpReceives;
+	}
+
+	@OneToMany(mappedBy = "sender")
+	public Collection<Chirp> getChirpWrites() {
+		return this.chirpWrites;
+	}
+
+	public void setChirpWrites(final Collection<Chirp> chirpWrites) {
+		this.chirpWrites = chirpWrites;
 	}
 
 }
