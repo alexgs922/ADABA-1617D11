@@ -9,6 +9,8 @@ import java.util.GregorianCalendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import services.ActorService;
 import services.ChorbiService;
+import services.CreditCardService;
 import services.EventService;
 import services.ManagerService;
 import domain.Actor;
@@ -37,16 +40,19 @@ public class EventController extends AbstractController {
 	////Services -----------------------------------------------------------
 
 	@Autowired
-	EventService	eventService;
+	private EventService		eventService;
 
 	@Autowired
-	ManagerService	managerService;
+	private ManagerService		managerService;
 
 	@Autowired
-	ActorService	actorService;
+	private ActorService		actorService;
 
 	@Autowired
-	ChorbiService	chorbiService;
+	private ChorbiService		chorbiService;
+
+	@Autowired
+	private CreditCardService	creditCardService;
 
 
 	//Browse a listing that includes every event that was registered in the system.
@@ -156,6 +162,64 @@ public class EventController extends AbstractController {
 
 	}
 
+	//Create a new Event
+
+	@RequestMapping(value = "/manager/create", method = RequestMethod.GET)
+	public ModelAndView create() {
+		ModelAndView result;
+		final Event event;
+
+		event = new Event();
+
+		result = new ModelAndView("event/edit");
+		result.addObject("event", event);
+		result.addObject("requestURI", "event/manager/create.do");
+
+		return result;
+
+	}
+
+	@RequestMapping(value = "/manager/create", method = RequestMethod.POST, params = "save")
+	public ModelAndView save(Event event, final BindingResult bindingResult) {
+		ModelAndView result;
+
+		final Manager m = this.managerService.findByPrincipal();
+
+		if (event.getMoment() != null)
+			try {
+				final Date current = new Date();
+				Assert.isTrue(event.getMoment().after(current));
+			} catch (final IllegalArgumentException momenterrors) {
+				return result = this.createEditModelAndView(event, "event.dates.error");
+			}
+
+		event = this.eventService.reconstruct(event, bindingResult);
+
+		if (bindingResult.hasErrors())
+
+			if (bindingResult.getGlobalError() != null)
+				result = this.createEditModelAndView(event, bindingResult.getGlobalError().getCode());
+			else
+				result = this.createEditModelAndView(event);
+
+		else
+			try {
+
+				Assert.notNull(m.getCreditCard());
+				Assert.isTrue(this.creditCardService.validateDate(m.getCreditCard().getExpirationMonth(), m.getCreditCard().getExpirationYear()));
+
+				this.eventService.save(event);
+				result = new ModelAndView("redirect:/event/myEvents.do");
+
+			} catch (final IllegalArgumentException ccerror) {
+				result = this.createEditModelAndView(event, "event.valid.creditCard");
+			} catch (final Throwable oops) {
+				result = this.createEditModelAndView(event, "event.commit.error");
+			}
+
+		return result;
+
+	}
 	//Register to an event
 
 	@RequestMapping(value = "/registerEvent", method = RequestMethod.GET)
@@ -174,7 +238,7 @@ public class EventController extends AbstractController {
 		return result;
 	}
 
-	//Register to an event
+	//unregister from an event
 
 	@RequestMapping(value = "/unregisterEvent", method = RequestMethod.GET)
 	public ModelAndView unregisterEvent(@RequestParam final int eventId) {
@@ -188,6 +252,27 @@ public class EventController extends AbstractController {
 		} catch (final Exception e2) {
 		}
 		result = this.list();
+
+		return result;
+	}
+
+	//-------------------------------------------------------------------------------------------------------------------------------------
+
+	protected ModelAndView createEditModelAndView(final Event event, final String message) {
+		ModelAndView result;
+
+		result = new ModelAndView("event/edit");
+		result.addObject("event", event);
+		result.addObject("requestURI", "event/manager/create.do");
+		result.addObject("message", message);
+
+		return result;
+	}
+
+	protected ModelAndView createEditModelAndView(final Event event) {
+		ModelAndView result;
+
+		result = this.createEditModelAndView(event, null);
 
 		return result;
 	}

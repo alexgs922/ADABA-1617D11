@@ -129,10 +129,12 @@ public class CreditCardService {
 		final Integer monthActual = cal.get(Calendar.MONTH) + 1;
 
 		//Primero comprobamos el año que nos pase sea mayor que el año actual
-		if (year >= yearActual)
+		if (year == yearActual) {
 			//Comprobamos ahora que el mes que nos pase sea mayor que el mes actual
 			if (month > monthActual)
 				res = true;
+		} else if (year > yearActual)
+			res = true;
 
 		return res;
 	}

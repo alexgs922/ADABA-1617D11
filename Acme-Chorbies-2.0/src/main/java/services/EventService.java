@@ -4,6 +4,7 @@ package services;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -11,10 +12,13 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import repositories.EventRepository;
 import domain.Chorbi;
 import domain.Event;
+import domain.Manager;
 
 @Service
 @Transactional
@@ -23,15 +27,20 @@ public class EventService {
 	// Managed Repository -------------------------------------------
 
 	@Autowired
-	private EventRepository	eventRepository;
-
+	private EventRepository			eventRepository;
 
 	// Supporting services ----------------------------------------------------
-	
-	@Autowired
-	private ChorbiService chorbiService;
 
-	
+	@Autowired
+	private ChorbiService			chorbiService;
+
+	@Autowired
+	private ManagerService			managerService;
+
+	@Autowired
+	private ConfigurationService	configurationService;
+
+
 	// Constructors -----------------------------------------------------------
 
 	public EventService() {
@@ -49,64 +58,60 @@ public class EventService {
 
 	}
 
-	public Event registerEvent(Chorbi chorbi, Event event){
+	public Event registerEvent(final Chorbi chorbi, final Event event) {
 		Assert.notNull(chorbi);
 		Assert.notNull(event);
-		Collection<Chorbi>coll = event.getRegistered();
-		
-		int seats = event.getNumberSeatsOffered();
-		int actualSeats = coll.size();
-		Assert.isTrue(seats>actualSeats);
-		
+		final Collection<Chorbi> coll = event.getRegistered();
+
+		final int seats = event.getNumberSeatsOffered();
+		final int actualSeats = coll.size();
+		Assert.isTrue(seats > actualSeats);
+
 		//Añadir chorbi al listado del evento
-			List<Chorbi> list = new ArrayList<Chorbi>(coll);
-			//No debe de haber sido registrado este chorbi.
-			Assert.isTrue(!list.contains(chorbi));
-			list.add(chorbi);
-			event.setRegistered(list);
-		
-			//Añadir el evento al chorbi
-			Collection<Event>events = chorbi.getEvents();
-			List<Event>listEvents = new ArrayList<Event>(events);
-			listEvents.add(event);
-			chorbi.setEvents(listEvents);			
-			
-			//Nada de fee...
-			
-		
+		final List<Chorbi> list = new ArrayList<Chorbi>(coll);
+		//No debe de haber sido registrado este chorbi.
+		Assert.isTrue(!list.contains(chorbi));
+		list.add(chorbi);
+		event.setRegistered(list);
+
+		//Añadir el evento al chorbi
+		final Collection<Event> events = chorbi.getEvents();
+		final List<Event> listEvents = new ArrayList<Event>(events);
+		listEvents.add(event);
+		chorbi.setEvents(listEvents);
+
+		//Nada de fee...
+
 		this.save(event);
 		this.chorbiService.save(chorbi);
 		return event;
-		
+
 	}
 
-	
-	public Event unregisterEvent(Chorbi chorbi, Event event){
+	public Event unregisterEvent(final Chorbi chorbi, final Event event) {
 		Assert.notNull(chorbi);
 		Assert.notNull(event);
-		Collection<Chorbi>coll = event.getRegistered();
-		List<Chorbi>list = new ArrayList<Chorbi>(coll);
-		
+		final Collection<Chorbi> coll = event.getRegistered();
+		final List<Chorbi> list = new ArrayList<Chorbi>(coll);
+
 		Assert.isTrue(list.contains(chorbi));
-		int index = list.indexOf(chorbi);
+		final int index = list.indexOf(chorbi);
 		list.remove(index);
 		event.setRegistered(list);
-		
-		
-		Collection<Event>collEvent = chorbi.getEvents();
-		List<Event>listEvent = new ArrayList<Event>(collEvent);
+
+		final Collection<Event> collEvent = chorbi.getEvents();
+		final List<Event> listEvent = new ArrayList<Event>(collEvent);
 		Assert.isTrue(listEvent.contains(event));
-		int index2 = listEvent.indexOf(event);
+		final int index2 = listEvent.indexOf(event);
 		listEvent.remove(index2);
 		chorbi.setEvents(listEvent);
-		
+
 		this.save(event);
 		this.chorbiService.save(chorbi);
 		return event;
-		
+
 	}
-	
-	
+
 	public Collection<Event> findAll() {
 		Collection<Event> result;
 		result = this.eventRepository.findAll();
@@ -121,9 +126,16 @@ public class EventService {
 		return result;
 	}
 
-	public Event save(final Event event) {
+	public Event save(Event event) {
 		Assert.notNull(event);
-		return this.eventRepository.save(event);
+		final Date current = new Date();
+		final Manager m = this.managerService.findByPrincipal();
+		Assert.isTrue(event.getMoment().after(current));
+		m.setTotalChargedFee(m.getTotalChargedFee() + 1);
+		event = this.eventRepository.save(event);
+		this.managerService.save(m);
+		return event;
+
 	}
 
 	public void delete(final Event event) {
@@ -143,6 +155,77 @@ public class EventService {
 		final long difms = fecha.getTimeInMillis() - current.getTimeInMillis();
 		final long difd = difms / (1000 * 60 * 60 * 24);
 		return difd;
+	}
+
+
+	@Autowired
+	private Validator	validator;
+
+
+	public Event reconstruct(final Event event, final BindingResult bindingResult) {
+		Event result;
+
+		if (event.getId() == 0) {
+			result = event;
+
+			if (!(result.getTitle() == "") || !(result.getTitle() == null))
+				result.setTitle(this.checkContactInfo(result.getTitle()));
+
+			if (!(result.getDescription() == "") || !(result.getDescription() == null))
+				result.setDescription(this.checkContactInfo(result.getDescription()));
+
+			final Manager manager = this.managerService.findByPrincipal();
+			Collection<Chorbi> registered;
+			registered = new ArrayList<Chorbi>();
+
+			result.setManager(manager);
+			result.setRegistered(registered);
+			result.setTotalChargedFee(this.configurationService.findConfiguration().getManagersFee());
+
+			this.validator.validate(event, bindingResult);
+
+		} else
+			result = null;
+
+		return result;
+
+	}
+	public String checkContactInfo(final String cadena) {
+
+		String res = "";
+
+		if (cadena.contains("@")) {
+			final String[] trozos = cadena.split(" ");
+			for (String t : trozos)
+				if (t.contains("@")) {
+					t = "***@***";
+					res = res + " " + t;
+				} else
+					res = res + " " + t;
+		} else
+			res = cadena;
+
+		final char[] res2 = cadena.toCharArray();
+		int contador = 0;
+		for (int i = 0; i < res.length(); i++)
+			if (Character.isDigit(res2[i]))
+				contador = contador + 1;
+
+		if (contador >= 6) {
+			String copia = "";
+			final char c_aux = '*';
+			for (int i = 0; i < res.length(); i++)
+				if (Character.isDigit(res.charAt(i)))
+					copia = copia + c_aux;
+				else
+					copia = copia + res.charAt(i);
+
+			res = copia;
+
+		}
+
+		return res;
+
 	}
 
 }

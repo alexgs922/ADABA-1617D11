@@ -542,6 +542,7 @@
 			</list>
 		</property>
 		<property name="creditCard" ref="creditCardManager1" />
+		<property name="totalChargedFee" value="4.00" />
 
 	</bean>
 
@@ -561,6 +562,7 @@
 			</list>
 		</property>
 		<property name="creditCard" ref="creditCardManager2" />
+		<property name="totalChargedFee" value="2.00" />
 
 	</bean>
 
@@ -580,6 +582,7 @@
 
 			</list>
 		</property>
+		<property name="totalChargedFee" value="3.00" />
 
 	</bean>
 
