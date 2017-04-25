@@ -26,6 +26,10 @@
 		<br>
 		<acme:number min="0" max="60" step="1" code="configuration.second" path="second"/>
 		<br>
+		<acme:textbox code="configuration.chorbiesFee" path="chorbiesFee"/>
+		<br>
+		<acme:textbox code="configuration.managersFee" path="managersFee"/>
+		<br>
 	</fieldset>
 
 	<acme:submit name="save" code="configuration.save" />

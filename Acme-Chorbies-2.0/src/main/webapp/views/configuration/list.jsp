@@ -22,6 +22,12 @@
 	
 	<spring:message code="configuration.second" var="configurationSecond" />
 	<display:column property="second" title="${configurationSecond}" sortable="false" />
+	
+	<spring:message code="configuration.chorbiesFee" var="configurationChorbiesFee" />
+	<display:column property="chorbiesFee" title="${configurationChorbiesFee}" sortable="false" />
+	
+	<spring:message code="configuration.managersFee" var="configurationManagersFee" />
+	<display:column property="managersFee" title="${configurationManagersFee}" sortable="false" />
 
 	<security:authorize access="hasRole('ADMIN')">
 		<display:column>
