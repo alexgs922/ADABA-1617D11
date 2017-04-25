@@ -136,9 +136,11 @@ public class EventService {
 	public void flush() {
 		this.eventRepository.flush();
 	}
+
 	public long difDiasEntre2fechas(final Calendar current, final Calendar fecha) {
 		final long difms = fecha.getTimeInMillis() - current.getTimeInMillis();
 		final long difd = difms / (1000 * 60 * 60 * 24);
 		return difd;
 	}
+
 }

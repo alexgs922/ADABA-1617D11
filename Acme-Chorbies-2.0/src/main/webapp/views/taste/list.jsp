@@ -49,6 +49,9 @@
 		
 	</display:column>
 	
+	<spring:message code="taste.stars" var="tasteStars" />
+	<display:column title="${tasteStars}" sortable="false" ><jstl:out value="${row.stars}"/></display:column>
+	
 	
 	<security:authorize access="isAuthenticated()">
 		<display:column>

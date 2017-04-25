@@ -39,6 +39,20 @@
 				</ul></li>
 		</security:authorize>
 
+		<security:authorize access="hasRole('MANAGER')">
+
+			<li><a class="fNiv"><spring:message
+						code="master.page.myevents" /></a>
+				<ul>
+					<li class="arrow"></li>
+					<li><a href="event/myEvents.do"><spring:message
+								code="master.page.list.myevents" /></a></li>
+
+				</ul></li>
+
+		</security:authorize>
+
+
 		<security:authorize access="hasRole('CHORBI')">
 			<li><a class="fNiv"><spring:message
 						code="master.page.template" /></a>
@@ -79,6 +93,8 @@
 						code="master.page.login" /></a></li>
 			<li><a class="fNiv" href="chorbi/register.do"><spring:message
 						code="master.page.register" /></a></li>
+			<li><a class="fNiv" href="event/list.do"><spring:message
+						code="master.page.listEvents" /></a></li>
 
 
 		</security:authorize>
@@ -87,6 +103,8 @@
 
 			<li><a class="fNiv" href="chorbi/list.do"><spring:message
 						code="master.page.know.people" /></a></li>
+			<li><a class="fNiv" href="event/list.do"><spring:message
+						code="master.page.listEvents" /></a></li>
 
 
 

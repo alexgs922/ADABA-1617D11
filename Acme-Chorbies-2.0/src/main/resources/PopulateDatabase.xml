@@ -195,6 +195,24 @@
 		<property name="expirationYear" value="2015" />
 		<property name="cvvCode" value="155" />
 	</bean>
+	
+	<bean id="creditCardManager1" class="domain.CreditCard">
+		<property name="holderName" value="Manager1" />
+		<property name="brandName" value="DISCOVER" />
+		<property name="number" value="6849892547748030" />
+		<property name="expirationMonth" value="01" />
+		<property name="expirationYear" value="2018" />
+		<property name="cvvCode" value="157" />
+	</bean>
+	
+	<bean id="creditCardManager2" class="domain.CreditCard">
+		<property name="holderName" value="Manager2" />
+		<property name="brandName" value="MASTERCARD" />
+		<property name="number" value="5555555555554444" />
+		<property name="expirationMonth" value="01" />
+		<property name="expirationYear" value="2014" />
+		<property name="cvvCode" value="121" />
+	</bean>
 
 	<!-- COORDINATES -->
 
@@ -503,6 +521,8 @@
 
 
 	<!-- MANAGERS -->
+	
+	<!-- Manager 1 valid credit card, Manager 2 invalid credit card, Manager 3 no credit card -->
 
 	<bean id="manager1" class="domain.Manager">
 		<property name="userAccount" ref="userAccount8" />
@@ -521,6 +541,7 @@
 
 			</list>
 		</property>
+		<property name="creditCard" ref="creditCardManager1" />
 
 	</bean>
 
@@ -539,6 +560,7 @@
 
 			</list>
 		</property>
+		<property name="creditCard" ref="creditCardManager2" />
 
 	</bean>
 
