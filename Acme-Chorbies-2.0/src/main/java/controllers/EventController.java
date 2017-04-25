@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import services.ActorService;
+import services.ChorbiService;
 import services.EventService;
 import services.ManagerService;
 import domain.Chorbi;
@@ -43,6 +44,9 @@ public class EventController extends AbstractController {
 	@Autowired
 	ActorService	actorService;
 
+
+	@Autowired
+	ChorbiService chorbiService;
 
 	//Browse a listing that includes every event that was registered in the system.
 	//Past events must be greyed out; events that are going to be organised in less than one month and have seats available must also be somewhat highlighted; 
@@ -139,4 +143,41 @@ public class EventController extends AbstractController {
 
 	}
 
+	//Register to an event
+	
+		@RequestMapping(value = "/registerEvent", method = RequestMethod.GET)
+		public ModelAndView registerEvent(@RequestParam final int eventId) {
+			ModelAndView result;
+			Chorbi chorbi;
+			Event e;
+			e = this.eventService.findOne(eventId);
+			chorbi = this.chorbiService.findByPrincipal();
+			try {
+				this.eventService.registerEvent(chorbi,e);
+				} catch (Exception e2) {
+				}			
+			
+			result = list();
+			return result;
+		}
+
+		//Register to an event
+		
+			@RequestMapping(value = "/unregisterEvent", method = RequestMethod.GET)
+			public ModelAndView unregisterEvent(@RequestParam final int eventId) {
+				ModelAndView result;
+				Chorbi chorbi;
+				Event e;
+				e = this.eventService.findOne(eventId);
+				chorbi = this.chorbiService.findByPrincipal();
+				try {
+					this.eventService.unregisterEvent(chorbi,e);
+					} catch (Exception e2) {
+					}			
+				result = list();
+
+				return result;
+			}
+	
+	
 }

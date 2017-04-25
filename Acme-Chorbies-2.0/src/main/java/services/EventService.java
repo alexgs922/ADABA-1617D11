@@ -60,6 +60,8 @@ public class EventService {
 		
 		//Añadir chorbi al listado del evento
 			List<Chorbi> list = new ArrayList<Chorbi>(coll);
+			//No debe de haber sido registrado este chorbi.
+			Assert.isTrue(!list.contains(chorbi));
 			list.add(chorbi);
 			event.setRegistered(list);
 		

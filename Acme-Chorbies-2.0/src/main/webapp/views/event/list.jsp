@@ -49,6 +49,7 @@
 			</a>
 
 		</display:column>
+
 	</security:authorize>
 	
 	
@@ -78,16 +79,23 @@
 			<a href="event/listsRegisteredFrom.do?eventId=${row.id}"> <spring:message
 					code="event.chorbies" />
 			</a>
+		</display:column>
+
+	</security:authorize>
+			<display:column>
+			<a href="event/registerEvent.do?eventId=${row.id}"> 		
+			<spring:message code="event.Register" />	</a>
 
 		</display:column>
-	</security:authorize>
-	
 	<security:authorize access="isAuthenticated()">
 		<display:column>
 			<a href="manager/display.do?managerId=${row.manager.id}"> <jstl:out value="${row.manager.name}"></jstl:out>
 			</a>
 
 		</display:column>
+
+
+
 	</security:authorize>
 	
 

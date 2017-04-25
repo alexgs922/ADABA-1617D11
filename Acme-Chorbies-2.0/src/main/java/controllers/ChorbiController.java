@@ -149,48 +149,6 @@ public class ChorbiController extends AbstractController {
 
 		return result;
 	}
-
-	//Register to an event
-	
-	@RequestMapping(value = "/registerEvent", method = RequestMethod.GET)
-	public ModelAndView registerEvent(@RequestParam final int eventId) {
-		ModelAndView result;
-		Chorbi chorbi;
-		Event e;
-		e = this.eventService.findOne(eventId);
-		chorbi = this.chorbiService.findByPrincipal();
-		try {
-			this.eventService.registerEvent(chorbi,e);
-			} catch (Exception e2) {
-			}			
-		
-		result = this.createEditModelAndView(e);
-		result.addObject("cancelURL", "chorbi/unregisterEvent.do?eventId=" + eventId);
-
-		return result;
-	}
-
-	//Register to an event
-	
-		@RequestMapping(value = "/unregisterEvent", method = RequestMethod.GET)
-		public ModelAndView unregisterEvent(@RequestParam final int eventId) {
-			ModelAndView result;
-			Chorbi chorbi;
-			Event e;
-			e = this.eventService.findOne(eventId);
-			chorbi = this.chorbiService.findByPrincipal();
-			try {
-				this.eventService.unregisterEvent(chorbi,e);
-				} catch (Exception e2) {
-				}			
-			
-			result = this.createEditModelAndView(e);
-			result.addObject("registerURL", "chorbi/registerEvent.do?eventId=" + eventId);
-
-			return result;
-		}
-
-	
 	
 	// Terms of Use -----------------------------------------------------------
 	@RequestMapping("/dataProtection")
