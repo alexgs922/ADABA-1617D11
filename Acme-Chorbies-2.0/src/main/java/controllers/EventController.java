@@ -18,6 +18,7 @@ import services.ActorService;
 import services.ChorbiService;
 import services.EventService;
 import services.ManagerService;
+import domain.Actor;
 import domain.Chorbi;
 import domain.Event;
 import domain.Manager;
@@ -44,9 +45,9 @@ public class EventController extends AbstractController {
 	@Autowired
 	ActorService	actorService;
 
-
 	@Autowired
-	ChorbiService chorbiService;
+	ChorbiService	chorbiService;
+
 
 	//Browse a listing that includes every event that was registered in the system.
 	//Past events must be greyed out; events that are going to be organised in less than one month and have seats available must also be somewhat highlighted; 
@@ -77,12 +78,24 @@ public class EventController extends AbstractController {
 
 		}
 
+		Actor principal;
+
+		try {
+
+			principal = this.actorService.findByPrincipal();
+
+		} catch (final Throwable oops) {
+
+			principal = null;
+		}
+
 		result = new ModelAndView("event/list");
 		result.addObject("events", eventsToShow);
 		result.addObject("requestURI", "event/list.do");
 		result.addObject("current", new Date());
 		result.addObject("tohighlight", aux);
 		result.addObject("togray", toGray);
+		result.addObject("principal", principal);
 
 		return result;
 
@@ -144,40 +157,39 @@ public class EventController extends AbstractController {
 	}
 
 	//Register to an event
-	
-		@RequestMapping(value = "/registerEvent", method = RequestMethod.GET)
-		public ModelAndView registerEvent(@RequestParam final int eventId) {
-			ModelAndView result;
-			Chorbi chorbi;
-			Event e;
-			e = this.eventService.findOne(eventId);
-			chorbi = this.chorbiService.findByPrincipal();
-			try {
-				this.eventService.registerEvent(chorbi,e);
-				} catch (Exception e2) {
-				}			
-			
-			result = list();
-			return result;
+
+	@RequestMapping(value = "/registerEvent", method = RequestMethod.GET)
+	public ModelAndView registerEvent(@RequestParam final int eventId) {
+		ModelAndView result;
+		Chorbi chorbi;
+		Event e;
+		e = this.eventService.findOne(eventId);
+		chorbi = this.chorbiService.findByPrincipal();
+		try {
+			this.eventService.registerEvent(chorbi, e);
+		} catch (final Exception e2) {
 		}
 
-		//Register to an event
-		
-			@RequestMapping(value = "/unregisterEvent", method = RequestMethod.GET)
-			public ModelAndView unregisterEvent(@RequestParam final int eventId) {
-				ModelAndView result;
-				Chorbi chorbi;
-				Event e;
-				e = this.eventService.findOne(eventId);
-				chorbi = this.chorbiService.findByPrincipal();
-				try {
-					this.eventService.unregisterEvent(chorbi,e);
-					} catch (Exception e2) {
-					}			
-				result = list();
+		result = this.list();
+		return result;
+	}
 
-				return result;
-			}
-	
-	
+	//Register to an event
+
+	@RequestMapping(value = "/unregisterEvent", method = RequestMethod.GET)
+	public ModelAndView unregisterEvent(@RequestParam final int eventId) {
+		ModelAndView result;
+		Chorbi chorbi;
+		Event e;
+		e = this.eventService.findOne(eventId);
+		chorbi = this.chorbiService.findByPrincipal();
+		try {
+			this.eventService.unregisterEvent(chorbi, e);
+		} catch (final Exception e2) {
+		}
+		result = this.list();
+
+		return result;
+	}
+
 }

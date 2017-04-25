@@ -52,6 +52,15 @@
 
 	</security:authorize>
 	
+	<security:authorize access="hasRole('CHORBI')">
+		<display:column>
+			
+			<spring:message code="event.notToRegister" var="notRegister" />
+			<p class="text-muted"><jstl:out value="${notRegister}"></jstl:out></p>
+
+		</display:column>
+	</security:authorize>
+	
 	
 	</jstl:when>
 	
@@ -80,25 +89,39 @@
 					code="event.chorbies" />
 			</a>
 		</display:column>
-
 	</security:authorize>
-			<display:column>
-			<a href="event/registerEvent.do?eventId=${row.id}"> 		
-			<spring:message code="event.Register" />	</a>
-
-		</display:column>
+		
 	<security:authorize access="isAuthenticated()">
 		<display:column>
 			<a href="manager/display.do?managerId=${row.manager.id}"> <jstl:out value="${row.manager.name}"></jstl:out>
 			</a>
 
 		</display:column>
+	</security:authorize>
 
+	<security:authorize access="hasRole('CHORBI')">
+			<display:column>
+			<jstl:choose>
+				<jstl:when test="${principal ne null and !row.registered.contains(principal)}">
+					
+					<a href="event/registerEvent.do?eventId=${row.id}"> 		
+					<spring:message code="event.Registerr" />	</a>
+				
+				</jstl:when>
+				
+				<jstl:when test="${principal ne null and row.registered.contains(principal)}">
+					
+					<a href="event/unregisterEvent.do?eventId=${row.id}"> 		
+					<spring:message code="event.unRegister" />	</a>
+				
+				</jstl:when>
+			</jstl:choose>
+			
 
-
+		</display:column>
+	
 	</security:authorize>
 	
-
 	</jstl:when>
 	
 	<jstl:when test="${!togray.contains(row) and !tohighlight.contains(row)}">
@@ -135,6 +158,29 @@
 			</a>
 
 		</display:column>
+	</security:authorize>
+	
+	<security:authorize access="hasRole('CHORBI')">
+			<display:column>
+			<jstl:choose>
+				<jstl:when test="${principal ne null and !row.registered.contains(principal)}">
+					
+					<a href="event/registerEvent.do?eventId=${row.id}"> 		
+					<spring:message code="event.Registerr" />	</a>
+				
+				</jstl:when>
+				
+				<jstl:when test="${principal ne null and row.registered.contains(principal)}">
+					
+					<a href="event/unregisterEvent.do?eventId=${row.id}"> 		
+					<spring:message code="event.unRegister" />	</a>
+				
+				</jstl:when>
+			</jstl:choose>
+			
+
+		</display:column>
+	
 	</security:authorize>
 	
 	</jstl:when>
