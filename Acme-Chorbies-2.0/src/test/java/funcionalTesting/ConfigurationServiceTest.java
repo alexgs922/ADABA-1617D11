@@ -26,7 +26,7 @@ public class ConfigurationServiceTest extends AbstractTest {
 
 
 	//CASO DE USO DESTINADO A PROBAR LA EDICIÓN DE LA CONFIGURACIÓN DE CACHEADO DE LOS RESULTADOS DE LAS BUSQUEDAS MEDIANTE EL TEMPLATE
-	protected void templateEditConfiguration(final String username, final int hours, final int minutes, final int seconds, final Class<?> expected) {
+	protected void templateEditConfiguration(final String username, final int hours, final int minutes, final int seconds, final double chorbiesFee, final double managersFee, final Class<?> expected) {
 		Class<?> caught;
 
 		caught = null;
@@ -43,6 +43,9 @@ public class ConfigurationServiceTest extends AbstractTest {
 			c.setHour(hours);
 			c.setMinute(minutes);
 			c.setSecond(seconds);
+
+			c.setChorbiesFee(chorbiesFee);
+			c.setManagersFee(managersFee);
 
 			this.configurationService.save(c);
 			this.configurationService.flush();
@@ -64,15 +67,15 @@ public class ConfigurationServiceTest extends AbstractTest {
 
 		final Object testingData[][] = {
 			{	//Edición correcta de la configuracion
-				"admin", 14, 25, 41, null
+				"admin", 14, 25, 41, 20.0, 50.0, null
 			}, {//Sólo el administrador puede editar una configuration
-				"chorbi1", 14, 25, 41, IllegalArgumentException.class
+				"chorbi1", 14, 25, 41, 20.0, 50.0, IllegalArgumentException.class
 			}
 
 		};
 
 		for (int i = 0; i < testingData.length; i++)
-			this.templateEditConfiguration((String) testingData[i][0], (int) testingData[i][1], (int) testingData[i][2], (int) testingData[i][3], (Class<?>) testingData[i][4]);
+			this.templateEditConfiguration((String) testingData[i][0], (int) testingData[i][1], (int) testingData[i][2], (int) testingData[i][3], (double) testingData[i][4], (double) testingData[i][5], (Class<?>) testingData[i][6]);
 
 	}
 
