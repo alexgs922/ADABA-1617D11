@@ -17,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import services.ChorbiService;
+import services.EventService;
 import services.TasteService;
 import services.TemplateService;
 import domain.Chorbi;
 import domain.CreditCard;
+import domain.Event;
 import domain.Taste;
 import domain.Template;
 import form.RegistrationForm;
@@ -47,7 +49,11 @@ public class ChorbiController extends AbstractController {
 	@Autowired
 	private TemplateService	templateService;
 
+	@Autowired
+	private EventService	eventService;
 
+	
+	
 	//Browse the chorbies who has registered to the system
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list() {
@@ -144,6 +150,48 @@ public class ChorbiController extends AbstractController {
 		return result;
 	}
 
+	//Register to an event
+	
+	@RequestMapping(value = "/registerEvent", method = RequestMethod.GET)
+	public ModelAndView registerEvent(@RequestParam final int eventId) {
+		ModelAndView result;
+		Chorbi chorbi;
+		Event e;
+		e = this.eventService.findOne(eventId);
+		chorbi = this.chorbiService.findByPrincipal();
+		try {
+			this.eventService.registerEvent(chorbi,e);
+			} catch (Exception e2) {
+			}			
+		
+		result = this.createEditModelAndView(e);
+		result.addObject("cancelURL", "chorbi/unregisterEvent.do?eventId=" + eventId);
+
+		return result;
+	}
+
+	//Register to an event
+	
+		@RequestMapping(value = "/unregisterEvent", method = RequestMethod.GET)
+		public ModelAndView unregisterEvent(@RequestParam final int eventId) {
+			ModelAndView result;
+			Chorbi chorbi;
+			Event e;
+			e = this.eventService.findOne(eventId);
+			chorbi = this.chorbiService.findByPrincipal();
+			try {
+				this.eventService.unregisterEvent(chorbi,e);
+				} catch (Exception e2) {
+				}			
+			
+			result = this.createEditModelAndView(e);
+			result.addObject("registerURL", "chorbi/registerEvent.do?eventId=" + eventId);
+
+			return result;
+		}
+
+	
+	
 	// Terms of Use -----------------------------------------------------------
 	@RequestMapping("/dataProtection")
 	public ModelAndView dataProtection() {
@@ -208,4 +256,23 @@ public class ChorbiController extends AbstractController {
 
 	}
 
+	protected ModelAndView createEditModelAndView(final Event event) {
+		ModelAndView result;
+
+		result = this.createEditModelAndView(event, null);
+
+		return result;
+	}
+
+	protected ModelAndView createEditModelAndView(final Event event, final String message) {
+		ModelAndView result;
+
+		result = new ModelAndView("chorbi/registerEvent");
+		result.addObject("event", event);
+		result.addObject("message", message);
+
+		return result;
+	}
+
+	
 }
