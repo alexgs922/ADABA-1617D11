@@ -64,8 +64,7 @@ public class EventService {
 		final Collection<Chorbi> coll = event.getRegistered();
 
 		final int seats = event.getNumberSeatsOffered();
-		final int actualSeats = coll.size();
-		Assert.isTrue(seats > actualSeats);
+		Assert.isTrue(seats > 0);
 
 		//Añadir chorbi al listado del evento
 		final List<Chorbi> list = new ArrayList<Chorbi>(coll);
@@ -73,15 +72,17 @@ public class EventService {
 		Assert.isTrue(!list.contains(chorbi));
 		list.add(chorbi);
 		event.setRegistered(list);
-
+		//Quitamos una plaza
+		event.setNumberSeatsOffered(seats-1);
+		
 		//Añadir el evento al chorbi
 		final Collection<Event> events = chorbi.getEvents();
 		final List<Event> listEvents = new ArrayList<Event>(events);
 		listEvents.add(event);
 		chorbi.setEvents(listEvents);
 
-		//Nada de fee...
-
+		
+		
 		this.save(event);
 		this.chorbiService.save(chorbi);
 		return event;
@@ -105,7 +106,8 @@ public class EventService {
 		final int index2 = listEvent.indexOf(event);
 		listEvent.remove(index2);
 		chorbi.setEvents(listEvent);
-
+		event.setNumberSeatsOffered(event.getNumberSeatsOffered()+1);
+		
 		this.save(event);
 		this.chorbiService.save(chorbi);
 		return event;
