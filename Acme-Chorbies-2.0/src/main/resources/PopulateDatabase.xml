@@ -145,6 +145,18 @@
 		<property name="surName" value="Admin1 surname" />
 		<property name="email" value="admin1@acmechorbi.com" />
 		<property name="phone" value="+52 689745212" />
+		
+		<property name="chirpReceives">
+			<list>
+
+			</list>
+		</property>
+		<property name="chirpWrites">
+			<list>
+
+			</list>
+		</property>
+
 
 	</bean>
 
@@ -543,6 +555,17 @@
 		</property>
 		<property name="creditCard" ref="creditCardManager1" />
 		<property name="totalChargedFee" value="4.00" />
+		
+		<property name="chirpReceives">
+			<list>
+
+			</list>
+		</property>
+		<property name="chirpWrites">
+			<list>
+
+			</list>
+		</property>
 
 	</bean>
 
@@ -563,6 +586,17 @@
 		</property>
 		<property name="creditCard" ref="creditCardManager2" />
 		<property name="totalChargedFee" value="2.00" />
+		
+		<property name="chirpReceives">
+			<list>
+
+			</list>
+		</property>
+		<property name="chirpWrites">
+			<list>
+
+			</list>
+		</property>
 
 	</bean>
 
@@ -583,6 +617,17 @@
 			</list>
 		</property>
 		<property name="totalChargedFee" value="3.00" />
+		
+		<property name="chirpReceives">
+			<list>
+
+			</list>
+		</property>
+		<property name="chirpWrites">
+			<list>
+
+			</list>
+		</property>
 
 	</bean>
 
