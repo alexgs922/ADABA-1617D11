@@ -162,22 +162,7 @@ public class EventService {
 		Assert.isTrue(event.getMoment().after(current));
 		event = this.eventRepository.save(event);
 
-		//		final Collection<Chorbi> chorbiesToChirp = event.getRegistered();
-		//		for (final Chorbi chorbi : chorbiesToChirp) {
-		//			final Chirp mensaje = this.chirpService.create();
-		//			mensaje.setSubject("Something has change in the event:  " + event.getTitle() + " // Algo ha cambiado en el evento: " + event.getTitle());
-		//			mensaje.setText("We have modified something in this event, you may want to know! // ¡Hemos modificado algo en este evento, quizás quieras saberlo!");
-		//			mensaje.setMoment(current);
-		//			mensaje.setAttachments("");
-		//			mensaje.setRecipient(chorbi);
-		//			mensaje.setSender(m);
-		//			mensaje.setCopy(false);
-		//
-		//			final Collection<Chirp> cr = chorbi.getChirpReceives();
-		//			cr.add(mensaje);
-		//			//¿?chirpService.save(mensaje);
-		//
-		//		}
+		this.chirpService.editEventChirp(event, m);
 
 		return event;
 

@@ -232,6 +232,30 @@ public class ChirpService {
 
 	}
 
+	public void editEventChirp(final Event event, final Manager principal) {
+		final Collection<Chorbi> chorbiesToChirp = event.getRegistered();
+		for (final Chorbi chorbi : chorbiesToChirp) {
+			final Chirp mensaje = this.create();
+			mensaje.setSubject("Something has change in the event:  " + event.getTitle() + " // Algo ha cambiado en el evento: " + event.getTitle());
+			mensaje.setText("We have modified something in this event, you may want to know! // ¡Hemos modificado algo en este evento, quizás quieras saberlo!");
+			final Date current = new Date();
+			mensaje.setMoment(current);
+			mensaje.setAttachments("");
+			mensaje.setRecipient(chorbi);
+			mensaje.setSender(principal);
+			mensaje.setCopy(false);
+
+			final Collection<Chirp> cr = chorbi.getChirpReceives();
+			cr.add(mensaje);
+			try {
+				this.chirpRepository.save(mensaje);
+			} catch (final Throwable th) {
+				System.out.println(th.getCause());
+			}
+
+		}
+	}
+
 	public void deleteReceived(final Chirp m) {
 		final Chorbi principal = this.chorbiService.findByPrincipal();
 		Assert.notNull(m);
