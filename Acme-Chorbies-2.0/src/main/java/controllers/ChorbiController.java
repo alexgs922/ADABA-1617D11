@@ -1,7 +1,11 @@
 
 package controllers;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.validation.Valid;
 
@@ -52,8 +56,7 @@ public class ChorbiController extends AbstractController {
 	@Autowired
 	private EventService	eventService;
 
-	
-	
+
 	//Browse the chorbies who has registered to the system
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public ModelAndView list() {
@@ -71,6 +74,43 @@ public class ChorbiController extends AbstractController {
 
 	}
 
+	@RequestMapping(value = "/listMyEvents", method = RequestMethod.GET)
+	public ModelAndView myEvents() {
+
+		ModelAndView result;
+		Collection<Event> eventsToShow;
+		final Chorbi m = this.chorbiService.findByPrincipal();
+		final Collection<Event> aux = new ArrayList<Event>();
+		final Collection<Event> toGray = new ArrayList<Event>();
+
+		eventsToShow = m.getEvents();
+
+		final Calendar current = new GregorianCalendar();
+		for (final Event tmp : eventsToShow) {
+			final Calendar fecha = new GregorianCalendar();
+			fecha.setTime(tmp.getMoment());
+			if (fecha.before(current))
+				toGray.add(tmp);
+			else {
+
+				final long dif = this.eventService.difDiasEntre2fechas(current, fecha);
+				if (fecha.after(current) && dif <= 30 && tmp.getNumberSeatsOffered() > 0)
+					aux.add(tmp);
+			}
+
+		}
+
+		result = new ModelAndView("chorbi/listMyEvents");
+		result.addObject("events", eventsToShow);
+		result.addObject("requestURI", "chorbi/listMyEvents.do");
+		result.addObject("current", new Date());
+		result.addObject("tohighlight", aux);
+		result.addObject("togray", toGray);
+		result.addObject("principal", m);
+
+		return result;
+
+	}
 	//See Chorbi Profile
 	@RequestMapping(value = "/profile", method = RequestMethod.GET)
 	public ModelAndView display(@RequestParam final int chorbiId) {
@@ -92,18 +132,17 @@ public class ChorbiController extends AbstractController {
 				}
 		} else
 			toLike = false;
-			
-		CreditCard creditCard = principal.getCreditCard();
-		if(creditCard != null){
+
+		final CreditCard creditCard = principal.getCreditCard();
+		if (creditCard != null)
 			toCreditCard = true;
-		}
-		
+
 		result = new ModelAndView("chorbi/displayProfile");
 		result.addObject("chorbi", chorbi);
 		result.addObject("principal", principal);
 		result.addObject("toLike", toLike);
-		result.addObject("creditCard",creditCard);
-		result.addObject("toCreditCard",toCreditCard);		
+		result.addObject("creditCard", creditCard);
+		result.addObject("toCreditCard", toCreditCard);
 		result.addObject("requestURI", "chorbi/profile.do?chorbiId=" + chorbiId);
 
 		return result;
@@ -112,10 +151,10 @@ public class ChorbiController extends AbstractController {
 	//See Chorbi Profile
 	@RequestMapping(value = "/viewProfile", method = RequestMethod.GET)
 	public ModelAndView viewProfile() {
-		return display(this.chorbiService.findByPrincipal().getId());
-		
+		return this.display(this.chorbiService.findByPrincipal().getId());
+
 	}
-	
+
 	//See people who like him/her
 
 	@RequestMapping(value = "/listWhoLikeThem", method = RequestMethod.GET)
@@ -149,7 +188,7 @@ public class ChorbiController extends AbstractController {
 
 		return result;
 	}
-	
+
 	// Terms of Use -----------------------------------------------------------
 	@RequestMapping("/dataProtection")
 	public ModelAndView dataProtection() {
@@ -232,5 +271,4 @@ public class ChorbiController extends AbstractController {
 		return result;
 	}
 
-	
 }

@@ -89,6 +89,9 @@
 						code="master.page.whoILike" /></a></li>
 			<li><a class="fNiv" href="chorbi/viewProfile.do"><spring:message
 						code="master.page.viewMyProfile" /></a></li>
+						
+			<li><a class="fNiv" href="chorbi/listMyEvents.do"><spring:message
+						code="master.page.viewMyEvents" /></a></li>
 
 
 

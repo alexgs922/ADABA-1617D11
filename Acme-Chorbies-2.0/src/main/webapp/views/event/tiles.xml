@@ -30,6 +30,11 @@
 		<put-attribute name="title" value="Forbidden operation" />
 		<put-attribute name="body" value="/views/event/errorsFromEvent.jsp" />
 	</definition>
+	
+	<definition name="chorbi/listMyEvents" extends="master.page">
+		<put-attribute name="title" value="My Events List" />
+		<put-attribute name="body" value="/views/event/list.jsp" />
+	</definition>
 
 
 
