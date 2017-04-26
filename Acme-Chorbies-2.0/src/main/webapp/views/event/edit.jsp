@@ -13,6 +13,9 @@
 
 <form:form action="${requestURI}" modelAttribute="event">
 
+	<form:hidden path="id"/>
+	<form:hidden path="version"/>
+
 	<fieldset>
 		<legend>
 			<spring:message code="event.info" />
