@@ -25,6 +25,10 @@
 		<put-attribute name="body" value="/views/event/edit.jsp" />
 	</definition>
 	
+	<definition name="event/forboperation" extends="master.page">
+		<put-attribute name="title" value="Forbidden operation" />
+		<put-attribute name="body" value="/views/event/errorsFromEvent.jsp" />
+	</definition>
 
 
 </tiles-definitions>

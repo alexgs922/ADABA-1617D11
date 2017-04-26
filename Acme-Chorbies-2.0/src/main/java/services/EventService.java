@@ -40,6 +40,12 @@ public class EventService {
 	@Autowired
 	private ConfigurationService	configurationService;
 
+	@Autowired
+	private CreditCardService		creditCardService;
+
+	@Autowired
+	private ChirpService			chirpService;
+
 
 	// Constructors -----------------------------------------------------------
 
@@ -64,8 +70,7 @@ public class EventService {
 		final Collection<Chorbi> coll = event.getRegistered();
 
 		final int seats = event.getNumberSeatsOffered();
-		final int actualSeats = coll.size();
-		Assert.isTrue(seats > actualSeats);
+		Assert.isTrue(seats > 0);
 
 		//Añadir chorbi al listado del evento
 		final List<Chorbi> list = new ArrayList<Chorbi>(coll);
@@ -73,7 +78,8 @@ public class EventService {
 		Assert.isTrue(!list.contains(chorbi));
 		list.add(chorbi);
 		event.setRegistered(list);
-
+		//Quitamos una plaza
+		event.setNumberSeatsOffered(seats - 1);
 		//Añadir el evento al chorbi
 		final Collection<Event> events = chorbi.getEvents();
 		final List<Event> listEvents = new ArrayList<Event>(events);
@@ -105,7 +111,7 @@ public class EventService {
 		final int index2 = listEvent.indexOf(event);
 		listEvent.remove(index2);
 		chorbi.setEvents(listEvent);
-
+		event.setNumberSeatsOffered(event.getNumberSeatsOffered() + 1);
 		this.save(event);
 		this.chorbiService.save(chorbi);
 		return event;
@@ -135,6 +141,8 @@ public class EventService {
 		final Date current = new Date();
 		final Manager m = this.managerService.findByPrincipal();
 		Assert.isTrue(event.getMoment().after(current));
+		Assert.notNull(m.getCreditCard());
+		Assert.isTrue(this.creditCardService.validateDate(m.getCreditCard().getExpirationMonth(), m.getCreditCard().getExpirationYear()));
 		final double feeCurrent = this.configurationService.findConfiguration().getManagersFee();
 		event.setTotalChargedFee(feeCurrent);
 		m.setTotalChargedFee(m.getTotalChargedFee() + feeCurrent);
@@ -144,6 +152,34 @@ public class EventService {
 
 	}
 
+	public Event saveEdit(Event event) {
+		Assert.notNull(event);
+		final Date current = new Date();
+		final Manager m = this.managerService.findByPrincipal();
+		Assert.isTrue(m.getId() == event.getManager().getId());
+		Assert.isTrue(event.getMoment().after(current));
+		event = this.eventRepository.save(event);
+
+		//		final Collection<Chorbi> chorbiesToChirp = event.getRegistered();
+		//		for (final Chorbi chorbi : chorbiesToChirp) {
+		//			final Chirp mensaje = this.chirpService.create();
+		//			mensaje.setSubject("Something has change in the event:  " + event.getTitle() + " // Algo ha cambiado en el evento: " + event.getTitle());
+		//			mensaje.setText("We have modified something in this event, you may want to know! // ¡Hemos modificado algo en este evento, quizás quieras saberlo!");
+		//			mensaje.setMoment(current);
+		//			mensaje.setAttachments("");
+		//			mensaje.setRecipient(chorbi);
+		//			mensaje.setSender(m);
+		//			mensaje.setCopy(false);
+		//
+		//			final Collection<Chirp> cr = chorbi.getChirpReceives();
+		//			cr.add(mensaje);
+		//			//¿?chirpService.save(mensaje);
+		//
+		//		}
+
+		return event;
+
+	}
 	public void delete(final Event event) {
 		Assert.notNull(event);
 		Assert.isTrue(event.getId() != 0);
@@ -189,8 +225,20 @@ public class EventService {
 
 			this.validator.validate(event, bindingResult);
 
-		} else
-			result = null;
+		} else {
+
+			result = this.eventRepository.findOne(event.getId());
+			//Este assert también se comprueba aquí, porque si no, el validator lo persiste igual, aunque no se cumpla la condición en controlador
+			Assert.isTrue(result.getRegistered().size() <= event.getNumberSeatsOffered());
+
+			result.setTitle(this.checkContactInfo(event.getTitle()));
+			result.setDescription(this.checkContactInfo(event.getDescription()));
+			result.setMoment(event.getMoment());
+			result.setNumberSeatsOffered(event.getNumberSeatsOffered());
+			result.setPicture(event.getPicture());
+			this.validator.validate(result, bindingResult);
+
+		}
 
 		return result;
 

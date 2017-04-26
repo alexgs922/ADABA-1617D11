@@ -220,6 +220,98 @@ public class EventController extends AbstractController {
 		return result;
 
 	}
+
+	//Edit an Event
+
+	@RequestMapping(value = "/manager/edit", method = RequestMethod.GET)
+	public ModelAndView edit(@RequestParam final int eventId) {
+
+		ModelAndView result;
+		Event event;
+
+		event = this.eventService.findOne(eventId);
+		Assert.notNull(event);
+
+		try {
+			final Manager principal = this.managerService.findByPrincipal();
+			Assert.isTrue(principal.getId() == event.getManager().getId());
+		} catch (final Exception e) {
+			result = new ModelAndView("event/forboperation");
+			result.addObject("forbiddenOperation", "event.not.your.event");
+			result.addObject("cancelURL", "event/myEvents.do");
+			return result;
+
+		}
+
+		try {
+			final Date current = new Date();
+			Assert.isTrue(event.getMoment().after(current));
+		} catch (final Exception e) {
+			result = new ModelAndView("event/forboperation");
+			result.addObject("forbiddenOperation", "event.in.past");
+			result.addObject("cancelURL", "event/myEvents.do");
+			return result;
+
+		}
+
+		result = this.createEditModelAndView(event);
+		result.addObject("requestURI", "event/manager/edit.do?eventId=" + eventId);
+
+		return result;
+
+	}
+
+	@RequestMapping(value = "/manager/edit", method = RequestMethod.POST, params = "save")
+	public ModelAndView saveEdit(Event event, final BindingResult bindingResult) {
+		ModelAndView result;
+
+		try {
+			event = this.eventService.reconstruct(event, bindingResult);
+		} catch (final IllegalArgumentException momenterrors) {
+			result = this.createEditModelAndView(event, "event.plazas.error");
+			result.addObject("requestURI", "event/manager/edit.do?eventId=" + event.getId());
+			return result;
+
+		} catch (final Exception e) {
+			result = this.createEditModelAndView(event);
+			result.addObject("requestURI", "event/manager/edit.do?eventId=" + event.getId());
+		}
+
+		if (event.getMoment() != null)
+			try {
+				final Date current = new Date();
+				Assert.isTrue(event.getMoment().after(current));
+			} catch (final IllegalArgumentException momenterrors) {
+				result = this.createEditModelAndView(event, "event.dates.error");
+				result.addObject("requestURI", "event/manager/edit.do?eventId=" + event.getId());
+				return result;
+			}
+
+		if (bindingResult.hasErrors()) {
+
+			if (bindingResult.getGlobalError() != null) {
+				result = this.createEditModelAndView(event, bindingResult.getGlobalError().getCode());
+				result.addObject("requestURI", "event/manager/edit.do?eventId=" + event.getId());
+			} else {
+				result = this.createEditModelAndView(event);
+				result.addObject("requestURI", "event/manager/edit.do?eventId=" + event.getId());
+			}
+
+		} else
+			try {
+
+				this.eventService.saveEdit(event);
+				result = new ModelAndView("redirect:/event/myEvents.do");
+
+			} catch (final Throwable oops) {
+				result = this.createEditModelAndView(event, "event.commit.error");
+				result.addObject("requestURI", "event/manager/edit.do?eventId=" + event.getId());
+			}
+
+		return result;
+
+	}
+
 	//Register to an event
 
 	@RequestMapping(value = "/registerEvent", method = RequestMethod.GET)
