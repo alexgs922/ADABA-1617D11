@@ -36,7 +36,11 @@
 								code="master.page.administrator.configuration" /></a></li>
 					<li><a href="administrator/dashboard.do"><spring:message
 								code="master.page.administrator.dashboard" /></a></li>
-				</ul></li>
+				</ul>
+			</li>
+			<li><a class="fNiv" href="manager/register.do"><spring:message
+						code="master.page.registerManager" /></a>
+			</li>
 		</security:authorize>
 
 		<security:authorize access="hasRole('MANAGER')">
