@@ -20,6 +20,11 @@
 		<put-attribute name="body" value="/views/event/list2.jsp" />
 	</definition>
 	
+	<definition name="event/listEventOfferMonth" extends="master.page">
+		<put-attribute name="title" value="Lista de eventos" />
+		<put-attribute name="body" value="/views/event/listEventOfferMonth.jsp" />
+	</definition>
+	
 	<definition name="event/edit" extends="master.page">
 		<put-attribute name="title" value="Editar Evento" />
 		<put-attribute name="body" value="/views/event/edit.jsp" />
@@ -34,8 +39,5 @@
 		<put-attribute name="title" value="Lista de mis Eventos" />
 		<put-attribute name="body" value="/views/event/list.jsp" />
 	</definition>
-	
-
-
 
 </tiles-definitions>

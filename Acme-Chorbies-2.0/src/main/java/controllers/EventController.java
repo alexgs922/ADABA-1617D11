@@ -37,7 +37,7 @@ public class EventController extends AbstractController {
 	}
 
 
-	////Services -----------------------------------------------------------
+	// Services -----------------------------------------------------------
 
 	@Autowired
 	private EventService		eventService;
@@ -105,6 +105,19 @@ public class EventController extends AbstractController {
 
 		return result;
 
+	}
+
+	//Browse the listing of events that are going to be organised in less than one month and have seats available
+	@RequestMapping(value = "/listEventOfferMonth", method = RequestMethod.GET)
+	public ModelAndView listEventOfferMonth() {
+		ModelAndView result;
+		final Collection<Event> events = this.eventService.listEventMonthSeatsFree();
+
+		result = new ModelAndView("event/listEventOfferMonth");
+		result.addObject("events", events);
+		result.addObject("requestURI", "event/listEventOfferMonth.do");
+
+		return result;
 	}
 
 	//List chorbies registered in this event

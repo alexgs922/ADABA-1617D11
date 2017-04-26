@@ -102,9 +102,10 @@
 						code="master.page.login" /></a></li>
 			<li><a class="fNiv" href="chorbi/register.do"><spring:message
 						code="master.page.register" /></a></li>
+			<li><a class="fNiv" href="event/listEventOfferMonth.do"><spring:message
+						code="master.page.listEventOfferMonth" /></a></li>
 			<li><a class="fNiv" href="event/list.do"><spring:message
 						code="master.page.listEvents" /></a></li>
-
 
 		</security:authorize>
 

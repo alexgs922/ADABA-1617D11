@@ -108,6 +108,7 @@
 		<security:intercept-url pattern="/event/manager/**" access="hasRole('MANAGER')" />
 		<security:intercept-url pattern="/event/registerEvent.do" access="hasRole('CHORBI')" />
 		<security:intercept-url pattern="/event/unregisterEvent.do" access="hasRole('CHORBI')" />
+		<security:intercept-url pattern="/event/listEventOfferMonth.do" access="permitAll" />
 
 
 
