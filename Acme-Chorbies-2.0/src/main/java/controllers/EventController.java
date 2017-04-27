@@ -37,7 +37,7 @@ public class EventController extends AbstractController {
 	}
 
 
-	////Services -----------------------------------------------------------
+	// Services -----------------------------------------------------------
 
 	@Autowired
 	private EventService		eventService;

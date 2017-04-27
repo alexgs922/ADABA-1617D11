@@ -235,6 +235,7 @@ public class EventService {
 		return result;
 
 	}
+
 	public String checkContactInfo(final String cadena) {
 
 		String res = "";
@@ -277,4 +278,5 @@ public class EventService {
 		final Collection<Event> res = this.eventRepository.listEventMonthSeatsFree();
 		return res;
 	}
+
 }
