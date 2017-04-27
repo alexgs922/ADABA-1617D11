@@ -16,6 +16,14 @@
 <%@taglib prefix="security" uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 
-<p><spring:message code = "invalidCreditCard" /></p> 
+<jstl:choose>
+<jstl:when test="${creditCard == null }">
+	<p><spring:message code = "nullCreditCard" /></p> 
+</jstl:when>
+<jstl:otherwise>
+	<p><spring:message code = "invalidCreditCard" /></p>	
+</jstl:otherwise>
+</jstl:choose>
+ 
 
 <p><a href="<spring:url value='/' />"><spring:message code = "back" /></a><p>

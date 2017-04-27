@@ -53,6 +53,7 @@ public class TasteController {
 		try {
 
 			principal = this.chorbiService.findByPrincipal();
+			Assert.isTrue(principal.getCreditCard() != null);
 			Assert.isTrue(this.creditCardService.validateDate(principal.getCreditCard().getExpirationMonth(), principal.getCreditCard().getExpirationYear()));
 			tastes = this.chorbiService.findAllMyTastesWithoutBannedChorbies(principal);
 			result = new ModelAndView("taste/list");
@@ -60,7 +61,9 @@ public class TasteController {
 			result.addObject("requestURI", "chorbi/chorbi/myLikes.do");
 
 		} catch (final Throwable th) {
+			principal = this.chorbiService.findByPrincipal();
 			result = new ModelAndView("invalidCreditCard");
+			result.addObject("creditCard", principal.getCreditCard());
 		}
 
 		return result;
