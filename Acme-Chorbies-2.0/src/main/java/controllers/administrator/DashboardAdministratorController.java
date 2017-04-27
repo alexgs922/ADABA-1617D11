@@ -10,8 +10,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import services.ChirpService;
 import services.ChorbiService;
+import services.ManagerService;
 import controllers.AbstractController;
 import domain.Chorbi;
+import domain.Manager;
 
 @Controller
 @RequestMapping("/administrator")
@@ -24,6 +26,9 @@ public class DashboardAdministratorController extends AbstractController {
 
 	@Autowired
 	private ChirpService	chirpService;
+
+	@Autowired
+	private ManagerService	managerService;
 
 
 	// Constructors -------------------------------------------
@@ -52,6 +57,14 @@ public class DashboardAdministratorController extends AbstractController {
 		final Collection<Object[]> minAvgMaxChirpsReceived = this.chirpService.minAvgMaxChirpsReceived();
 		final Collection<Object[]> minAvgMaxChirpsSent = this.chirpService.minAvgMaxChirpsSent();
 
+		//Dashboard 2.0
+
+		final Collection<Manager> listingManagersSortedByNumbeOfEventsTheyOrganise = this.managerService.listingManagersSortedByNumbeOfEventsTheyOrganise();
+		final Collection<Object[]> listingManagersAndAmountTheyDueInFees = this.managerService.listingManagersAndAmountTheyDueInFees();
+		final Collection<Chorbi> listingChorbiesSortedByNumberOfEventsRegistered = this.chorbiService.listingChorbiesSortedByNumberOfEventsRegistered();
+		final Collection<Object[]> listingChorbiesAndAmountTheyDueInFees = this.chorbiService.listingChorbiesAndAmountTheyDueInFees();
+		final Collection<Object[]> listChorbiesSortedByAverageNumberStarsThatTheyHaveeGot = this.chorbiService.listChorbiesSortedByAverageNumberStarsThatTheyHaveeGot();
+
 		result = new ModelAndView("administrator/dashboard");
 		result.addObject("listingWithTheNumberOfChorbiesPerCountryAndCity", listingWithTheNumberOfChorbiesPerCountryAndCity);
 		result.addObject("minimumMaximumAverageAgesOfTheChorbies", minimumMaximumAverageAgesOfTheChorbies);
@@ -67,8 +80,12 @@ public class DashboardAdministratorController extends AbstractController {
 		result.addObject("theChorbiesWhoHaveSentMoreChirps", theChorbiesWhoHaveSentMoreChirps);
 		result.addObject("minAvgMaxChirpsReceived", minAvgMaxChirpsReceived);
 		result.addObject("minAvgMaxChirpsSent", minAvgMaxChirpsSent);
+		result.addObject("listingManagersSortedByNumbeOfEventsTheyOrganise", listingManagersSortedByNumbeOfEventsTheyOrganise);
+		result.addObject("listingManagersAndAmountTheyDueInFees", listingManagersAndAmountTheyDueInFees);
+		result.addObject("listingChorbiesSortedByNumberOfEventsRegistered", listingChorbiesSortedByNumberOfEventsRegistered);
+		result.addObject("listingChorbiesAndAmountTheyDueInFees", listingChorbiesAndAmountTheyDueInFees);
+		result.addObject("listChorbiesSortedByAverageNumberStarsThatTheyHaveeGot", listChorbiesSortedByAverageNumberStarsThatTheyHaveeGot);
 
 		return result;
 	}
-
 }

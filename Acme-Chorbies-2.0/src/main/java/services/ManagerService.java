@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-import org.springframework.validation.Validator;
 
 import repositories.ManagerRepository;
 import security.Authority;
@@ -37,9 +36,6 @@ public class ManagerService {
 	@Autowired
 	private Md5PasswordEncoder	encoder;
 
-	@Autowired
-	private Validator			validator;
-
 
 	// Simple CRUD methods ----------------------------------------------------
 
@@ -49,7 +45,6 @@ public class ManagerService {
 		return result;
 	}
 
-	//TODO reconstruct de manager
 	public Manager reconstruct(final RegistrationFormManager form) {
 		Manager result;
 		UserAccount userAccount;
@@ -140,7 +135,18 @@ public class ManagerService {
 
 	public void flush() {
 		this.managerRepository.flush();
+	}
 
+	// Dashboard 2.0
+
+	public Collection<Manager> listingManagersSortedByNumbeOfEventsTheyOrganise() {
+		final Collection<Manager> res = this.managerRepository.listingManagersSortedByNumbeOfEventsTheyOrganise();
+		return res;
+	}
+
+	public Collection<Object[]> listingManagersAndAmountTheyDueInFees() {
+		final Collection<Object[]> res = this.managerRepository.listingManagersAndAmountTheyDueInFees();
+		return res;
 	}
 
 }

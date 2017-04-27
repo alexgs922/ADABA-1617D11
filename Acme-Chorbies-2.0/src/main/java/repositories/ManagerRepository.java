@@ -15,7 +15,7 @@ public interface ManagerRepository extends JpaRepository<Manager, Integer> {
 	@Query("select m from Manager m where m.userAccount.id = ?1")
 	Manager findByUserAccountId(int userAccountId);
 
-	//Dashboard
+	// Dashboard 2.0
 	@Query("select m from Manager m order by m.events.size DESC")
 	Collection<Manager> listingManagersSortedByNumbeOfEventsTheyOrganise();
 

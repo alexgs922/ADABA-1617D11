@@ -512,4 +512,22 @@ public class ChorbiService {
 		final Collection<Chorbi> res = this.chorbiRepository.theChorbiesWhoHaveSentMoreChirps();
 		return res;
 	}
+
+	// Dashboard 2.0
+
+	public Collection<Chorbi> listingChorbiesSortedByNumberOfEventsRegistered() {
+		final Collection<Chorbi> res = this.chorbiRepository.listingChorbiesSortedByNumberOfEventsRegistered();
+		return res;
+	}
+
+	public Collection<Object[]> listingChorbiesAndAmountTheyDueInFees() {
+		final Collection<Object[]> res = this.chorbiRepository.listingChorbiesAndAmountTheyDueInFees();
+		return res;
+	}
+
+	public Collection<Object[]> listChorbiesSortedByAverageNumberStarsThatTheyHaveeGot() {
+		final Collection<Object[]> res = this.chorbiRepository.listChorbiesSortedByAverageNumberStarsThatTheyHaveeGot();
+		return res;
+	}
+
 }

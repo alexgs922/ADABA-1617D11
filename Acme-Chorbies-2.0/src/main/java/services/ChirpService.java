@@ -37,9 +37,6 @@ public class ChirpService {
 	private TasteService	tasteService;
 
 	@Autowired
-	private EventService	eventService;
-
-	@Autowired
 	private ActorService	actorService;
 
 	@Autowired
