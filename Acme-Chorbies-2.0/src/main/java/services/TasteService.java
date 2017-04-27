@@ -55,6 +55,7 @@ public class TasteService {
 		final Collection<Chorbi> chorbiesWithMyLike = this.chorbiService.findAllChorbiesWhoLikedByThisUserForNotDoubleLike(principal);
 		Assert.isTrue(!chorbiesWithMyLike.contains(t.getChorbi()));
 		Assert.isTrue(t.getChorbi().isBan() == false);
+		Assert.isTrue(t.getStars() <= 3);
 		if (!(t.getComment() == null))
 			t.setComment(this.checkContactInfo(t.getComment()));
 		result = this.tasteRepository.saveAndFlush(t);
