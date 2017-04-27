@@ -121,4 +121,24 @@ public class AdministratorChorbiController extends AbstractController {
 		return result;
 	}
 
+	@RequestMapping(value = "/calculateFee", method = RequestMethod.GET)
+	public ModelAndView calculateFee(@RequestParam final int chorbiId) {
+		ModelAndView result;
+		Chorbi chorbi;
+
+		chorbi = this.chorbiService.findOne(chorbiId);
+
+		try {
+			this.chorbiService.calculateFee(chorbi);
+			result = new ModelAndView("redirect:list.do");
+
+		} catch (final Throwable th) {
+			result = new ModelAndView("forbiddenRun");
+
+		}
+
+		return result;
+
+	}
+
 }

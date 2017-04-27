@@ -22,6 +22,7 @@ import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
 import domain.Chorbi;
+import domain.Configuration;
 import domain.Coordinate;
 import domain.CreditCard;
 import domain.Genre;
@@ -37,35 +38,42 @@ public class ChorbiService {
 	// ---------- Repositories----------------------
 
 	@Autowired
-	private ChorbiRepository	chorbiRepository;
+	private ChorbiRepository		chorbiRepository;
 
 	// Supporting services ------------------------------------------
 
 	@Autowired
-	private ActorService		actorService;
+	private ActorService			actorService;
 
 	@Autowired
-	private Md5PasswordEncoder	encoder;
+	private Md5PasswordEncoder		encoder;
 
 	@Autowired
-	private Validator			validator;
+	private Validator				validator;
 
 	@Autowired
-	private TemplateService		templateService;
+	private TemplateService			templateService;
 
 	@Autowired
-	private CreditCardService	creditCardService;
+	private CreditCardService		creditCardService;
 
 	@Autowired
-	private TasteService		tasteService;
+	private TasteService			tasteService;
+
+	@Autowired
+	private ConfigurationService	configurationService;
 
 
 	// Simple CRUD methods ----------------------------------------------------
 
 	public Chorbi create() {
 		Chorbi result;
+		Date updateDate;
 
 		result = new Chorbi();
+		updateDate = new Date();
+
+		result.setUpdateDate(updateDate);
 
 		return result;
 	}
@@ -352,6 +360,37 @@ public class ChorbiService {
 		Assert.isTrue(chorbi.isBan() == true);
 
 		chorbi.setBan(false);
+
+		this.save(chorbi);
+
+	}
+
+	public void calculateFee(final Chorbi chorbi) {
+		Assert.notNull(chorbi);
+		Double res = 0.0;
+		Integer months = 0;
+
+		final Calendar updateDate = Calendar.getInstance();
+		final Calendar actualDate = Calendar.getInstance();
+
+		Configuration configuration;
+
+		actualDate.setTime(new Date());
+		updateDate.setTime(chorbi.getUpdateDate());
+
+		Assert.isTrue(updateDate.get(Calendar.MONTH) != actualDate.get(Calendar.MONTH));
+
+		if (updateDate.get(Calendar.MONTH) < actualDate.get(Calendar.MONTH))
+			months += actualDate.get(Calendar.MONTH) - updateDate.get(Calendar.MONTH);
+		else
+			months += 12 - updateDate.get(Calendar.MONTH) + actualDate.get(Calendar.MONTH);
+
+		configuration = this.configurationService.findConfiguration();
+
+		res = configuration.getChorbiesFee() * months;
+
+		chorbi.setTotalChargedFee(res);
+		chorbi.setUpdateDate(new Date());
 
 		this.save(chorbi);
 

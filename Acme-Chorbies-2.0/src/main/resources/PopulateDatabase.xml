@@ -854,7 +854,7 @@
 		<property name="description" value="Chorbi3 Female Love description" />
 		<property name="relationship" value="LOVE" />
 		<property name="birthDate" value="11/07/1992" />
-		<property name="updateDate" value="01/01/2017" />
+		<property name="updateDate" value="02/01/2017" />
 		<property name="genre" value="FEMALE" />
 		<property name="ban" value="true" />
 
@@ -906,7 +906,7 @@
 		<property name="description" value="Chorbi4 Female Love description" />
 		<property name="relationship" value="LOVE" />
 		<property name="birthDate" value="22/03/1995" />
-		<property name="updateDate" value="01/02/2017" />
+		<property name="updateDate" value="02/02/2017" />
 		<property name="genre" value="FEMALE" />
 		<property name="ban" value="false" />
 
@@ -957,7 +957,7 @@
 		<property name="description" value="Chorbi5 Female Activities description" />
 		<property name="relationship" value="ACTIVITIES" />
 		<property name="birthDate" value="08/09/1985" />
-		<property name="updateDate" value="01/03/2017" />
+		<property name="updateDate" value="03/03/2017" />
 		<property name="genre" value="FEMALE" />
 		<property name="ban" value="false" />
 
@@ -1008,7 +1008,7 @@
 		<property name="description" value="Chorbi6 MALE Activities description" />
 		<property name="relationship" value="ACTIVITIES" />
 		<property name="birthDate" value="08/10/1986" />
-		<property name="updateDate" value="01/03/2017" />
+		<property name="updateDate" value="03/03/2017" />
 		<property name="genre" value="MALE" />
 		<property name="ban" value="false" />
 

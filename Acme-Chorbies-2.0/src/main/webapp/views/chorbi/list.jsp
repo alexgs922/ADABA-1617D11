@@ -35,6 +35,16 @@
 	
 	<spring:message code="chorbi.relationship" var="chorbiRelationship" />
 	<display:column property="relationship" title="${chorbiRelationship}" sortable="false" />
+	
+	<security:authorize access="hasRole('ADMIN')">
+		<spring:message code="chorbi.updateDate" var="chorbiUpdateDate" />
+		<display:column property="updateDate" title="${chorbiUpdateDate}" sortable="false" />
+	</security:authorize>
+	
+	<security:authorize access="hasRole('ADMIN')">
+		<spring:message code="chorbi.totalChargedFee" var="chorbiTotalChargedFee" />
+		<display:column property="totalChargedFee" title="${chorbiTotalChargedFee}" sortable="false" />
+	</security:authorize>
 
 
 	<security:authorize access="hasRole('CHORBI')">
@@ -98,6 +108,17 @@
 
 		</display:column>
 	</security:authorize>
+	
+	<security:authorize access="hasRole('ADMIN')">
+		<display:column>
+			<a
+				href="administrator/chorbi/calculateFee.do?chorbiId=${row.id}">
+				<spring:message code="chorbi.calculateFee" />
+			</a>
+		</display:column>
+	</security:authorize>
+	
+	
 	
 
 </display:table>
