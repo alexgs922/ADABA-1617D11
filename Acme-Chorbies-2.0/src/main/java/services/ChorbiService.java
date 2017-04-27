@@ -64,7 +64,9 @@ public class ChorbiService {
 
 	public Chorbi create() {
 		Chorbi result;
+
 		result = new Chorbi();
+
 		return result;
 	}
 
