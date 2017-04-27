@@ -48,6 +48,7 @@ public class Chorbi extends Actor {
 	private boolean			ban;
 	private Coordinate		coordinate;
 	private double			totalChargedFee;
+	private Date			updateDate;
 
 
 	//Getters & Setters ----------------------------------------------------------------------
@@ -56,6 +57,16 @@ public class Chorbi extends Actor {
 	@Digits(integer = 32, fraction = 2)
 	public double getTotalChargedFee() {
 		return this.totalChargedFee;
+	}
+
+	@Temporal(TemporalType.DATE)
+	@DateTimeFormat(pattern = "dd/MM/yyyy")
+	public Date getUpdateDate() {
+		return this.updateDate;
+	}
+
+	public void setUpdateDate(final Date updateDate) {
+		this.updateDate = updateDate;
 	}
 
 	public void setTotalChargedFee(final double totalChargedFee) {
@@ -132,8 +143,7 @@ public class Chorbi extends Actor {
 	private Collection<Event>	events;
 
 
-	@Valid
-	@NotNull
+	
 	@ManyToMany(mappedBy = "registered")
 	public Collection<Event> getEvents() {
 		return this.events;
