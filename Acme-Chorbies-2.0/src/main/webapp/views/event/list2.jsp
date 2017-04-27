@@ -10,6 +10,7 @@
 	uri="http://www.springframework.org/security/tags"%>
 <%@taglib prefix="display" uri="http://displaytag.sf.net"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<%@taglib prefix="acme" tagdir="/WEB-INF/tags"%>
 
 
 <display:table pagesize="5" keepStatus="true" sort="list"
@@ -163,8 +164,12 @@
 			<security:authorize access="hasRole('MANAGER')">
 				<display:column>
 					<jstl:if test="${principal.events.contains(row)}">
-						<a href="event/manager/delete.do?eventId=${row.id}"><spring:message
-								code="event.delete" /> </a>
+						<%-- <a href="event/manager/delete.do?eventId=${row.id}"><spring:message
+								code="event.delete" /> </a> --%>
+								
+						<acme:confirmDelete url="event/manager/delete.do?eventId=${row.id}"
+							code="event.delete" codeConfirm="event.confirm.delete" />
+							
 					</jstl:if>
 
 				</display:column>
@@ -241,8 +246,12 @@
 			<security:authorize access="hasRole('MANAGER')">
 				<display:column>
 					<jstl:if test="${principal.events.contains(row)}">
-						<a href="event/manager/delete.do?eventId=${row.id}"><spring:message
-								code="event.delete" /> </a>
+						<%-- <a href="event/manager/delete.do?eventId=${row.id}"><spring:message
+								code="event.delete" /> </a> --%>
+								
+						<acme:confirmDelete url="event/manager/delete.do?eventId=${row.id}"
+							code="event.delete" codeConfirm="event.confirm.delete" />
+						
 					</jstl:if>
 
 				</display:column>

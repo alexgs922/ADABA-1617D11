@@ -107,6 +107,19 @@ public class EventController extends AbstractController {
 
 	}
 
+	//Browse the listing of events that are going to be organised in less than one month and have seats available
+	@RequestMapping(value = "/listEventOfferMonth", method = RequestMethod.GET)
+	public ModelAndView listEventOfferMonth() {
+		ModelAndView result;
+		final Collection<Event> events = this.eventService.listEventMonthSeatsFree();
+
+		result = new ModelAndView("event/listEventOfferMonth");
+		result.addObject("events", events);
+		result.addObject("requestURI", "event/listEventOfferMonth.do");
+
+		return result;
+	}
+
 	//List chorbies registered in this event
 	@RequestMapping(value = "/listsRegisteredFrom", method = RequestMethod.GET)
 	public ModelAndView listsRegisteredFrom(@RequestParam final int eventId) {
@@ -307,6 +320,56 @@ public class EventController extends AbstractController {
 				result = this.createEditModelAndView(event, "event.commit.error");
 				result.addObject("requestURI", "event/manager/edit.do?eventId=" + event.getId());
 			}
+
+		return result;
+
+	}
+
+	//Delete an event
+
+	@RequestMapping(value = "/manager/delete", method = RequestMethod.GET)
+	public ModelAndView delete(@RequestParam final int eventId) {
+		ModelAndView result;
+
+		Event event;
+
+		event = this.eventService.findOne(eventId);
+		Assert.notNull(event);
+
+		try {
+			final Manager principal = this.managerService.findByPrincipal();
+			Assert.isTrue(principal.getId() == event.getManager().getId());
+		} catch (final Exception e) {
+			result = new ModelAndView("event/forboperation");
+			result.addObject("forbiddenOperation", "event.not.your.event.delete");
+			result.addObject("cancelURL", "event/myEvents.do");
+			return result;
+
+		}
+
+		try {
+			final Date current = new Date();
+			Assert.isTrue(event.getMoment().after(current));
+		} catch (final Exception e) {
+			result = new ModelAndView("event/forboperation");
+			result.addObject("forbiddenOperation", "event.in.past.delete");
+			result.addObject("cancelURL", "event/myEvents.do");
+			return result;
+
+		}
+
+		try {
+
+			this.eventService.delete(event);
+			result = new ModelAndView("redirect:/event/myEvents.do");
+
+		} catch (final Throwable th) {
+
+			result = new ModelAndView("event/forboperation");
+			result.addObject("forbiddenOperation", "event.commit.error");
+			result.addObject("cancelURL", "event/myEvents.do");
+			return result;
+		}
 
 		return result;
 

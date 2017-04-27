@@ -247,11 +247,29 @@ public class ChirpService {
 
 			final Collection<Chirp> cr = chorbi.getChirpReceives();
 			cr.add(mensaje);
-			try {
-				this.chirpRepository.save(mensaje);
-			} catch (final Throwable th) {
-				System.out.println(th.getCause());
-			}
+
+			this.chirpRepository.save(mensaje);
+
+		}
+	}
+
+	public void deleteEventChirp(final Event event, final Manager principal) {
+		final Collection<Chorbi> chorbiesToChirp = event.getRegistered();
+		for (final Chorbi chorbi : chorbiesToChirp) {
+			final Chirp mensaje = this.create();
+			mensaje.setSubject("We canceled this event:  " + event.getTitle() + " // Hemos cancelado este evento: " + event.getTitle());
+			mensaje.setText("We canceled this event, you may want to know! // ¡Hemos cancelado este evento, quizás quieras saberlo!");
+			final Date current = new Date();
+			mensaje.setMoment(current);
+			mensaje.setAttachments("");
+			mensaje.setRecipient(chorbi);
+			mensaje.setSender(principal);
+			mensaje.setCopy(false);
+
+			final Collection<Chirp> cr = chorbi.getChirpReceives();
+			cr.add(mensaje);
+
+			this.chirpRepository.save(mensaje);
 
 		}
 	}

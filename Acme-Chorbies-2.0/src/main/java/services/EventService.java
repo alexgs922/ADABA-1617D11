@@ -169,9 +169,14 @@ public class EventService {
 	}
 	public void delete(final Event event) {
 		Assert.notNull(event);
-		Assert.isTrue(event.getId() != 0);
-
+		final Manager principal = this.managerService.findByPrincipal();
+		Assert.isTrue(event.getManager().getId() == principal.getId());
+		final Date current = new Date();
+		Assert.isTrue(event.getMoment().after(current));
+		this.chirpService.deleteEventChirp(event, principal);
+		principal.getEvents().remove(event);
 		this.eventRepository.delete(event);
+
 	}
 
 	// Other business methods ----------------------------------------------
@@ -268,4 +273,8 @@ public class EventService {
 
 	}
 
+	public Collection<Event> listEventMonthSeatsFree() {
+		final Collection<Event> res = this.eventRepository.listEventMonthSeatsFree();
+		return res;
+	}
 }
