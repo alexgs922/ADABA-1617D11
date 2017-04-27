@@ -30,6 +30,12 @@
   		<put-attribute name="title" value="No se puede ejecutar" /> 
  		<put-attribute name="body" value="/views/misc/forbiddenRun.jsp" /> 
   	</definition>
+  	
+  	<definition name="invalidCreditCard" extends="master.page">
+  		<put-attribute name="title" value="Tarjeta de crédito caducada" /> 
+ 		<put-attribute name="body" value="/views/misc/invalidCreditCard.jsp" /> 
+  	</definition>
+	
 	
 
 </tiles-definitions>

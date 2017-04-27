@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import services.ChorbiService;
+import services.CreditCardService;
 import services.TasteService;
 import domain.Chorbi;
 import domain.Taste;
@@ -30,10 +32,13 @@ public class TasteController {
 	//Services -----------------------------------------------------------
 
 	@Autowired
-	private ChorbiService	chorbiService;
+	private ChorbiService		chorbiService;
 
 	@Autowired
-	private TasteService	tasteService;
+	private TasteService		tasteService;
+
+	@Autowired
+	private CreditCardService	creditCardService;
 
 
 	//MyLikes ------------------------------------------------
@@ -45,12 +50,18 @@ public class TasteController {
 		final Collection<Taste> tastes;
 		Chorbi principal;
 
-		principal = this.chorbiService.findByPrincipal();
-		tastes = this.chorbiService.findAllMyTastesWithoutBannedChorbies(principal);
+		try {
 
-		result = new ModelAndView("taste/list");
-		result.addObject("tastes", tastes);
-		result.addObject("requestURI", "chorbi/chorbi/myLikes.do");
+			principal = this.chorbiService.findByPrincipal();
+			Assert.isTrue(this.creditCardService.validateDate(principal.getCreditCard().getExpirationMonth(), principal.getCreditCard().getExpirationYear()));
+			tastes = this.chorbiService.findAllMyTastesWithoutBannedChorbies(principal);
+			result = new ModelAndView("taste/list");
+			result.addObject("tastes", tastes);
+			result.addObject("requestURI", "chorbi/chorbi/myLikes.do");
+
+		} catch (final Throwable th) {
+			result = new ModelAndView("invalidCreditCard");
+		}
 
 		return result;
 

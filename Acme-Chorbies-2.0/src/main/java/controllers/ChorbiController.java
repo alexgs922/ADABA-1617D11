@@ -179,6 +179,7 @@ public class ChorbiController extends AbstractController {
 		ModelAndView result;
 		Collection<Chorbi> chorbies;
 		Chorbi chorbi;
+
 		chorbi = this.chorbiService.findOne(chorbiId);
 		chorbies = this.chorbiService.findAllChorbiesWhoLikedByThisUser(chorbi);
 
