@@ -12,7 +12,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 
-<display:table pagesize="5" keepStatus="true" sort="list" class="displaytag" name="events" requestURI="${requestURI}" id="row">
+<display:table pagesize="5"  sort="list" class="displaytag" name="events" requestURI="${requestURI}" id="row">
 	
 	<jstl:choose>
 	<jstl:when test="${togray.contains(row)}">

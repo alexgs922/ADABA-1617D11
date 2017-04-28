@@ -13,7 +13,7 @@
 <%@taglib prefix="acme" tagdir="/WEB-INF/tags"%>
 
 
-<display:table pagesize="5" keepStatus="true" sort="list"
+<display:table pagesize="5" sort="list"
 	class="displaytag" name="events" requestURI="${requestURI}" id="row">
 
 	<jstl:choose>

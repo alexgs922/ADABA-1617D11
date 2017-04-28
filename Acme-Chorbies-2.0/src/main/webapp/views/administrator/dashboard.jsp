@@ -28,9 +28,9 @@
 
 <jstl:if
 	test="${listingWithTheNumberOfChorbiesPerCountryAndCity.size() != 0 }">
-	<display:table pagesize="10" class="displaytag" keepStatus="true"
+	<display:table pagesize="10" class="displaytag"
 		name="listingWithTheNumberOfChorbiesPerCountryAndCity"
-		requestURI="${requestURI}" id="row">
+		requestURI="${requestURI}" id="row" >
 
 		<spring:message code="administrator.country" var="country" />
 		<display:column value="${row[0]}" title="${country}" />
@@ -51,7 +51,7 @@
 </h3>
 
 <jstl:if test="${minimumMaximumAverageAgesOfTheChorbies.size() != 0 }">
-	<display:table pagesize="10" class="displaytag" keepStatus="true"
+	<display:table pagesize="10" class="displaytag" 
 		name="minimumMaximumAverageAgesOfTheChorbies"
 		requestURI="${requestURI}" id="row">
 
@@ -73,7 +73,7 @@
 		code="administrator.ratioChorbiesWhoHaveNoRegisteredACreditCardOrHaveRegisteredAnInvalidCreditCard" />
 </h3>
 
-<display:table class="displaytag" keepStatus="true"
+<display:table class="displaytag" 
 	name="ratioChorbiesWhoHaveNoRegisteredACreditCardOrHaveRegisteredAnInvalidCreditCard"
 	id="row">
 
@@ -96,7 +96,7 @@
 		code="administrator.ratiosOfChorbiesWhoSearchActivities" />
 </h3>
 
-<display:table class="displaytag" keepStatus="true"
+<display:table class="displaytag" 
 	name="ratiosOfChorbiesWhoSearchActivities" id="row">
 
 	<spring:message
@@ -117,7 +117,7 @@
 		code="administrator.ratiosOfChorbiesWhoSearchFriendship" />
 </h3>
 
-<display:table class="displaytag" keepStatus="true"
+<display:table class="displaytag" 
 	name="ratiosOfChorbiesWhoSearchFriendship" id="row">
 
 	<spring:message
@@ -137,7 +137,7 @@
 	<spring:message code="administrator.ratiosOfChorbiesWhoSearchLove" />
 </h3>
 
-<display:table class="displaytag" keepStatus="true"
+<display:table class="displaytag" 
 	name="ratiosOfChorbiesWhoSearchLove" id="row">
 
 	<spring:message code="administrator.ratiosOfChorbiesWhoSearchLove"
@@ -159,7 +159,7 @@
 
 <jstl:if
 	test="${listOfChorbiesCortedByTheNumberOfLikesTheyHaveGot.size() != 0 }">
-	<display:table pagesize="10" class="displaytag" keepStatus="true"
+	<display:table pagesize="10" class="displaytag" 
 		name="listOfChorbiesCortedByTheNumberOfLikesTheyHaveGot"
 		requestURI="${requestURI}" id="row">
 
@@ -181,7 +181,7 @@
 </h3>
 
 <jstl:if test="${minOfLikesPerChorbie.size() != 0 }">
-	<display:table class="displaytag" keepStatus="true"
+	<display:table class="displaytag" 
 		name="minOfLikesPerChorbie" id="row">
 
 		<spring:message code="administrator.minOfLikesPerChorbie"
@@ -200,7 +200,7 @@
 </h3>
 
 <jstl:if test="${maxOfLikesPerChorbie.size() != 0 }">
-	<display:table class="displaytag" keepStatus="true"
+	<display:table class="displaytag" 
 		name="maxOfLikesPerChorbie" id="row">
 
 		<spring:message code="administrator.maxOfLikesPerChorbie"
@@ -218,7 +218,7 @@
 	<spring:message code="administrator.averageLikesPerChorbi" />
 </h3>
 
-<display:table class="displaytag" keepStatus="true"
+<display:table class="displaytag" 
 	name="averageLikesPerChorbi" id="row">
 
 	<spring:message code="administrator.averageLikesPerChorbi"
@@ -237,7 +237,7 @@
 </h3>
 
 <jstl:if test="${theChorbiesWhoHaveGotMoreChirps.size() != 0 }">
-	<display:table class="displaytag" keepStatus="true"
+	<display:table class="displaytag" 
 		name="theChorbiesWhoHaveGotMoreChirps" id="row">
 
 		<spring:message code="administrator.chorbi.name" var="nameActor" />
@@ -256,7 +256,7 @@
 </h3>
 
 <jstl:if test="${theChorbiesWhoHaveSentMoreChirps.size() != 0 }">
-	<display:table class="displaytag" keepStatus="true"
+	<display:table class="displaytag" 
 		name="theChorbiesWhoHaveSentMoreChirps" id="row">
 
 		<spring:message code="administrator.chorbi.name" var="nameActor" />
@@ -275,7 +275,7 @@
 </h3>
 
 <jstl:if test="${minAvgMaxChirpsReceived.size() != 0 }">
-	<display:table pagesize="10" class="displaytag" keepStatus="true"
+	<display:table pagesize="10" class="displaytag" 
 		name="minAvgMaxChirpsReceived" requestURI="${requestURI}" id="row">
 
 		<spring:message code="administrator.min" var="min" />
@@ -296,7 +296,7 @@
 </h3>
 
 <jstl:if test="${minAvgMaxChirpsSent.size() != 0 }">
-	<display:table pagesize="10" class="displaytag" keepStatus="true"
+	<display:table pagesize="10" class="displaytag" 
 		name="minAvgMaxChirpsSent" requestURI="${requestURI}" id="row">
 
 		<spring:message code="administrator.min" var="min" />
@@ -320,7 +320,7 @@
 		code="administrator.listingManagersSortedByNumbeOfEventsTheyOrganise" />
 </h3>
 
-<display:table class="displaytag" keepStatus="true"
+<display:table class="displaytag" 
 	name="listingManagersSortedByNumbeOfEventsTheyOrganise" id="row">
 
 	<spring:message code="administrator.manager.name" var="nameActor" />
@@ -338,7 +338,7 @@
 </h3>
 
 <jstl:if test="${listingManagersAndAmountTheyDueInFees.size() != 0 }">
-	<display:table pagesize="10" class="displaytag" keepStatus="true"
+	<display:table pagesize="10" class="displaytag" 
 		name="listingManagersAndAmountTheyDueInFees" requestURI="${requestURI}" id="row">
 
 		<spring:message code="administrator.manager.name" var="nameActor" />
@@ -356,7 +356,7 @@
 </h3>
 
 <jstl:if test="${listingChorbiesSortedByNumberOfEventsRegistered.size() != 0 }">
-	<display:table class="displaytag" keepStatus="true"
+	<display:table class="displaytag" 
 		name="listingChorbiesSortedByNumberOfEventsRegistered" id="row">
 
 		<spring:message code="administrator.chorbi.name" var="nameActor" />
@@ -375,7 +375,7 @@
 </h3>
 
 <jstl:if test="${listingChorbiesAndAmountTheyDueInFees.size() != 0 }">
-	<display:table pagesize="10" class="displaytag" keepStatus="true"
+	<display:table pagesize="10" class="displaytag" 
 		name="listingChorbiesAndAmountTheyDueInFees" requestURI="${requestURI}" id="row">
 
 		<spring:message code="administrator.chorbi.name" var="nameActor" />
@@ -393,7 +393,7 @@
 </h3>
 
 <jstl:if test="${listChorbiesSortedByAverageNumberStarsThatTheyHaveeGot.size() != 0 }">
-	<display:table pagesize="10" class="displaytag" keepStatus="true"
+	<display:table pagesize="10" class="displaytag" 
 		name="listChorbiesSortedByAverageNumberStarsThatTheyHaveeGot" requestURI="${requestURI}" id="row">
 
 		<spring:message code="administrator.chorbi.name" var="nameActor" />

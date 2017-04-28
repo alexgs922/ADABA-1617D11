@@ -29,19 +29,31 @@
 <script type="text/javascript" src="scripts/jquery.js"></script>
 <script type="text/javascript" src="scripts/jquery-ui.js"></script>
 <script type="text/javascript" src="scripts/jmenu.js"></script>
+<script type="text/javascript" src="scripts/jquery.dataTables.min.js"></script>
 
 <link rel="stylesheet" href="styles/common.css" type="text/css">
 <link rel="stylesheet" href="styles/jmenu.css" media="screen"
 	type="text/css" />
 <link rel="stylesheet" href="styles/displaytag.css" type="text/css">
-
+<link rel="stylesheet" href="styles/jquery.dataTables.min.css" type="text/css">
 <title><tiles:insertAttribute name="title" ignore="true" /></title>
 
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("#jMenu").jMenu();
 	});
+	
+	$(document).ready(function(){
+	    $('#row').DataTable();
+	});
 
+	$(document).ready(function(){
+		$('#row_length').hide();
+		$('#row_info').hide();
+		$('#row_paginate').hide();
+	});
+	
+	
 	function askSubmission(msg, form) {
 		if (confirm(msg))
 			form.submit();
