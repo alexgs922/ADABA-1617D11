@@ -837,7 +837,7 @@
 
 			</list>
 		</property>
-		<property name="totalChargedFee" value="20" />
+		<property name="totalChargedFee" value="30" />
 
 
 	</bean>
@@ -889,7 +889,7 @@
 
 			</list>
 		</property>
-		<property name="totalChargedFee" value="20" />
+		<property name="totalChargedFee" value="15" />
 
 
 	</bean>
@@ -991,7 +991,7 @@
 
 			</list>
 		</property>
-		<property name="totalChargedFee" value="20" />
+		<property name="totalChargedFee" value="23" />
 
 	</bean>
 
@@ -1040,7 +1040,7 @@
 				
 			</list>
 		</property>
-		<property name="totalChargedFee" value="20" />
+		<property name="totalChargedFee" value="15" />
 
 	</bean>
 
