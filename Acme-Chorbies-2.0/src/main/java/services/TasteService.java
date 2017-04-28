@@ -3,6 +3,7 @@ package services;
 
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -150,6 +151,31 @@ public class TasteService {
 
 		return res;
 
+	}
+
+	// Dashboard 2.0 
+
+	public Double avgStars() {
+		final Double res = this.tasteRepository.avgStars();
+		return res;
+	}
+
+	public Long minStars() {
+		Long res = null;
+		final List<Long> maxMin = (List<Long>) this.tasteRepository.minMaxStars();
+		for (final Long i : maxMin)
+			if (i != null) {
+				res = i;
+				break;
+			}
+		return res;
+	}
+
+	public Long maxStars() {
+		Long res = null;
+		final List<Long> maxMin = (List<Long>) this.tasteRepository.minMaxStars();
+		res = maxMin.get(maxMin.size() - 1);
+		return res;
 	}
 
 }

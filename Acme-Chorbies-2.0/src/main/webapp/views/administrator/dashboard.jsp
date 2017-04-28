@@ -405,3 +405,53 @@
 	</display:table>
 </jstl:if>
 
+
+<h3>
+	<spring:message code="administrator.minStars" />
+</h3>
+
+<display:table class="displaytag" name="minStars" id="row">
+
+		<spring:message code="administrator.minStars" var="minStars" />
+		<display:column title="${minStars}" sortable="false" >
+			<fmt:formatNumber value="${row}" type="number" />
+		</display:column>
+		
+</display:table>
+
+
+<h3>
+	<spring:message code="administrator.maxStars" />
+</h3>
+
+<display:table class="displaytag" name="maxStars" id="row">
+
+		<spring:message code="administrator.maxStars" var="maxStars" />
+		<display:column title="${maxStars}" sortable="false" >
+			<fmt:formatNumber value="${row}" type="number" />
+		</display:column>
+		
+</display:table>
+
+
+<h3>
+	<spring:message code="administrator.avgStars" />
+</h3>
+
+<display:table class="displaytag" name="avgStars" id="row">
+
+	<spring:message code="administrator.avgStars" var="avgStars" />
+	<display:column title="${avgStars}" sortable="false">
+		<fmt:formatNumber value="${row}" type="number" maxFractionDigits="3" minFractionDigits="3" />
+	</display:column>
+
+</display:table>
+
+
+
+
+
+
+
+
+

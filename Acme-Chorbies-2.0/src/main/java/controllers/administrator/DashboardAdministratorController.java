@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 import services.ChirpService;
 import services.ChorbiService;
 import services.ManagerService;
+import services.TasteService;
 import controllers.AbstractController;
 import domain.Chorbi;
 import domain.Manager;
@@ -29,6 +30,9 @@ public class DashboardAdministratorController extends AbstractController {
 
 	@Autowired
 	private ManagerService	managerService;
+
+	@Autowired
+	private TasteService	tasteService;
 
 
 	// Constructors -------------------------------------------
@@ -64,6 +68,9 @@ public class DashboardAdministratorController extends AbstractController {
 		final Collection<Chorbi> listingChorbiesSortedByNumberOfEventsRegistered = this.chorbiService.listingChorbiesSortedByNumberOfEventsRegistered();
 		final Collection<Object[]> listingChorbiesAndAmountTheyDueInFees = this.chorbiService.listingChorbiesAndAmountTheyDueInFees();
 		final Collection<Object[]> listChorbiesSortedByAverageNumberStarsThatTheyHaveeGot = this.chorbiService.listChorbiesSortedByAverageNumberStarsThatTheyHaveeGot();
+		final Long minStars = this.tasteService.minStars();
+		final Long maxStars = this.tasteService.maxStars();
+		final Double avgStars = this.tasteService.avgStars();
 
 		result = new ModelAndView("administrator/dashboard");
 		result.addObject("listingWithTheNumberOfChorbiesPerCountryAndCity", listingWithTheNumberOfChorbiesPerCountryAndCity);
@@ -85,6 +92,9 @@ public class DashboardAdministratorController extends AbstractController {
 		result.addObject("listingChorbiesSortedByNumberOfEventsRegistered", listingChorbiesSortedByNumberOfEventsRegistered);
 		result.addObject("listingChorbiesAndAmountTheyDueInFees", listingChorbiesAndAmountTheyDueInFees);
 		result.addObject("listChorbiesSortedByAverageNumberStarsThatTheyHaveeGot", listChorbiesSortedByAverageNumberStarsThatTheyHaveeGot);
+		result.addObject("minStars", minStars);
+		result.addObject("maxStars", maxStars);
+		result.addObject("avgStars", avgStars);
 
 		return result;
 	}
