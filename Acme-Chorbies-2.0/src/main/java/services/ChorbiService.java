@@ -369,20 +369,20 @@ public class ChorbiService {
 		Assert.notNull(chorbi);
 		Double res = 0.0;
 		Integer months = 0;
+		Configuration configuration;
 
 		final Calendar updateDate = Calendar.getInstance();
 		final Calendar actualDate = Calendar.getInstance();
 
-		Configuration configuration;
-
 		actualDate.setTime(new Date());
 		updateDate.setTime(chorbi.getUpdateDate());
 
-		Assert.isTrue(updateDate.get(Calendar.MONTH) != actualDate.get(Calendar.MONTH));
+		if (actualDate.get(Calendar.YEAR) == updateDate.get(Calendar.YEAR))
+			Assert.isTrue(updateDate.get(Calendar.MONTH) != actualDate.get(Calendar.MONTH));
 
-		if (updateDate.get(Calendar.MONTH) < actualDate.get(Calendar.MONTH))
+		if (updateDate.get(Calendar.YEAR) == actualDate.get(Calendar.YEAR))
 			months += actualDate.get(Calendar.MONTH) - updateDate.get(Calendar.MONTH);
-		else
+		else if (updateDate.get(Calendar.YEAR) != actualDate.get(Calendar.YEAR))
 			months += 12 - updateDate.get(Calendar.MONTH) + actualDate.get(Calendar.MONTH);
 
 		configuration = this.configurationService.findConfiguration();
