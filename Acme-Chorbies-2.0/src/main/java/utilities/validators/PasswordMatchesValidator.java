@@ -6,15 +6,15 @@ import javax.validation.ConstraintValidatorContext;
 
 import form.RegistrationForm;
 import form.RegistrationFormManager;
-public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatchesManager, RegistrationFormManager> {
+public class PasswordMatchesValidator implements ConstraintValidator<PasswordMatches, RegistrationForm> {
 
 
 
 	@Override
-	public void initialize(PasswordMatchesManager constraintAnnotation) {
+	public void initialize(PasswordMatches constraintAnnotation) {
 	}
 	@Override
-	public boolean isValid(RegistrationFormManager form, ConstraintValidatorContext context) {
+	public boolean isValid(RegistrationForm form, ConstraintValidatorContext context) {
 		return form.getPassword().equals(form.getPasswordCheck());
 	}
 }

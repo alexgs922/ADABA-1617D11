@@ -132,8 +132,7 @@ public class Chorbi extends Actor {
 	private Collection<Event>	events;
 
 
-	@Valid
-	@NotNull
+	
 	@ManyToMany(mappedBy = "registered")
 	public Collection<Event> getEvents() {
 		return this.events;
