@@ -1008,7 +1008,7 @@
 		<property name="description" value="Chorbi6 MALE Activities description" />
 		<property name="relationship" value="ACTIVITIES" />
 		<property name="birthDate" value="08/10/1986" />
-		<property name="updateDate" value="03/03/2017" />
+		<property name="updateDate" value="04/03/2017" />
 		<property name="genre" value="MALE" />
 		<property name="ban" value="false" />
 

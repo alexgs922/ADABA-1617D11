@@ -1,6 +1,7 @@
 
 package funcionalTesting;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
@@ -303,31 +304,8 @@ public class ChorbiServiceTest extends AbstractTest {
 	@Test
 	public void driverBanChorbiUseCase5() {
 
-		final Chorbi chorbi1 = this.chorbiService.findOneToSent(63); // Obtenemos
-																		// de la
-																		// base
-																		// de
-																		// datos
-																		// el
-																		// chorbi
-																		// con
-																		// id =
-																		// 63
-																		// inicialmente
-																		// no
-																		// banneado
-		final Chorbi chorbi2 = this.chorbiService.findOneToSent(65); // Obtenemos
-																		// de la
-																		// base
-																		// de
-																		// datos
-																		// el
-																		// chorbi
-																		// con
-																		// id =
-																		// 65
-																		// inicialmente
-																		// banneado
+		final Chorbi chorbi1 = this.chorbiService.findOneToSent(259); // Obtenemos de la base de datos el chorbi con id = 259 inicialmente no banneado
+		final Chorbi chorbi2 = this.chorbiService.findOneToSent(261); //Obtenesmo de la base de datos el chorbi con id = 261 inicialmente banneado
 
 		final Object testingData[][] = {
 			// TEST POSITIVO: Bannear un chorbi que aun no esta baneado, y
@@ -379,31 +357,8 @@ public class ChorbiServiceTest extends AbstractTest {
 	@Test
 	public void driverUnbanChorbiUseCase5() {
 
-		final Chorbi chorbi1 = this.chorbiService.findOneToSent(65); // Obtenemos
-																		// de la
-																		// base
-																		// de
-																		// datos
-																		// el
-																		// chorbi
-																		// con
-																		// id =
-																		// 65
-																		// inicialmente
-																		// banneado
-		final Chorbi chorbi2 = this.chorbiService.findOneToSent(63); // Obtenemos
-																		// de la
-																		// base
-																		// de
-																		// datos
-																		// el
-																		// chorbi
-																		// con
-																		// id =
-																		// 63
-																		// inicialmente
-																		// no
-																		// banneado
+		final Chorbi chorbi1 = this.chorbiService.findOneToSent(261); // Obtenemos de la base de datos el chorbi con id = 261 inicialmente baneado
+		final Chorbi chorbi2 = this.chorbiService.findOneToSent(259); // Obtenemos de la base de datos el chorbi con id = 259 inicialmente sin banear
 
 		final Object testingData[][] = {
 			// TEST POSITIVO: Permitir un chorbi que esta baneado, y
@@ -517,5 +472,62 @@ public class ChorbiServiceTest extends AbstractTest {
 				(String) testingData[i][8], (String) testingData[i][9], (String) testingData[i][10], (String) testingData[i][11], (String) testingData[i][12], (String) testingData[i][13], (String) testingData[i][14], (String) testingData[i][15],
 				(String) testingData[i][16], (Class<?>) testingData[i][17]);
 
+	}
+
+	protected void templateCalculateFeeChorbiUseCase(final String username, final Chorbi chorbi, final Class<?> expected) {
+
+		Class<?> caught;
+		caught = null;
+
+		try {
+
+			this.authenticate(username);
+
+			final Calendar updateDate = Calendar.getInstance();
+			final Calendar actualDate = Calendar.getInstance();
+
+			actualDate.setTime(new Date());
+			updateDate.setTime(chorbi.getUpdateDate());
+
+			this.chorbiService.calculateFee(chorbi);
+
+			this.unauthenticate();
+			this.chorbiService.flush();
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.checkExceptions(expected, caught);
+
+	}
+
+	@Test
+	public void driverCalculateFeeChorbiUseCase() {
+
+		final Chorbi chorbi1 = this.chorbiService.findOneToSent(259); // Obtenemos un chorbi con una fecha de actualización correcta chorbiId = 259
+
+		final Chorbi chorbi2 = this.chorbiService.findOneToSent(264); // Obtenemos un chorbi con una fecha de actualización igual a la fecha actual chorbiId = 264
+
+		final Object testingData[][] = {
+			// TEST POSITIVO: calulamos la fee del chorbi que se ecuentra en un rango de fechas correcto.
+			{
+				"admin", chorbi1, null
+			},
+			// TEST NEGATIVO: Intentamos calcular la fee del chorbi cuya fecha de actualización se encuentra en el mismo mes que la fecha actual
+			// Si el siguiente test no funciona correctamente quiere decir que ha pasado el tiempo y el mes actual ya no conincide con la fecha de actualización
+			// Por lo tanto bastaría con cambiar el mes de actualización del chorbi.
+			{
+				"admin", chorbi2, IllegalArgumentException.class
+			},
+			// TEST NEGATIVO: Intentamos calcular la fee del chorbi sin ser admin
+			{
+				"chorbi1", chorbi2, IllegalArgumentException.class
+			}
+
+		};
+
+		for (int i = 0; i < testingData.length; i++)
+			this.templateCalculateFeeChorbiUseCase((String) testingData[i][0], (Chorbi) testingData[i][1], ((Class<?>) testingData[i][2]));
 	}
 }
