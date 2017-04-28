@@ -12,10 +12,12 @@ import domain.Chirp;
 @Repository
 public interface ChirpRepository extends JpaRepository<Chirp, Integer> {
 
-	@Query("select m from Chorbi c join c.chirpReceives m where m.copy=false and c.id=?1")
+	//chorbi 1 259
+	//manager 1 250 
+	@Query("select m from Actor c join c.chirpReceives m where m.copy=false and c.id=?1")
 	Collection<Chirp> myRecivedMessages(int actorId);
 
-	@Query("select m from Chorbi c join c.chirpWrites m where m.copy=true and c.id=?1")
+	@Query("select m from Actor c join c.chirpWrites m where m.copy=true and c.id=?1")
 	Collection<Chirp> mySendedMessages(int actorId);
 
 	//Dashboard

@@ -80,11 +80,11 @@ public class Chirp extends DomainEntity {
 		this.attachments = attachments;
 	}
 
-	public boolean isCopy() {
+	public Boolean isCopy() {
 		return this.copy;
 	}
 
-	public void setCopy(final boolean copy) {
+	public void setCopy(final Boolean copy) {
 		this.copy = copy;
 	}
 

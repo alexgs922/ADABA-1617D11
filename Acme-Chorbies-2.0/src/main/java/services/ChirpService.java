@@ -1,6 +1,7 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 
@@ -16,6 +17,7 @@ import domain.Actor;
 import domain.Chirp;
 import domain.Chorbi;
 import domain.Event;
+import domain.Manager;
 
 @Service
 @Transactional
@@ -39,6 +41,9 @@ public class ChirpService {
 
 	@Autowired
 	private ActorService	actorService;
+
+	@Autowired
+	private ManagerService	managerService;
 
 	@Autowired
 	private Validator		validator;
@@ -67,6 +72,20 @@ public class ChirpService {
 		res = new Chirp();
 
 		res.setRecipient(c);
+		res.setCopy(true);
+
+		return res;
+	}
+
+	public Chirp createBulk(final Event c) {
+		Chirp res;
+
+		final Manager principal = this.managerService.findByPrincipal();
+		Assert.isTrue(principal.getId() == c.getManager().getId());
+
+		res = new Chirp();
+
+		res.setSender(c.getManager());
 		res.setCopy(true);
 
 		return res;
@@ -103,7 +122,7 @@ public class ChirpService {
 		final String text = this.tasteService.checkContactInfo(chirp.getText());
 		final String subject = this.tasteService.checkContactInfo(chirp.getSubject());
 
-		result.setRecipient(chirp.getRecipient());
+		result.setRecipient(t);
 		result.setSender(t);
 		result.setText(text);
 		result.setSubject(subject);
@@ -190,21 +209,8 @@ public class ChirpService {
 	public void saveBulk(final Chirp m, final Event v) {
 		Assert.notNull(m);
 
-		final Actor t = this.actorService.findByPrincipal();
-
-		final Chirp chirp1 = new Chirp();
-		chirp1.setSubject(m.getSubject());
-		chirp1.setText(m.getText());
-		chirp1.setMoment(m.getMoment());
-		chirp1.setAttachments(m.getAttachments());
-		chirp1.setRecipient(m.getRecipient());
-		chirp1.setSender(m.getSender());
-		chirp1.setCopy(true);
-
-		final Collection<Chirp> cs = m.getSender().getChirpWrites();
-		cs.add(chirp1);
-
-		this.chirpRepository.save(chirp1);
+		final Manager principal = this.managerService.findByPrincipal();
+		Assert.isTrue(principal.getId() == v.getManager().getId());
 
 		final Collection<Chorbi> cc = v.getRegistered();
 		for (final Chorbi c : cc) {
@@ -215,7 +221,7 @@ public class ChirpService {
 			chirp2.setMoment(m.getMoment());
 			chirp2.setAttachments(m.getAttachments());
 			chirp2.setRecipient(c);
-			chirp2.setSender(m.getSender());
+			chirp2.setSender(principal);
 			chirp2.setCopy(false);
 
 			final Collection<Chirp> cr = c.getChirpReceives();
@@ -224,9 +230,50 @@ public class ChirpService {
 
 		}
 
-		Assert.isTrue(t.getId() == m.getSender().getId());
-
 	}
+
+	public void editEventChirp(final Event event, final Manager principal) {
+		final Collection<Chorbi> chorbiesToChirp = event.getRegistered();
+		for (final Chorbi chorbi : chorbiesToChirp) {
+			final Chirp mensaje = this.create();
+			mensaje.setSubject("Something has change in the event:  " + event.getTitle() + " // Algo ha cambiado en el evento: " + event.getTitle());
+			mensaje.setText("We have modified something in this event, you may want to know! // ¡Hemos modificado algo en este evento, quizás quieras saberlo!");
+			final Date current = new Date();
+			mensaje.setMoment(current);
+			mensaje.setAttachments("");
+			mensaje.setRecipient(chorbi);
+			mensaje.setSender(principal);
+			mensaje.setCopy(false);
+
+			final Collection<Chirp> cr = chorbi.getChirpReceives();
+			cr.add(mensaje);
+
+			this.chirpRepository.save(mensaje);
+
+		}
+	}
+
+	public void deleteEventChirp(final Event event, final Manager principal) {
+		final Collection<Chorbi> chorbiesToChirp = event.getRegistered();
+		for (final Chorbi chorbi : chorbiesToChirp) {
+			final Chirp mensaje = this.create();
+			mensaje.setSubject("We canceled this event:  " + event.getTitle() + " // Hemos cancelado este evento: " + event.getTitle());
+			mensaje.setText("We canceled this event, you may want to know! // ¡Hemos cancelado este evento, quizás quieras saberlo!");
+			final Date current = new Date();
+			mensaje.setMoment(current);
+			mensaje.setAttachments("");
+			mensaje.setRecipient(chorbi);
+			mensaje.setSender(principal);
+			mensaje.setCopy(false);
+
+			final Collection<Chirp> cr = chorbi.getChirpReceives();
+			cr.add(mensaje);
+
+			this.chirpRepository.save(mensaje);
+
+		}
+	}
+
 	public void deleteReceived(final Chirp m) {
 		final Chorbi principal = this.chorbiService.findByPrincipal();
 		Assert.notNull(m);
@@ -260,6 +307,19 @@ public class ChirpService {
 		final Collection<Chirp> sm = this.chirpRepository.myRecivedMessages(actorId);
 
 		return sm;
+	}
+
+	public Collection<Chirp> misRecibidos(final Actor actor) {
+
+		final Collection<Chirp> sm = actor.getChirpReceives();
+
+		final Collection<Chirp> sm2 = new ArrayList<Chirp>();
+
+		for (final Chirp c : sm)
+			if (c.isCopy().equals(false))
+				sm2.add(c);
+
+		return sm2;
 	}
 
 	public void flush() {

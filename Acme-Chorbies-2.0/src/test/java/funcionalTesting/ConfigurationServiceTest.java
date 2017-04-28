@@ -2,6 +2,7 @@
 package funcionalTesting;
 
 import javax.transaction.Transactional;
+import javax.validation.ConstraintViolationException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -70,6 +71,8 @@ public class ConfigurationServiceTest extends AbstractTest {
 				"admin", 14, 25, 41, 20.0, 50.0, null
 			}, {//Sólo el administrador puede editar una configuration
 				"chorbi1", 14, 25, 41, 20.0, 50.0, IllegalArgumentException.class
+			}, {//Introducimos valores de fee erroneos
+				"admin", 14, 25, 41, -20.0, -50.0, ConstraintViolationException.class
 			}
 
 		};

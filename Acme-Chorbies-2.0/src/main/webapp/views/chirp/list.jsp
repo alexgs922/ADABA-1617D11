@@ -34,7 +34,7 @@
 
 	</jstl:if>
 
-	<jstl:if test="${requestURI == 'message/listSentMessages.do'}">
+	<jstl:if test="${requestURI == 'chirp/listSentMessages.do'}">
 
 		<spring:message code="chirp.recipient" var="chirpRecipient" />
 		<display:column property="recipient.userAccount.username"
@@ -84,29 +84,63 @@
 
 
 	<jstl:if test="${requestURI == 'chirp/listReceivedMessages.do'}">
-		<display:column>
 
-			<a href="chirp/response/create.do?actorId=${row.sender.id}"> <spring:message
-					code="chirp.create" />
-			</a>
 
-		</display:column>
+		<jstl:if test="${row.sender.userAccount.authorities[0].authority=='CHORBI'}">
 
-		<display:column>
+			<display:column>
 
-			<a href="chirp/reply.do?chirpId=${row.id}"> <spring:message
-					code="chirp.reply" />
-			</a>
+				<a href="chirp/response/create.do?actorId=${row.sender.id}"> <spring:message
+						code="chirp.create" />
+				</a>
 
-		</display:column>
+			</display:column>
 
-		<display:column>
+			<display:column>
 
-			<acme:confirmDelete
-				url="chirp/deleteReceived.do?chirpId=${row.id}"
-				code="chirp.delete" codeConfirm="chirp.confirm.delete" />
+				<a href="chirp/reply.do?chirpId=${row.id}"> <spring:message
+						code="chirp.reply" />
+				</a>
 
-		</display:column>
+			</display:column>
+
+			<display:column>
+
+				<acme:confirmDelete url="chirp/deleteReceived.do?chirpId=${row.id}"
+					code="chirp.delete" codeConfirm="chirp.confirm.delete" />
+
+			</display:column>
+
+		</jstl:if>
+
+
+
+		<jstl:if test="${row.sender.userAccount.authorities[0].authority=='MANAGER'}">
+
+			<display:column>
+				<spring:message code="chirp.notRespond" var="notRespond" />
+				<p class="text-muted">
+					<jstl:out value="${notRespond}"></jstl:out>
+				</p>
+			</display:column>
+
+			<display:column>
+				<spring:message code="chirp.notReply" var="notReply" />
+				<p class="text-muted">
+					<jstl:out value="${notReply}"></jstl:out>
+				</p>
+			</display:column>
+
+
+			<display:column>
+
+				<acme:confirmDelete url="chirp/deleteReceived.do?chirpId=${row.id}"
+					code="chirp.delete" codeConfirm="chirp.confirm.delete" />
+
+			</display:column>
+
+		</jstl:if>
+
 	</jstl:if>
 
 
@@ -121,8 +155,7 @@
 		</display:column>
 
 		<display:column>
-			<acme:confirmDelete
-				url="chirp/deleteSent.do?chirpId=${row.id}"
+			<acme:confirmDelete url="chirp/deleteSent.do?chirpId=${row.id}"
 				code="chirp.delete" codeConfirm="chirp.confirm.delete" />
 
 		</display:column>

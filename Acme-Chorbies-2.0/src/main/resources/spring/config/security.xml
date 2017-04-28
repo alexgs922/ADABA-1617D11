@@ -94,17 +94,21 @@
 			access="hasRole('CHORBI')" />
 		<security:intercept-url pattern="/chirp/reply.do"
 			access="hasRole('CHORBI')" />
-			
-			<security:intercept-url pattern="/chirp/bulkChirp.do"
+
+		<security:intercept-url pattern="/chorbi/listMyEvents.do" access="hasRole('CHORBI')" /> 
+
+		
+		<security:intercept-url pattern="/chirp/bulkChirp.do"
 			access="hasRole('MANAGER')" />
-			
+
 		<!-- EVENTS -->
 		<security:intercept-url pattern="/event/list.do" access="permitAll" /> 
 		<security:intercept-url pattern="/event/listsRegisteredFrom.do" access="isAuthenticated()" /> 
 		<security:intercept-url pattern="/event/myEvents.do" access="hasRole('MANAGER')" />
-		<security:intercept-url pattern="/event/manager/create.do" access="hasRole('MANAGER')" />
+		<security:intercept-url pattern="/event/manager/**" access="hasRole('MANAGER')" />
 		<security:intercept-url pattern="/event/registerEvent.do" access="hasRole('CHORBI')" />
 		<security:intercept-url pattern="/event/unregisterEvent.do" access="hasRole('CHORBI')" />
+		<security:intercept-url pattern="/event/listEventOfferMonth.do" access="permitAll" />
 
 
 

@@ -84,4 +84,12 @@ public interface ChorbiRepository extends JpaRepository<Chorbi, Integer> {
 	@Query("select c from Chorbi c where c.chirpWrites.size=(select max(c1.chirpWrites.size) from Chorbi c1)")
 	Collection<Chorbi> theChorbiesWhoHaveSentMoreChirps();
 
+	@Query("select c from Chorbi c order by c.events.size DESC")
+	Collection<Chorbi> listingChorbiesSortedByNumberOfEventsRegistered();
+
+	@Query("select c.name, c.totalChargedFee from Chorbi c")
+	Collection<Object[]> listingChorbiesAndAmountTheyDueInFees();
+
+	@Query("select c.name,(select avg(t.stars) from Taste t where t.chorbi.id=c.id)as auxiliar from Chorbi c order by auxiliar")
+	Collection<Object[]> listChorbiesSortedByAverageNumberStarsThatTheyHaveeGot();
 }

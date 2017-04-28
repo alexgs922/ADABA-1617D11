@@ -40,6 +40,12 @@ public class EventService {
 	@Autowired
 	private ConfigurationService	configurationService;
 
+	@Autowired
+	private CreditCardService		creditCardService;
+
+	@Autowired
+	private ChirpService			chirpService;
+
 
 	// Constructors -----------------------------------------------------------
 
@@ -73,16 +79,15 @@ public class EventService {
 		list.add(chorbi);
 		event.setRegistered(list);
 		//Quitamos una plaza
-		event.setNumberSeatsOffered(seats-1);
-		
+
+		event.setNumberSeatsOffered(seats - 1);
+
 		//Añadir el evento al chorbi
 		final Collection<Event> events = chorbi.getEvents();
 		final List<Event> listEvents = new ArrayList<Event>(events);
 		listEvents.add(event);
 		chorbi.setEvents(listEvents);
 
-		
-		
 		this.save(event);
 		this.chorbiService.save(chorbi);
 		return event;
@@ -106,8 +111,9 @@ public class EventService {
 		final int index2 = listEvent.indexOf(event);
 		listEvent.remove(index2);
 		chorbi.setEvents(listEvent);
-		event.setNumberSeatsOffered(event.getNumberSeatsOffered()+1);
-		
+
+		event.setNumberSeatsOffered(event.getNumberSeatsOffered() + 1);
+
 		this.save(event);
 		this.chorbiService.save(chorbi);
 		return event;
@@ -137,6 +143,8 @@ public class EventService {
 		final Date current = new Date();
 		final Manager m = this.managerService.findByPrincipal();
 		Assert.isTrue(event.getMoment().after(current));
+		Assert.notNull(m.getCreditCard());
+		Assert.isTrue(this.creditCardService.validateDate(m.getCreditCard().getExpirationMonth(), m.getCreditCard().getExpirationYear()));
 		final double feeCurrent = this.configurationService.findConfiguration().getManagersFee();
 		event.setTotalChargedFee(feeCurrent);
 		m.setTotalChargedFee(m.getTotalChargedFee() + feeCurrent);
@@ -146,11 +154,29 @@ public class EventService {
 
 	}
 
+	public Event saveEdit(Event event) {
+		Assert.notNull(event);
+		final Date current = new Date();
+		final Manager m = this.managerService.findByPrincipal();
+		Assert.isTrue(m.getId() == event.getManager().getId());
+		Assert.isTrue(event.getMoment().after(current));
+		event = this.eventRepository.save(event);
+
+		this.chirpService.editEventChirp(event, m);
+
+		return event;
+
+	}
 	public void delete(final Event event) {
 		Assert.notNull(event);
-		Assert.isTrue(event.getId() != 0);
-
+		final Manager principal = this.managerService.findByPrincipal();
+		Assert.isTrue(event.getManager().getId() == principal.getId());
+		final Date current = new Date();
+		Assert.isTrue(event.getMoment().after(current));
+		this.chirpService.deleteEventChirp(event, principal);
+		principal.getEvents().remove(event);
 		this.eventRepository.delete(event);
+
 	}
 
 	// Other business methods ----------------------------------------------
@@ -191,12 +217,25 @@ public class EventService {
 
 			this.validator.validate(event, bindingResult);
 
-		} else
-			result = null;
+		} else {
+
+			result = this.eventRepository.findOne(event.getId());
+			//Este assert también se comprueba aquí, porque si no, el validator lo persiste igual, aunque no se cumpla la condición en controlador
+			Assert.isTrue(result.getRegistered().size() <= event.getNumberSeatsOffered());
+
+			result.setTitle(this.checkContactInfo(event.getTitle()));
+			result.setDescription(this.checkContactInfo(event.getDescription()));
+			result.setMoment(event.getMoment());
+			result.setNumberSeatsOffered(event.getNumberSeatsOffered());
+			result.setPicture(event.getPicture());
+			this.validator.validate(result, bindingResult);
+
+		}
 
 		return result;
 
 	}
+
 	public String checkContactInfo(final String cadena) {
 
 		String res = "";
@@ -233,6 +272,11 @@ public class EventService {
 
 		return res;
 
+	}
+
+	public Collection<Event> listEventMonthSeatsFree() {
+		final Collection<Event> res = this.eventRepository.listEventMonthSeatsFree();
+		return res;
 	}
 
 }

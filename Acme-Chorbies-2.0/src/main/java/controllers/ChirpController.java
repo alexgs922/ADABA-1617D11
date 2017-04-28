@@ -20,9 +20,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import services.ActorService;
 import services.ChirpService;
 import services.ChorbiService;
 import services.EventService;
+import domain.Actor;
 import domain.Chirp;
 import domain.Chorbi;
 import domain.Event;
@@ -40,6 +42,9 @@ public class ChirpController extends AbstractController {
 	@Autowired
 	private EventService	eventService;
 
+	@Autowired
+	private ActorService	actorService;
+
 
 	// Constructors -----------------------------------------------------------
 
@@ -51,9 +56,9 @@ public class ChirpController extends AbstractController {
 	public ModelAndView listReceivedMessages() {
 		final ModelAndView result;
 
-		final Chorbi c = this.chorbiService.findByPrincipal();
+		final Actor c = this.chorbiService.findByPrincipal();
 
-		final Collection<Chirp> receivedMessages = this.chirpService.myRecivedMessages(c.getId());
+		final Collection<Chirp> receivedMessages = this.chirpService.misRecibidos(c);
 
 		result = new ModelAndView("chirp/listReceivedMessages");
 		result.addObject("chirps", receivedMessages);
@@ -97,19 +102,6 @@ public class ChirpController extends AbstractController {
 		chirp = this.chirpService.create(c);
 
 		result = this.createEditModelAndView2(chirp);
-
-		return result;
-	}
-
-	@RequestMapping(value = "/chirp/bulkChirp", method = RequestMethod.GET)
-	public ModelAndView createBulk(@RequestParam final int eventId) {
-		ModelAndView result;
-		Chirp chirp;
-
-		final Event c = this.eventService.findOne(eventId);
-		chirp = this.chirpService.create();
-
-		result = new ModelAndView("chirp/bulkChirp");
 
 		return result;
 	}
@@ -166,31 +158,47 @@ public class ChirpController extends AbstractController {
 		return result;
 	}
 
-	@RequestMapping(value = "/chirp/bulkChirp", method = RequestMethod.POST, params = "save")
+	@RequestMapping(value = "/bulkChirp", method = RequestMethod.GET)
+	public ModelAndView createBulk(@RequestParam final int eventId) {
+		ModelAndView result;
+		Chirp chirp;
+
+		final Event c = this.eventService.findOne(eventId);
+		chirp = this.chirpService.createBulk(c);
+
+		result = this.createEditModelAndView3(chirp);
+		result.addObject("requestURI", "chirp/bulkChirp.do?eventId=" + eventId);
+		result.addObject("eventId", eventId);
+
+		return result;
+	}
+
+	@RequestMapping(value = "/bulkChirp", method = RequestMethod.POST, params = "save")
 	public ModelAndView saveBulk(Chirp chirpToEdit, final BindingResult binding, @RequestParam final int eventId) {
 
 		ModelAndView result;
 
 		chirpToEdit = this.chirpService.reconstruct2(chirpToEdit, binding);
 		if (binding.hasErrors()) {
-			result = this.createEditModelAndView2(chirpToEdit);
+			result = this.createEditModelAndView3(chirpToEdit);
 
 			result.addObject("chirp", chirpToEdit);
 
 		} else {
 			try {
+
 				final Event event = this.eventService.findOne(eventId);
 				this.chirpService.saveBulk(chirpToEdit, event);
 
 			} catch (final Throwable th) {
-				result = this.createEditModelAndView2(chirpToEdit, "chirp.commit.error");
+				result = this.createEditModelAndView3(chirpToEdit, "chirp.commit.error");
 
 				result.addObject("chirp", chirpToEdit);
 
 				return result;
 			}
 
-			result = new ModelAndView("redirect:/chirp/listReceivedMessages.do");
+			result = new ModelAndView("redirect:/event/myEvents.do");
 
 		}
 
@@ -288,7 +296,7 @@ public class ChirpController extends AbstractController {
 		Collection<Chorbi> actors;
 		final Chorbi c = this.chorbiService.findByPrincipal();
 
-		actors = this.chorbiService.findAll();
+		actors = this.chorbiService.findAllNotBannedChorbies();
 		actors.remove(c);
 
 		result = new ModelAndView("chirp/create");
@@ -311,6 +319,24 @@ public class ChirpController extends AbstractController {
 		ModelAndView result;
 
 		result = new ModelAndView("chirp/response/create");
+		result.addObject("chirp", chirpToEdit);
+		result.addObject("message", message);
+
+		return result;
+	}
+
+	protected ModelAndView createEditModelAndView3(final Chirp chirpToEdit) {
+		ModelAndView result;
+
+		result = this.createEditModelAndView3(chirpToEdit, null);
+
+		return result;
+	}
+
+	protected ModelAndView createEditModelAndView3(final Chirp chirpToEdit, final String message) {
+		ModelAndView result;
+
+		result = new ModelAndView("chirp/bulkChirp");
 		result.addObject("chirp", chirpToEdit);
 		result.addObject("message", message);
 
