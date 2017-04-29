@@ -28,6 +28,6 @@
 
 	<acme:submit name="save" code="chirp.save" />
 
-	<acme:cancel url="welcome/index.do" code="chirp.cancel"/>
+	<acme:cancel url="chirp/listReceivedMessages.do" code="chirp.cancel"/>
 
 </form:form>
