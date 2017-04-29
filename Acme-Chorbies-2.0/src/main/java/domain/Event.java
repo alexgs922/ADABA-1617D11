@@ -99,7 +99,7 @@ public class Event extends DomainEntity {
 		this.picture = picture;
 	}
 
-	@Min(1)
+	@Min(0)
 	public int getNumberSeatsOffered() {
 		return this.numberSeatsOffered;
 	}
