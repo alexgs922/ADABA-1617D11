@@ -1,7 +1,6 @@
 
 package funcionalTesting;
 
-import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
@@ -474,7 +473,7 @@ public class ChorbiServiceTest extends AbstractTest {
 
 	}
 
-	protected void templateCalculateFeeChorbiUseCase(final String username, final Chorbi chorbi, final Class<?> expected) {
+	protected void templateCalculateFeeChorbiUseCase(final String username, final Class<?> expected) {
 
 		Class<?> caught;
 		caught = null;
@@ -483,13 +482,7 @@ public class ChorbiServiceTest extends AbstractTest {
 
 			this.authenticate(username);
 
-			final Calendar updateDate = Calendar.getInstance();
-			final Calendar actualDate = Calendar.getInstance();
-
-			actualDate.setTime(new Date());
-			updateDate.setTime(chorbi.getUpdateDate());
-
-			this.chorbiService.calculateFee(chorbi);
+			this.chorbiService.calculateFee();
 
 			this.unauthenticate();
 			this.chorbiService.flush();
@@ -514,12 +507,6 @@ public class ChorbiServiceTest extends AbstractTest {
 			{
 				"admin", chorbi1, null
 			},
-			// TEST NEGATIVO: Intentamos calcular la fee del chorbi cuya fecha de actualización se encuentra en el mismo mes que la fecha actual
-			// Si el siguiente test no funciona correctamente quiere decir que ha pasado el tiempo y el mes actual ya no conincide con la fecha de actualización
-			// Por lo tanto bastaría con cambiar el mes de actualización del chorbi.
-			{
-				"admin", chorbi2, IllegalArgumentException.class
-			},
 			// TEST NEGATIVO: Intentamos calcular la fee del chorbi sin ser admin
 			{
 				"chorbi1", chorbi2, IllegalArgumentException.class
@@ -528,6 +515,6 @@ public class ChorbiServiceTest extends AbstractTest {
 		};
 
 		for (int i = 0; i < testingData.length; i++)
-			this.templateCalculateFeeChorbiUseCase((String) testingData[i][0], (Chorbi) testingData[i][1], ((Class<?>) testingData[i][2]));
+			this.templateCalculateFeeChorbiUseCase((String) testingData[i][0], ((Class<?>) testingData[i][1]));
 	}
 }

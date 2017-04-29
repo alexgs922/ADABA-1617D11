@@ -108,19 +108,14 @@
 
 		</display:column>
 	</security:authorize>
-	
-	<security:authorize access="hasRole('ADMIN')">
-		<display:column>
-			<a
-				href="administrator/chorbi/calculateFee.do?chorbiId=${row.id}">
-				<spring:message code="chorbi.calculateFee" />
-			</a>
-		</display:column>
-	</security:authorize>
-	
-	
-	
 
 </display:table>
 
+<security:authorize access="hasRole('ADMIN')">
 	
+		<button onclick="window.location.href='administrator/chorbi/calculateFee.do'">
+			<spring:message code="chorbi.calculateFee" />
+		</button>
+	
+</security:authorize>
+

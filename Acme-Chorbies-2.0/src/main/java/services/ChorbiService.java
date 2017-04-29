@@ -365,34 +365,50 @@ public class ChorbiService {
 
 	}
 
-	public void calculateFee(final Chorbi chorbi) {
-		Assert.notNull(chorbi);
+	public void calculateFee() {
+
 		Double res = 0.0;
 		Integer months = 0;
 		Configuration configuration;
+		Collection<Chorbi> allChorbies;
+
+		allChorbies = this.findAll();
 
 		final Calendar updateDate = Calendar.getInstance();
 		final Calendar actualDate = Calendar.getInstance();
 
-		actualDate.setTime(new Date());
-		updateDate.setTime(chorbi.getUpdateDate());
+		for (final Chorbi chorbi : allChorbies) {
 
-		if (actualDate.get(Calendar.YEAR) == updateDate.get(Calendar.YEAR))
-			Assert.isTrue(updateDate.get(Calendar.MONTH) != actualDate.get(Calendar.MONTH));
+			actualDate.setTime(new Date());
+			updateDate.setTime(chorbi.getUpdateDate());
 
-		if (updateDate.get(Calendar.YEAR) == actualDate.get(Calendar.YEAR))
-			months += actualDate.get(Calendar.MONTH) - updateDate.get(Calendar.MONTH);
-		else if (updateDate.get(Calendar.YEAR) != actualDate.get(Calendar.YEAR))
-			months += 12 - updateDate.get(Calendar.MONTH) + actualDate.get(Calendar.MONTH);
+			if (actualDate.get(Calendar.YEAR) == updateDate.get(Calendar.YEAR) && updateDate.get(Calendar.MONTH) == actualDate.get(Calendar.MONTH)) {
+				chorbi.setTotalChargedFee(chorbi.getTotalChargedFee());
+				this.save(chorbi);
+				this.flush();
 
-		configuration = this.configurationService.findConfiguration();
+			} else {
 
-		res = configuration.getChorbiesFee() * months;
+				//	if (actualDate.get(Calendar.YEAR) == updateDate.get(Calendar.YEAR))
+				//		Assert.isTrue(updateDate.get(Calendar.MONTH) != actualDate.get(Calendar.MONTH));
 
-		chorbi.setTotalChargedFee(res);
-		chorbi.setUpdateDate(new Date());
+				if (updateDate.get(Calendar.YEAR) == actualDate.get(Calendar.YEAR))
+					months = actualDate.get(Calendar.MONTH) - updateDate.get(Calendar.MONTH);
+				else if (updateDate.get(Calendar.YEAR) != actualDate.get(Calendar.YEAR))
+					months = 12 - updateDate.get(Calendar.MONTH) + actualDate.get(Calendar.MONTH);
 
-		this.save(chorbi);
+				configuration = this.configurationService.findConfiguration();
+
+				res = configuration.getChorbiesFee() * months;
+
+				chorbi.setTotalChargedFee(res);
+				chorbi.setUpdateDate(new Date());
+
+				this.save(chorbi);
+				this.flush();
+			}
+
+		}
 
 	}
 
