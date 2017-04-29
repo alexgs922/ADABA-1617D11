@@ -16,6 +16,7 @@ import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
+import domain.CreditCard;
 import domain.Manager;
 import form.RegistrationFormManager;
 
@@ -35,6 +36,9 @@ public class ManagerService {
 
 	@Autowired
 	private Md5PasswordEncoder	encoder;
+
+	@Autowired
+	private CreditCardService	creditCardService;
 
 
 	// Simple CRUD methods ----------------------------------------------------
@@ -97,6 +101,21 @@ public class ManagerService {
 	public Manager save(final Manager manager) {
 		Assert.notNull(manager);
 		return this.managerRepository.save(manager);
+
+	}
+
+	public Manager saveAndFlush2(Manager manager, CreditCard c) {
+		Assert.notNull(manager);
+		Assert.notNull(c);
+
+		if (manager.getId() != 0) {
+
+			c = this.creditCardService.saveAndFlush(c);
+			manager.setCreditCard(c);
+			this.save(manager);
+		} else
+			manager = this.save(manager);
+		return manager;
 
 	}
 

@@ -65,7 +65,9 @@
         <security:intercept-url pattern="/template/editCoordinate.do" access="hasRole('CHORBI')" />  
 		<security:intercept-url pattern="/profile/editProfile.do" access="hasRole('CHORBI')" /> 
 		<security:intercept-url pattern="/profile/createCreditCard.do" access="hasRole('CHORBI')" /> 
-		<security:intercept-url pattern="/profile/editCreditCard.do" access="hasRole('CHORBI')" /> 
+		<security:intercept-url pattern="/profile/editCreditCard.do" access="hasRole('CHORBI')" />
+		<security:intercept-url pattern="/profile/createCreditCardManager.do" access="hasRole('MANAGER')" /> 
+		<security:intercept-url pattern="/profile/editCreditCardManager.do" access="hasRole('MANAGER')" />  
 		<security:intercept-url pattern="/profile/editLocationInformation.do" access="hasRole('CHORBI')" /> 
 		
 		<security:intercept-url pattern="/configuration/administrator/**" access="hasRole('ADMIN')" />
@@ -79,6 +81,8 @@
 
 
 		<security:intercept-url pattern="/manager/register.do" access="hasRole('ADMIN')" />
+		<security:intercept-url pattern="/manager/viewProfile.do" access="hasRole('MANAGER')" />
+		<security:intercept-url pattern="/manager/profile.do" access="hasRole('MANAGER')" />
 
 		
 		<security:intercept-url pattern="/chirp/listReceivedMessages.do"

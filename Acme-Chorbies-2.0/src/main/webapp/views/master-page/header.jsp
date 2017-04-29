@@ -52,9 +52,13 @@
 					<li><a href="event/myEvents.do"><spring:message
 								code="master.page.list.myevents" /></a></li>
 					<li><a href="event/manager/create.do"><spring:message
-								code="master.page.list.create.event" /></a></li>
+								code="master.page.list.create.event" /></a></li>			
 
 				</ul></li>
+				<li><a class="fNiv" href="manager/viewProfile.do"><spring:message
+						code="master.page.viewMyProfile" /></a>
+			</li>
+				
 
 		</security:authorize>
 

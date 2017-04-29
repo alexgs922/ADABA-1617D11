@@ -46,8 +46,19 @@
 	
 	
 	<definition name="profile/createCreditCard" extends="master.page">
-		<put-attribute name="title" value="Crear CreditCard"/>
+		<put-attribute name="title" value="Create CreditCard"/>
 		<put-attribute name="body" value="/views/profile/createCreditCard.jsp"/>
+	</definition>
+	
+	<definition name="profile/editCreditCardManager" extends="master.page">
+		<put-attribute name="title" value="Edit CreditCard"/>
+		<put-attribute name="body" value="/views/profile/creditCardManager.jsp"/>
+	</definition>
+	
+	
+	<definition name="profile/createCreditCardManager" extends="master.page">
+		<put-attribute name="title" value="Create CreditCard"/>
+		<put-attribute name="body" value="/views/profile/createCreditCardManager.jsp"/>
 	</definition>
 	
 	

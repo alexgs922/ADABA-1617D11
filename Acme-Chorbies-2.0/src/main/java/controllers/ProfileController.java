@@ -24,75 +24,78 @@ import org.springframework.web.servlet.ModelAndView;
 import services.ActorService;
 import services.ChorbiService;
 import services.CreditCardService;
+import services.ManagerService;
 import services.TasteService;
 import services.TemplateService;
 import domain.Chorbi;
 import domain.Coordinate;
 import domain.CreditCard;
+import domain.Manager;
 
 @Controller
 @RequestMapping("/profile")
 public class ProfileController extends AbstractController {
 
 	@Autowired
-	private ChorbiService chorbiService;
+	private ChorbiService		chorbiService;
 
 	@Autowired
-	private TasteService tasteService;
+	private TasteService		tasteService;
 
 	@Autowired
-	private TemplateService templateService;
+	private TemplateService		templateService;
 
 	@Autowired
-	private ActorService actorService;
+	private ActorService		actorService;
 
 	@Autowired
-	private CreditCardService creditCardService;
-	
-	
+	private CreditCardService	creditCardService;
+
+	@Autowired
+	private ManagerService		managerService;
+
+
 	//Edit profile
-	
+
 	@RequestMapping(value = "/editProfile", method = RequestMethod.GET)
-	public ModelAndView edit(@RequestParam int chorbiId) {
+	public ModelAndView edit(@RequestParam final int chorbiId) {
 		ModelAndView res;
 		Chorbi chorbi;
-		int  principal;
-		chorbi = chorbiService.findOne(chorbiId);
+		int principal;
+		chorbi = this.chorbiService.findOne(chorbiId);
 		principal = this.actorService.findByPrincipal().getId();
-		Assert.isTrue(principal==chorbiId);
+		Assert.isTrue(principal == chorbiId);
 
 		try {
 			Assert.isTrue(principal == chorbiId);
-		} catch (Throwable th) {
-			res = createEditModelAndViewError(chorbi);
+		} catch (final Throwable th) {
+			res = this.createEditModelAndViewError(chorbi);
 			return res;
 		}
 		Assert.notNull(chorbi);
-		res = createEditModelAndView(chorbi);
+		res = this.createEditModelAndView(chorbi);
 		return res;
 	}
 
 	@RequestMapping(value = "/editProfile", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(Chorbi chorbi, BindingResult binding) {
+	public ModelAndView save(final Chorbi chorbi, final BindingResult binding) {
 		ModelAndView result;
 		if (binding.hasErrors()) {
 			if (binding.getGlobalError() != null)
-				result = createEditModelAndView(chorbi, binding
-						.getGlobalError().getCode());
+				result = this.createEditModelAndView(chorbi, binding.getGlobalError().getCode());
 			else
-				result = createEditModelAndView(chorbi);
-		} else {
+				result = this.createEditModelAndView(chorbi);
+		} else
 			try {
-				Chorbi chorbi1 = this.chorbiService.reconstruct(chorbi, binding);
+				final Chorbi chorbi1 = this.chorbiService.reconstruct(chorbi, binding);
 				this.chorbiService.save(chorbi1);
-				result = new ModelAndView("redirect:../chorbi/profile.do?chorbiId="+chorbi.getId());
-			} catch (Throwable oops) {
-				result = createEditModelAndView(chorbi, "chorbi.commit.error");
+				result = new ModelAndView("redirect:../chorbi/profile.do?chorbiId=" + chorbi.getId());
+			} catch (final Throwable oops) {
+				result = this.createEditModelAndView(chorbi, "chorbi.commit.error");
 			}
-		}
 		return result;
 	}
-	
+
 	@RequestMapping(value = "/createCreditCard", method = RequestMethod.GET)
 	public ModelAndView create() {
 		ModelAndView result;
@@ -104,21 +107,20 @@ public class ProfileController extends AbstractController {
 
 		return result;
 	}
-	
-	
+
 	@RequestMapping(value = "/createCreditCard", method = RequestMethod.POST, params = "save")
-	public ModelAndView save(CreditCard creditCard, final BindingResult binding) {
+	public ModelAndView save(final CreditCard creditCard, final BindingResult binding) {
 
 		ModelAndView result;
 		CreditCard res;
-		Chorbi chorbi = this.chorbiService.findByPrincipal();
+		final Chorbi chorbi = this.chorbiService.findByPrincipal();
 		res = this.creditCardService.reconstruct(creditCard, binding);
 		if (binding.hasErrors())
 			result = this.editCreditCardModelAndView(res);
 		else
 			try {
 				this.chorbiService.saveAndFlush2(chorbi, creditCard);
-				result = new ModelAndView("redirect:../chorbi/profile.do?chorbiId="+chorbi.getId());
+				result = new ModelAndView("redirect:../chorbi/profile.do?chorbiId=" + chorbi.getId());
 
 			} catch (final Throwable th) {
 				result = this.editCreditCardModelAndView(res, "creditCard.commit.error");
@@ -128,119 +130,184 @@ public class ProfileController extends AbstractController {
 		return result;
 	}
 
-	
 	// Edit CreditCard ----------------------------------
 
 	@RequestMapping(value = "/editCreditCard", method = RequestMethod.GET)
-	public ModelAndView editCreditCard(@RequestParam int chorbiId) {
+	public ModelAndView editCreditCard(@RequestParam final int chorbiId) {
 		ModelAndView res;
 		CreditCard creditCard;
 		Chorbi principal;
-		principal = chorbiService.findByPrincipal();
-		creditCard = chorbiService.findOne(chorbiId).getCreditCard();
+		principal = this.chorbiService.findByPrincipal();
+		creditCard = this.chorbiService.findOne(chorbiId).getCreditCard();
 		try {
 			Assert.isTrue(principal.getId() == chorbiId);
-		} catch (Throwable th) {
-			res = createEditCreditCardModelAndViewError(creditCard);
+		} catch (final Throwable th) {
+			res = this.createEditCreditCardModelAndViewError(creditCard);
 			return res;
 		}
 		Assert.notNull(creditCard);
-		res = createEditCreditCardModelAndView(creditCard);
+		res = this.createEditCreditCardModelAndView(creditCard);
 		return res;
 	}
 
 	@RequestMapping(value = "/editCreditCard", method = RequestMethod.POST, params = "save")
-	public ModelAndView saveCreditCard(@Valid CreditCard creditCard,
-			BindingResult binding) {
+	public ModelAndView saveCreditCard(@Valid final CreditCard creditCard, final BindingResult binding) {
 		ModelAndView result;
 		if (binding.hasErrors()) {
 			result = new ModelAndView("profile/editCreditCard");
 			result.addObject("creditCard", creditCard);
 			result.addObject("forbiddenOperation", false);
-		} else {
+		} else
 			try {
-				Chorbi t = this.chorbiService.findByPrincipal();
+				final Chorbi t = this.chorbiService.findByPrincipal();
 				t.setCreditCard(creditCard);
 				this.chorbiService.save(t);
 				this.creditCardService.save(creditCard);
-				result = new ModelAndView("redirect:../chorbi/profile.do?chorbiId="+t.getId());
-			} catch (Throwable oops) {
+				result = new ModelAndView("redirect:../chorbi/profile.do?chorbiId=" + t.getId());
+			} catch (final Throwable oops) {
 				result = new ModelAndView("profile/editCreditCard");
 				result.addObject("creditCard", creditCard);
 				result.addObject("message", "chorbi.commit.error");
 			}
-		}
 		return result;
 
 	}
-	
 
-	
-	
+	//Create creditCard manager ------------------------------------
+
+	@RequestMapping(value = "/createCreditCardManager", method = RequestMethod.GET)
+	public ModelAndView createCreditCardManager() {
+		ModelAndView result;
+		CreditCard creditCard;
+
+		creditCard = this.creditCardService.create();
+
+		result = this.editCreditCardManagerModelAndView(creditCard);
+
+		return result;
+	}
+
+	@RequestMapping(value = "/createCreditCardManager", method = RequestMethod.POST, params = "save")
+	public ModelAndView saveCreateCreditCardManager(final CreditCard creditCard, final BindingResult binding) {
+
+		ModelAndView result;
+		CreditCard res;
+		final Manager manager = this.managerService.findByPrincipal();
+		res = this.creditCardService.reconstruct(creditCard, binding);
+		if (binding.hasErrors())
+			result = this.editCreditCardManagerModelAndView(res);
+		else
+			try {
+				this.managerService.saveAndFlush2(manager, creditCard);
+				result = new ModelAndView("redirect:../manager/profile.do?managerId=" + manager.getId());
+
+			} catch (final Throwable th) {
+				result = this.editCreditCardManagerModelAndView(res, "creditCard.commit.error");
+
+			}
+
+		return result;
+	}
+
+	// Edit CreditCard manager ----------------------------------
+
+	@RequestMapping(value = "/editCreditCardManager", method = RequestMethod.GET)
+	public ModelAndView editCreditCardmanager(@RequestParam final int managerId) {
+		ModelAndView res;
+		CreditCard creditCard;
+		Manager principal;
+		principal = this.managerService.findByPrincipal();
+		creditCard = this.managerService.findOne(managerId).getCreditCard();
+		try {
+			Assert.isTrue(principal.getId() == managerId);
+		} catch (final Throwable th) {
+			res = this.createEditCreditCardManagerModelAndViewError(creditCard);
+			return res;
+		}
+		Assert.notNull(creditCard);
+		res = this.createEditCreditCardManagerModelAndView(creditCard);
+		return res;
+	}
+
+	@RequestMapping(value = "/editCreditCardManager", method = RequestMethod.POST, params = "save")
+	public ModelAndView saveCreditCardManager(@Valid final CreditCard creditCard, final BindingResult binding) {
+		ModelAndView result;
+		if (binding.hasErrors()) {
+			result = new ModelAndView("profile/editCreditCard");
+			result.addObject("creditCard", creditCard);
+			result.addObject("forbiddenOperation", false);
+		} else
+			try {
+				final Manager t = this.managerService.findByPrincipal();
+				t.setCreditCard(creditCard);
+				this.managerService.save(t);
+				this.creditCardService.save(creditCard);
+				result = new ModelAndView("redirect:../manager/profile.do?managerId=" + t.getId());
+			} catch (final Throwable oops) {
+				result = new ModelAndView("profile/editCreditCardManager");
+				result.addObject("creditCard", creditCard);
+				result.addObject("message", "manager.commit.error");
+			}
+		return result;
+
+	}
+
 	// Edit LocationInformation ----------------------------------
 
 	@RequestMapping(value = "/editLocationInformation", method = RequestMethod.GET)
-	public ModelAndView editLocationInformation(@RequestParam int chorbiId) {
+	public ModelAndView editLocationInformation(@RequestParam final int chorbiId) {
 		ModelAndView res;
 		Chorbi principal;
-		principal = chorbiService.findByPrincipal();
-		Coordinate c = principal.getCoordinate();
+		principal = this.chorbiService.findByPrincipal();
+		final Coordinate c = principal.getCoordinate();
 		try {
 			Assert.isTrue(principal.getId() == chorbiId);
-		} catch (Throwable th) {
-			res = createEditModelAndView(c);
+		} catch (final Throwable th) {
+			res = this.createEditModelAndView(c);
 			return res;
 		}
 		Assert.notNull(c);
-		res = createEditModelAndView(c);
+		res = this.createEditModelAndView(c);
 		return res;
 	}
 
 	@RequestMapping(value = "/editLocationInformation", method = RequestMethod.POST, params = "save")
-	public ModelAndView saveCreditCard(@Valid Coordinate coordinate,
-			BindingResult binding) {
+	public ModelAndView saveCreditCard(@Valid final Coordinate coordinate, final BindingResult binding) {
 		ModelAndView result;
 		if (binding.hasErrors()) {
 			result = new ModelAndView("profile/editLocationInformation");
 			result.addObject("coordinate", coordinate);
 			result.addObject("forbiddenOperation", false);
-		} else {
+		} else
 			try {
-				Chorbi t = this.chorbiService.findByPrincipal();
+				final Chorbi t = this.chorbiService.findByPrincipal();
 				t.setCoordinate(coordinate);
 				this.chorbiService.save(t);
-				result = new ModelAndView("redirect:../chorbi/profile.do?chorbiId="+t.getId());
-			} catch (Throwable oops) {
+				result = new ModelAndView("redirect:../chorbi/profile.do?chorbiId=" + t.getId());
+			} catch (final Throwable oops) {
 				result = new ModelAndView("profile/editLocationInformation");
 				result.addObject("coordinate", coordinate);
 				result.addObject("message", "chorbi.commit.error");
 			}
-		}
 		return result;
 
 	}
 
-	
-	
-	
-	
-	
-	
 	//Other methods 
-	protected ModelAndView createEditModelAndView(Coordinate c) {
+	protected ModelAndView createEditModelAndView(final Coordinate c) {
 		ModelAndView result;
-		result = createEditModelAndView(c, null);
+		result = this.createEditModelAndView(c, null);
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndViewError(Coordinate c) {
+	protected ModelAndView createEditModelAndViewError(final Coordinate c) {
 		ModelAndView res;
-		res = createEditModelAndViewError(c, null);
+		res = this.createEditModelAndViewError(c, null);
 		return res;
 
 	}
 
-	protected ModelAndView createEditModelAndView(Coordinate c, String message) {
+	protected ModelAndView createEditModelAndView(final Coordinate c, final String message) {
 		ModelAndView result;
 		result = new ModelAndView("profile/editLocationInformation");
 		result.addObject("coordinate", c);
@@ -249,8 +316,7 @@ public class ProfileController extends AbstractController {
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndViewError(Coordinate c,
-			String message) {
+	protected ModelAndView createEditModelAndViewError(final Coordinate c, final String message) {
 		ModelAndView res;
 		res = new ModelAndView("profile/editProfile");
 		res.addObject("coordinate", c);
@@ -260,26 +326,20 @@ public class ProfileController extends AbstractController {
 
 	}
 
-
-	
-	
-	
-	
-	
-	protected ModelAndView createEditModelAndView(Chorbi chorbi) {
+	protected ModelAndView createEditModelAndView(final Chorbi chorbi) {
 		ModelAndView result;
-		result = createEditModelAndView(chorbi, null);
+		result = this.createEditModelAndView(chorbi, null);
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndViewError(Chorbi chorbi) {
+	protected ModelAndView createEditModelAndViewError(final Chorbi chorbi) {
 		ModelAndView res;
-		res = createEditModelAndViewError(chorbi, null);
+		res = this.createEditModelAndViewError(chorbi, null);
 		return res;
 
 	}
 
-	protected ModelAndView createEditModelAndView(Chorbi chorbi, String message) {
+	protected ModelAndView createEditModelAndView(final Chorbi chorbi, final String message) {
 		ModelAndView result;
 		result = new ModelAndView("profile/editProfile");
 		result.addObject("chorbi", chorbi);
@@ -288,8 +348,7 @@ public class ProfileController extends AbstractController {
 		return result;
 	}
 
-	protected ModelAndView createEditModelAndViewError(Chorbi chorbi,
-			String message) {
+	protected ModelAndView createEditModelAndViewError(final Chorbi chorbi, final String message) {
 		ModelAndView res;
 		res = new ModelAndView("profile/editProfile");
 		res.addObject("chorbi", chorbi);
@@ -299,23 +358,20 @@ public class ProfileController extends AbstractController {
 
 	}
 
-	protected ModelAndView createEditCreditCardModelAndView(
-			CreditCard creditCard) {
+	protected ModelAndView createEditCreditCardModelAndView(final CreditCard creditCard) {
 		ModelAndView result;
-		result = createEditCreditCardModelAndView(creditCard, null);
+		result = this.createEditCreditCardModelAndView(creditCard, null);
 		return result;
 
 	}
 
-	protected ModelAndView createEditCreditCardModelAndViewError(
-			CreditCard creditCard) {
+	protected ModelAndView createEditCreditCardModelAndViewError(final CreditCard creditCard) {
 		ModelAndView res;
-		res = createEditCreditCardModelAndViewError(creditCard, null);
+		res = this.createEditCreditCardModelAndViewError(creditCard, null);
 		return res;
 	}
 
-	protected ModelAndView createEditCreditCardModelAndView(
-			CreditCard creditCard, String message) {
+	protected ModelAndView createEditCreditCardModelAndView(final CreditCard creditCard, final String message) {
 		ModelAndView result;
 
 		result = new ModelAndView("profile/editCreditCard");
@@ -326,8 +382,7 @@ public class ProfileController extends AbstractController {
 		return result;
 	}
 
-	protected ModelAndView createEditCreditCardModelAndViewError(
-			CreditCard creditCard, String message) {
+	protected ModelAndView createEditCreditCardModelAndViewError(final CreditCard creditCard, final String message) {
 		ModelAndView res;
 		res = new ModelAndView("profile/editCreditCard");
 		res.addObject("creditCard", creditCard);
@@ -336,19 +391,50 @@ public class ProfileController extends AbstractController {
 		return res;
 
 	}
-	
-	
-	//----------------------
-	
-	protected ModelAndView editCreditCardModelAndView(
-			CreditCard creditCard) {
+
+	protected ModelAndView createEditCreditCardManagerModelAndView(final CreditCard creditCard) {
+		ModelAndView result;
+		result = this.createEditCreditCardManagerModelAndView(creditCard, null);
+		return result;
+
+	}
+
+	protected ModelAndView createEditCreditCardManagerModelAndViewError(final CreditCard creditCard) {
 		ModelAndView res;
-		res = editCreditCardModelAndView(creditCard, null);
+		res = this.createEditCreditCardManagerModelAndViewError(creditCard, null);
 		return res;
 	}
 
-	protected ModelAndView editCreditCardModelAndView(
-			CreditCard creditCard, String message) {
+	protected ModelAndView createEditCreditCardManagerModelAndView(final CreditCard creditCard, final String message) {
+		ModelAndView result;
+
+		result = new ModelAndView("profile/editCreditCardManager");
+		result.addObject("creditCard", creditCard);
+		result.addObject("message", message);
+		result.addObject("forbiddenOperation", false);
+
+		return result;
+	}
+
+	protected ModelAndView createEditCreditCardManagerModelAndViewError(final CreditCard creditCard, final String message) {
+		ModelAndView res;
+		res = new ModelAndView("profile/editCreditCardManager");
+		res.addObject("creditCard", creditCard);
+		res.addObject("message", message);
+		res.addObject("forbiddenOperation", true);
+		return res;
+
+	}
+
+	//----------------------
+
+	protected ModelAndView editCreditCardModelAndView(final CreditCard creditCard) {
+		ModelAndView res;
+		res = this.editCreditCardModelAndView(creditCard, null);
+		return res;
+	}
+
+	protected ModelAndView editCreditCardModelAndView(final CreditCard creditCard, final String message) {
 		ModelAndView result;
 
 		result = new ModelAndView("profile/createCreditCard");
@@ -359,6 +445,21 @@ public class ProfileController extends AbstractController {
 		return result;
 	}
 
-	
-	
+	protected ModelAndView editCreditCardManagerModelAndView(final CreditCard creditCard) {
+		ModelAndView res;
+		res = this.editCreditCardManagerModelAndView(creditCard, null);
+		return res;
+	}
+
+	protected ModelAndView editCreditCardManagerModelAndView(final CreditCard creditCard, final String message) {
+		ModelAndView result;
+
+		result = new ModelAndView("profile/createCreditCardManager");
+		result.addObject("creditCard", creditCard);
+		result.addObject("message", message);
+		result.addObject("forbiddenOperation", false);
+
+		return result;
+	}
+
 }
