@@ -81,10 +81,7 @@
 				<a href="profile/editProfile.do?chorbiId=${row.id}"> <spring:message
 						code="chorbi.editprofile" />
 				</a>
-				<br />
-				<a href="profile/editLocationInformation.do?chorbiId=${row.id}">
-					<spring:message code="chorbi.editLocationInformation" />
-				</a>
+
 
 				<br>
 				<spring:message code="chorbi.CreditCard" var="chorbiCC" />
@@ -165,6 +162,15 @@
 
 
 </display:table>
+
+<jstl:choose>
+<jstl:when test="${principal.id == row.id }">
+<br />
+<a href="profile/editLocationInformation.do?chorbiId=${row.id}"> <spring:message
+		code="chorbi.editLocationInformation" />
+</a>
+</jstl:when>
+</jstl:choose>
 
 <spring:message code="chorbi.contactInfo" var="chorbiContactInfo" />
 <h2>
