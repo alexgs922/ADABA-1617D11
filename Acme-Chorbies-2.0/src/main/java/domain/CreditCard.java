@@ -38,6 +38,7 @@ public class CreditCard extends DomainEntity {
 	//Getters & Setters ----------------------------------------------------------------------
 
 	@NotBlank
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getHolderName() {
 		return this.holderName;
 	}
@@ -56,6 +57,7 @@ public class CreditCard extends DomainEntity {
 
 	@NotBlank
 	@CreditCardNumber
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getNumber() {
 		return this.number;
 	}

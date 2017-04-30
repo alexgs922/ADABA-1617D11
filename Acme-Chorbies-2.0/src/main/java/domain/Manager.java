@@ -45,6 +45,7 @@ public class Manager extends Actor {
 	}
 
 	@NotBlank
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getCompany() {
 		return this.company;
 	}
@@ -55,6 +56,7 @@ public class Manager extends Actor {
 
 	@NotBlank
 	@Pattern(regexp = "^ES[ABCDEFGHJNPQRSUVW]{1}[1-9]{8}$")
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getVatNumber() {
 		return this.vatNumber;
 	}

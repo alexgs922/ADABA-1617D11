@@ -29,6 +29,7 @@ public class Coordinate {
 	//Getters & Setters ----------------------------------------------------------------------
 
 	@NotBlank
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getCountry() {
 		return this.country;
 	}
@@ -37,6 +38,7 @@ public class Coordinate {
 		this.country = country;
 	}
 
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getState() {
 		return this.state;
 	}
@@ -45,6 +47,7 @@ public class Coordinate {
 		this.state = state;
 	}
 
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getProvince() {
 		return this.province;
 	}
@@ -54,6 +57,7 @@ public class Coordinate {
 	}
 
 	@NotBlank
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getCity() {
 		return this.city;
 	}

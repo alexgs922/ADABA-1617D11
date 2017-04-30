@@ -69,6 +69,7 @@ public class Template extends DomainEntity {
 		this.genre = genre;
 	}
 
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getKeyword() {
 		return this.keyword;
 	}

@@ -76,6 +76,7 @@ public class Chorbi extends Actor {
 
 	@NotBlank
 	@URL
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getPicture() {
 		return this.picture;
 	}
@@ -85,6 +86,7 @@ public class Chorbi extends Actor {
 	}
 
 	@NotBlank
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getDescription() {
 		return this.description;
 	}

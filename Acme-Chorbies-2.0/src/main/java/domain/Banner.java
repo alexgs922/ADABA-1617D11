@@ -26,6 +26,7 @@ public class Banner extends DomainEntity {
 
 	@URL
 	@NotBlank
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getUrl() {
 		return this.url;
 	}

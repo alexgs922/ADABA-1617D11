@@ -54,6 +54,7 @@ public class Chirp extends DomainEntity {
 	}
 
 	@NotBlank
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getSubject() {
 		return this.subject;
 	}
@@ -63,6 +64,7 @@ public class Chirp extends DomainEntity {
 	}
 
 	@NotBlank
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getText() {
 		return this.text;
 	}
