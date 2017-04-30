@@ -29,7 +29,7 @@
 	<display:column property="genre" title="${chorbiGenre}" sortable="false" />
 	
 	<spring:message code="chorbi.birthDate" var="chorbiBirthDate" />
-	<display:column property="birthDate" title="${chorbiBirthDate}" sortable="false" format="{0,date,dd/MM/YYYY}"/>
+	<display:column property="birthDate" title="${chorbiBirthDate}" sortable="false" format="{0,date,YYYY/MM/dd}"/>
 	
 	
 	
