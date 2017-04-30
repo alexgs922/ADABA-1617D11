@@ -36,6 +36,8 @@
 								code="master.page.administrator.configuration" /></a></li>
 					<li><a href="administrator/dashboard.do"><spring:message
 								code="master.page.administrator.dashboard" /></a></li>
+					<li><a href="administrator/listManagers.do"><spring:message
+								code="master.page.administrator.list.manager" /></a></li>
 				</ul>
 			</li>
 			<li><a class="fNiv" href="manager/register.do"><spring:message

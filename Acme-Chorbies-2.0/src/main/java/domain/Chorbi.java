@@ -1,5 +1,4 @@
 
-
 package domain;
 
 import java.util.Collection;
@@ -21,6 +20,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.SafeHtml;
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 import org.hibernate.validator.constraints.URL;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -146,7 +147,6 @@ public class Chorbi extends Actor {
 	private Collection<Event>	events;
 
 
-	
 	@ManyToMany(mappedBy = "registered")
 	public Collection<Event> getEvents() {
 		return this.events;
@@ -175,7 +175,3 @@ public class Chorbi extends Actor {
 	}
 
 }
-
-
-
-

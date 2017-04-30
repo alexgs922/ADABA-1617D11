@@ -45,7 +45,7 @@
 	
 	<security:authorize access="isAuthenticated()">
 		<display:column>
-			<a href="manager/display.do?managerId=${row.manager.id}"> <jstl:out value="${row.manager.name}"></jstl:out>
+			<a href="manager/profile.do?managerId=${row.manager.id}"> <jstl:out value="${row.manager.name}"></jstl:out>
 			</a>
 
 		</display:column>
@@ -60,7 +60,6 @@
 
 		</display:column>
 	</security:authorize>
-	
 	
 	</jstl:when>
 	
@@ -93,7 +92,7 @@
 		
 	<security:authorize access="isAuthenticated()">
 		<display:column>
-			<a href="manager/display.do?managerId=${row.manager.id}"> <jstl:out value="${row.manager.name}"></jstl:out>
+			<a href="manager/profile.do?managerId=${row.manager.id}"> <jstl:out value="${row.manager.name}"></jstl:out>
 			</a>
 
 		</display:column>
@@ -102,6 +101,12 @@
 	<security:authorize access="hasRole('CHORBI')">
 			<display:column>
 			<jstl:choose>
+				<jstl:when test="${row.numberSeatsOffered==0}">
+				
+					<spring:message code="event.noplace" var="noPlace" />
+					<p class="text-bold"><jstl:out value="${noPlace}"></jstl:out></p>	
+				
+				</jstl:when>
 				<jstl:when test="${principal ne null and !row.registered.contains(principal)}">
 					
 					<a href="event/registerEvent.do?eventId=${row.id}"> 		
@@ -115,6 +120,7 @@
 					<spring:message code="event.unRegister" />	</a>
 				
 				</jstl:when>
+				
 			</jstl:choose>
 			
 
@@ -154,7 +160,7 @@
 	
 	<security:authorize access="isAuthenticated()">
 		<display:column>
-			<a href="manager/display.do?managerId=${row.manager.id}"> <jstl:out value="${row.manager.name}"></jstl:out>
+			<a href="manager/profile.do?managerId=${row.manager.id}"> <jstl:out value="${row.manager.name}"></jstl:out>
 			</a>
 
 		</display:column>
@@ -163,6 +169,14 @@
 	<security:authorize access="hasRole('CHORBI')">
 			<display:column>
 			<jstl:choose>
+				
+				<jstl:when test="${row.numberSeatsOffered==0}">
+				
+					<spring:message code="event.noplace" var="noPlace" />
+					<p class="text-normal"><jstl:out value="${noPlace}"></jstl:out></p>	
+				
+				</jstl:when>
+			
 				<jstl:when test="${principal ne null and !row.registered.contains(principal)}">
 					
 					<a href="event/registerEvent.do?eventId=${row.id}"> 		

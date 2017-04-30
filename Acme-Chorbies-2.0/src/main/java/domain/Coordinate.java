@@ -6,6 +6,8 @@ import javax.persistence.AccessType;
 import javax.persistence.Embeddable;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.SafeHtml;
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 
 @Embeddable
 @Access(AccessType.PROPERTY)
