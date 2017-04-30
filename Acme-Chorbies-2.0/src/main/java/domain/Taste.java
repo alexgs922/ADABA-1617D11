@@ -15,6 +15,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Range;
+import org.hibernate.validator.constraints.SafeHtml;
+import org.hibernate.validator.constraints.SafeHtml.WhiteListType;
 import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
@@ -35,7 +37,8 @@ public class Taste extends DomainEntity {
 
 	private Date	moment;
 	private String	comment;
-	private int 	stars;
+	private int		stars;
+
 
 	//Getters & Setters ----------------------------------------------------------------------
 
@@ -49,6 +52,7 @@ public class Taste extends DomainEntity {
 		this.moment = moment;
 	}
 
+	@SafeHtml(whitelistType = WhiteListType.NONE)
 	public String getComment() {
 		return this.comment;
 	}
@@ -57,18 +61,16 @@ public class Taste extends DomainEntity {
 		this.comment = comment;
 	}
 
-	@Range(max=3,min=0)
+	@Range(max = 3, min = 0)
 	public int getStars() {
-		return stars;
+		return this.stars;
 	}
 
-	public void setStars(int stars) {
+	public void setStars(final int stars) {
 		this.stars = stars;
 	}
 
-	
-	
-	
+
 	//Relationship
 
 	private Chorbi	chorbi;

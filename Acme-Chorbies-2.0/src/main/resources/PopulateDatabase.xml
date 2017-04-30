@@ -388,7 +388,7 @@
 
 	<bean id="event4" class="domain.Event">
 		<property name="title" value="Evento 4" />
-		<property name="moment" value="04/30/2017 12:00" />
+		<property name="moment" value="05/17/2017 12:00" />
 		<property name="description"
 			value="Evento 4, feria de abril de sevilla, (en vigor)" />
 		<property name="picture"
@@ -415,7 +415,7 @@
 
 	<bean id="event5" class="domain.Event">
 		<property name="title" value="Evento 5" />
-		<property name="moment" value="04/29/2017 12:00" />
+		<property name="moment" value="05/18/2017 12:00" />
 		<property name="description" value="Evento 5, pescaito en la feria, (en vigor)" />
 		<property name="picture"
 			value="https://c1.staticflickr.com/8/7576/16303010852_a4fec1cb97_m.jpg" />

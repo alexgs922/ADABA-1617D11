@@ -30,7 +30,7 @@
 
 			<spring:message code="event.moment" var="eventMoment" />
 			<display:column property="moment" title="${eventMoment}"
-				sortable="false" format="{0,date,dd/MM/YYYY HH:mm}"
+				sortable="false" format="{0,date,YYYY/MM/dd HH:mm}"
 				class="text-muted" />
 
 			<spring:message code="event.description" var="eventDescription" />
@@ -109,7 +109,7 @@
 
 			<spring:message code="event.moment" var="eventMoment" />
 			<display:column property="moment" title="${eventMoment}"
-				sortable="false" format="{0,date,dd/MM/YYYY HH:mm}"
+				sortable="false" format="{0,date,YYYY/MM/dd HH:mm}"
 				class="text-bold" />
 
 			<spring:message code="event.description" var="eventDescription" />
@@ -191,7 +191,7 @@
 
 			<spring:message code="event.moment" var="eventMoment" />
 			<display:column property="moment" title="${eventMoment}"
-				sortable="false" format="{0,date,dd/MM/YYYY HH:mm}"
+				sortable="false" format="{0,date,YYYY/MM/dd HH:mm}"
 				class="text-normal" />
 
 			<spring:message code="event.description" var="eventDescription" />
