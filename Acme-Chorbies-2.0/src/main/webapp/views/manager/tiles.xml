@@ -20,6 +20,11 @@
 		<put-attribute name="title" value="Manager Profile" />
 		<put-attribute name="body" value="/views/manager/displayProfile.jsp" />
 	</definition>
+	
+	<definition name="manager/list" extends="master.page">
+		<put-attribute name="title" value="Manager List" />
+		<put-attribute name="body" value="/views/manager/list.jsp" />
+	</definition>
 
 
 </tiles-definitions>
