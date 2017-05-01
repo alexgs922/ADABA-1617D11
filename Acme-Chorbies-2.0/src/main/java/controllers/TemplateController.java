@@ -159,7 +159,7 @@ public class TemplateController extends AbstractController {
 			if (binding.getGlobalError() != null)
 				result = this.createEditModelAndView(template, binding.getGlobalError().getCode());
 			else
-				result = this.createEditModelAndView(template);
+				result = this.createEditModelAndView(template, "template.commit.error");
 
 		} else
 			try {
