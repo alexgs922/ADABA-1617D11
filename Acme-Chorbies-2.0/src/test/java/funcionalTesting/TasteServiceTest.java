@@ -38,7 +38,7 @@ public class TasteServiceTest extends AbstractTest {
 
 	//CASO DE USO : LIKE ANOTHER CHORBI ---------------------------------------------------------------------------------
 
-	//Prueba 1: comprobando que chorbi4 puede dar like a chorbi5 añadiendo un comentario (POSITIVO)
+	//Prueba 1: comprobando que chorbi4 puede dar like a chorbi5 añadiendo un comentario y estrellas (POSITIVO)
 	//Se harán las siguientes comprobaciones:
 	//1.Hay un taste más en la base de datos
 	//2.Hay un taste más en la collection de likes dados para el principal
@@ -46,7 +46,6 @@ public class TasteServiceTest extends AbstractTest {
 	//4. Que la collection que tiene los chorbies que le gustan al principal tenga ahora al chorbi5
 	//5. Que la collection que tiene los chorbies que le han dado like al chorbi 5 esté el principal
 
-	//Chorbi = 63,64,65,66,67,68
 	@Test
 	public void testCreateLikeWithComment() {
 
@@ -56,10 +55,11 @@ public class TasteServiceTest extends AbstractTest {
 
 		final int beforeSave = principal.getGivenTastes().size();
 
-		final Chorbi chorbiToLike = this.chorbiService.findOne(67);
+		final Chorbi chorbiToLike = this.chorbiService.findOne(263);
 
 		final Taste new_like = this.tasteService.create(chorbiToLike);
 		new_like.setComment("comentario de prueba");
+		new_like.setStars(2);
 		final Taste reconstruct_like = this.tasteService.reconstruct(new_like, null, chorbiToLike);
 		final Taste like = this.tasteService.save(reconstruct_like);
 
@@ -80,7 +80,7 @@ public class TasteServiceTest extends AbstractTest {
 
 	}
 
-	//Prueba 2: comprobando que chorbi4 puede dar like a chorbi5 sin añadir un comentario (POSITIVO)
+	//Prueba 2: comprobando que chorbi4 puede dar like a chorbi5 sin añadir un comentario ni estrellas(son 0 por defecto) (POSITIVO)
 	//Se harán las siguientes comprobaciones:
 	//1.Hay un taste más en la base de datos
 	//2.Hay un taste más en la collection de likes dados para el principal
@@ -97,7 +97,7 @@ public class TasteServiceTest extends AbstractTest {
 
 		final int beforeSave = principal.getGivenTastes().size();
 
-		final Chorbi chorbiToLike = this.chorbiService.findOne(67);
+		final Chorbi chorbiToLike = this.chorbiService.findOne(263);
 
 		final Taste new_like = this.tasteService.create(chorbiToLike);
 		final Taste reconstruct_like = this.tasteService.reconstruct(new_like, null, chorbiToLike);
@@ -126,7 +126,7 @@ public class TasteServiceTest extends AbstractTest {
 	public void testCreateLikeTwice() {
 
 		this.authenticate("chorbi1");
-		final Chorbi chorbiToLike = this.chorbiService.findOne(64);
+		final Chorbi chorbiToLike = this.chorbiService.findOne(260);
 
 		final Taste new_like = this.tasteService.create(chorbiToLike);
 		new_like.setComment("comentario de prueba");
@@ -143,7 +143,7 @@ public class TasteServiceTest extends AbstractTest {
 	public void testCreateLikeToYourself() {
 
 		this.authenticate("chorbi1");
-		final Chorbi chorbiToLike = this.chorbiService.findOne(63);
+		final Chorbi chorbiToLike = this.chorbiService.findOne(259);
 
 		final Taste new_like = this.tasteService.create(chorbiToLike);
 		new_like.setComment("comentario de prueba");
@@ -160,7 +160,7 @@ public class TasteServiceTest extends AbstractTest {
 	public void testCreateLikeToBannedChorbi() {
 
 		this.authenticate("chorbi1");
-		final Chorbi chorbiToLike = this.chorbiService.findOne(65);
+		final Chorbi chorbiToLike = this.chorbiService.findOne(261);
 
 		final Taste new_like = this.tasteService.create(chorbiToLike);
 		new_like.setComment("comentario de prueba");
@@ -180,18 +180,16 @@ public class TasteServiceTest extends AbstractTest {
 	//3. Que el like cancelado se elimine del sistema
 	//4. Que el like cancelado ya no aparezca para ninguno de los dos implicados
 
-	//Chorbi = 63,64,65,66,67,68
-	//taste = 73,74,75,76 
 	@Test
 	public void testCancelLike() {
 
 		this.authenticate("chorbi1");
 		final Chorbi principal = this.chorbiService.findByPrincipal();
-		final Chorbi chorbiToCancelLike = this.chorbiService.findOne(64);
+		final Chorbi chorbiToCancelLike = this.chorbiService.findOne(260);
 
 		final int beforeCancel = this.tasteService.findAll().size();
-		//64
-		final Taste likeToCancel = this.tasteService.findOne(73);
+
+		final Taste likeToCancel = this.tasteService.findOne(269);
 		Assert.isTrue(likeToCancel.getChorbi().getId() == chorbiToCancelLike.getId());
 		Assert.isTrue(principal.getGivenTastes().contains(likeToCancel));
 
@@ -207,14 +205,13 @@ public class TasteServiceTest extends AbstractTest {
 
 	//Prueba 2: comprobando que un chorbi no puede cancelar un like que no es suyo (pertenece a chorbi2)
 
-	//taste = 73,74,75,76 
 	@Test(expected = IllegalArgumentException.class)
 	public void testCancelLikeNotMine() {
 
 		this.authenticate("chorbi1");
 		final Chorbi principal = this.chorbiService.findByPrincipal();
 
-		final Taste likeToCancel = this.tasteService.findOne(75);
+		final Taste likeToCancel = this.tasteService.findOne(271);
 		Assert.isTrue(!principal.getGivenTastes().contains(likeToCancel));
 
 		this.tasteService.delete(likeToCancel.getChorbi());
@@ -225,19 +222,18 @@ public class TasteServiceTest extends AbstractTest {
 
 	//Prueba 3: comprobando que no se puede cancelar un like que ya se había cancelado y que por tanto, no existe
 
-	//taste = 73,74,75,76 
 	@Test(expected = IllegalArgumentException.class)
 	public void testCancelLikeNotExists() {
 
 		this.authenticate("chorbi1");
 
 		//Cancela la primera vez
-		final Taste likeToCancel = this.tasteService.findOne(73);
+		final Taste likeToCancel = this.tasteService.findOne(269);
 		this.tasteService.delete(likeToCancel.getChorbi());
 		this.tasteService.flush();
 
 		//Cancela la segunda vez
-		final Taste likeToCancel2 = this.tasteService.findOne(73);
+		final Taste likeToCancel2 = this.tasteService.findOne(269);
 		this.tasteService.delete(likeToCancel2.getChorbi());
 		this.tasteService.flush();
 
@@ -259,15 +255,14 @@ public class TasteServiceTest extends AbstractTest {
 
 	//Prueba 5 : comprobando que no se puede cancelar un like a un chorbi baneado
 
-	//taste = 73,74,75,76 
 	@Test(expected = IllegalArgumentException.class)
 	public void testCancelLikeToBannedChorbi() {
 
 		this.authenticate("chorbi1");
 		final Chorbi principal = this.chorbiService.findByPrincipal();
-		final Chorbi chorbiToCancelLike = this.chorbiService.findOne(65);
+		final Chorbi chorbiToCancelLike = this.chorbiService.findOne(261);
 
-		final Taste likeToCancel = this.tasteService.findOne(74);
+		final Taste likeToCancel = this.tasteService.findOne(270);
 		Assert.isTrue(likeToCancel.getChorbi().getId() == chorbiToCancelLike.getId());
 		Assert.isTrue(principal.getGivenTastes().contains(likeToCancel));
 
