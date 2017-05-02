@@ -81,6 +81,15 @@ public class ManagerService {
 
 	}
 
+	public Manager findOne2Tests(final int managerId) {
+		Manager res;
+
+		res = this.managerRepository.findOne(managerId);
+		Assert.notNull(res);
+
+		return res;
+	}
+
 	public Manager findOne(final int managerId) {
 		Manager res;
 		final Actor principal = this.actorService.findByPrincipal();
