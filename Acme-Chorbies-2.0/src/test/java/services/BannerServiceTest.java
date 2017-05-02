@@ -28,8 +28,8 @@ public class BannerServiceTest extends AbstractTest {
 	private BannerService	bannerService;
 
 
-	//Banner = 78,...,86
-	//Admin = 51
+	//Banner = 274,...,280
+	//Admin = 242
 
 	// FindAllBanners positivo
 	@Test
@@ -74,14 +74,14 @@ public class BannerServiceTest extends AbstractTest {
 
 		this.authenticate("admin");
 
-		final Banner b = this.bannerService.findOne(79);
+		final Banner b = this.bannerService.findOne(279);
 		Assert.isTrue(this.bannerService.checkAdminPrincipal());
 
 		System.out.println("-----------------------------------------------------------------------------------");
 		System.out.println("--------------------------------FIND ONE BANNER------------------------------------");
 		System.out.println("-----------------------------------------------------------------------------------");
 
-		System.out.println("Se espera obtener el Banner con id 79: ");
+		System.out.println("Se espera obtener el Banner con id 279: ");
 		System.out.println("Id: " + b.getId());
 
 		this.unauthenticate();
@@ -93,14 +93,14 @@ public class BannerServiceTest extends AbstractTest {
 
 		this.unauthenticate();
 
-		final Banner b = this.bannerService.findOne(79);
+		final Banner b = this.bannerService.findOne(279);
 		Assert.isTrue(this.bannerService.checkAdminPrincipal());
 
 		System.out.println("-----------------------------------------------------------------------------------");
 		System.out.println("--------------------------------FIND ONE BANNER------------------------------------");
 		System.out.println("-----------------------------------------------------------------------------------");
 
-		System.out.println("Se espera obtener el Banner con id 79: ");
+		System.out.println("Se espera obtener el Banner con id 279: ");
 		System.out.println("Id: " + b.getId());
 
 	}

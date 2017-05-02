@@ -26,8 +26,8 @@ public class ConfigurationServiceTest extends AbstractTest {
 	private ConfigurationService	configService;
 
 
-	// Configuration = 77
-	// Admin = 51
+	// Configuration = 273
+	// Admin = 242
 
 	// FindAllConfigs positivo
 	@Test
@@ -72,14 +72,14 @@ public class ConfigurationServiceTest extends AbstractTest {
 
 		this.authenticate("admin");
 
-		final Configuration c = this.configService.findOne(77);
+		final Configuration c = this.configService.findOne(273);
 
 		Assert.isTrue(this.configService.checkAdminPrincipal());
 		System.out.println("-----------------------------------------------------------------------------------");
 		System.out.println("--------------------------------FIND ONE CONFIG------------------------------------");
 		System.out.println("-----------------------------------------------------------------------------------");
 
-		System.out.println("Se espera obtener la configuracion con id 77: ");
+		System.out.println("Se espera obtener la configuracion con id 273: ");
 		System.out.println("Id: " + c.getId());
 
 		this.unauthenticate();
@@ -91,14 +91,14 @@ public class ConfigurationServiceTest extends AbstractTest {
 
 		this.unauthenticate();
 
-		final Configuration c = this.configService.findOne(77);
+		final Configuration c = this.configService.findOne(273);
 
 		Assert.isTrue(this.configService.checkAdminPrincipal());
 		System.out.println("-----------------------------------------------------------------------------------");
 		System.out.println("--------------------------------FIND ONE CONFIG------------------------------------");
 		System.out.println("-----------------------------------------------------------------------------------");
 
-		System.out.println("Se espera obtener la configuracion con id 77: ");
+		System.out.println("Se espera obtener la configuracion con id 273: ");
 		System.out.println("Id: " + c.getId());
 
 	}

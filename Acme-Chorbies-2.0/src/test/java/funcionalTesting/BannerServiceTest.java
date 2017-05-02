@@ -60,15 +60,15 @@ public class BannerServiceTest extends AbstractTest {
 
 		final Object testingData[][] = {
 			{	//Edición correcta de un banner
-				"admin", "https://c1.staticflickr.com/3/2216/2202761744_5964045554_m.jpg", 78, null
+				"admin", "https://c1.staticflickr.com/3/2216/2202761744_5964045554_m.jpg", 278, null
 			}, {//Sólo el administrador puede editar un banner
-				"chorbi1", "https://c1.staticflickr.com/3/2216/2202761744_5964045554_m.jpg", 78, IllegalArgumentException.class
+				"chorbi1", "https://c1.staticflickr.com/3/2216/2202761744_5964045554_m.jpg", 278, IllegalArgumentException.class
 			}, {//La url del banner no puede ser vacía
-				"admin", "", 78, ConstraintViolationException.class
+				"admin", "", 278, ConstraintViolationException.class
 			}, {//La url del banner no puede ser nula
-				"admin", null, 78, ConstraintViolationException.class
+				"admin", null, 278, ConstraintViolationException.class
 			}, {//La cadena del banner debe ser una url
-				"admin", "holaestoesunacadenasinurl", 78, ConstraintViolationException.class
+				"admin", "holaestoesunacadenasinurl", 278, ConstraintViolationException.class
 			},
 
 		};
