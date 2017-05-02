@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -277,6 +278,41 @@ public class EventService {
 	public Collection<Event> listEventMonthSeatsFree() {
 		final Collection<Event> res = this.eventRepository.listEventMonthSeatsFree();
 		return res;
+	}
+
+	public Collection<Event> listPastEvents() {
+		final Collection<Event> res = this.eventRepository.listPastEvents();
+		return res;
+	}
+
+	public Collection<Event> listEnVigorEvents() {
+		final Collection<Event> all = this.eventRepository.findAll();
+		final Collection<Event> res = new ArrayList<Event>();
+
+		final Calendar current = new GregorianCalendar();
+		for (final Event e : all) {
+			final Calendar fecha = new GregorianCalendar();
+			fecha.setTime(e.getMoment());
+			final long dif = this.difDiasEntre2fechas(current, fecha);
+			if (fecha.after(current) && dif <= 30 && e.getNumberSeatsOffered() > 0)
+				res.add(e);
+
+		}
+
+		return res;
+	}
+
+	public Collection<Event> listEventosFuturos() {
+		final Collection<Event> all = this.findAll();
+		final Collection<Event> pasados = this.listPastEvents();
+		final Collection<Event> envigor = this.listEnVigorEvents();
+		final Collection<Event> futuros = new ArrayList<Event>();
+
+		for (final Event e : all)
+			if ((!pasados.contains(e)) && (!envigor.contains(e)))
+				futuros.add(e);
+
+		return futuros;
 	}
 
 }

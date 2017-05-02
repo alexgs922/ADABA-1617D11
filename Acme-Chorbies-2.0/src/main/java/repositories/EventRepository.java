@@ -14,4 +14,7 @@ public interface EventRepository extends JpaRepository<Event, Integer> {
 
 	@Query("select e from Event e where MONTH(e.moment) is MONTH(CURRENT_DATE) and YEAR(e.moment) is YEAR(CURRENT_DATE) and e.numberSeatsOffered >=1")
 	Collection<Event> listEventMonthSeatsFree();
+
+	@Query("select e from Event e where e.moment < CURRENT_TIMESTAMP")
+	Collection<Event> listPastEvents();
 }
