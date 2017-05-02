@@ -34,7 +34,7 @@ public class TasteServiceTest extends AbstractTest {
 
 		this.authenticate("chorbi4");
 
-		final Chorbi chorbiToLike = this.chorbiService.findOne(67);
+		final Chorbi chorbiToLike = this.chorbiService.findOne(263);
 
 		final Taste new_like = this.tasteService.create(chorbiToLike);
 		new_like.setComment("comentario de test de creación");
@@ -44,7 +44,7 @@ public class TasteServiceTest extends AbstractTest {
 		System.out.println("-----------------------------------------------------------------------------------");
 
 		System.out.println("Comment: " + new_like.getComment());
-		System.out.println("Chorbi to like (se espera el chorbi con id 67): " + new_like.getChorbi().getName() + " y tiene id: " + new_like.getChorbi().getId());
+		System.out.println("Chorbi to like (se espera el chorbi con id 263): " + new_like.getChorbi().getName() + " y tiene id: " + new_like.getChorbi().getId());
 
 		this.unauthenticate();
 
@@ -57,7 +57,7 @@ public class TasteServiceTest extends AbstractTest {
 
 		this.unauthenticate();
 
-		final Chorbi chorbiToLike = this.chorbiService.findOne(67);
+		final Chorbi chorbiToLike = this.chorbiService.findOne(263);
 
 		final Taste new_like = this.tasteService.create(chorbiToLike);
 		new_like.setComment("comentario de test de creación");
@@ -67,7 +67,7 @@ public class TasteServiceTest extends AbstractTest {
 		System.out.println("-----------------------------------------------------------------------------------");
 
 		System.out.println("Comment: " + new_like.getComment());
-		System.out.println("Chorbi to like (se espera el chorbi con id 67): " + new_like.getChorbi().getName() + " y tiene id: " + new_like.getChorbi().getId());
+		System.out.println("Chorbi to like (se espera el chorbi con id 263): " + new_like.getChorbi().getName() + " y tiene id: " + new_like.getChorbi().getId());
 
 	}
 
@@ -90,7 +90,7 @@ public class TasteServiceTest extends AbstractTest {
 
 		this.authenticate("chorbi4");
 
-		final Chorbi chorbiToLike = this.chorbiService.findOne(67);
+		final Chorbi chorbiToLike = this.chorbiService.findOne(263);
 
 		final Chorbi principal = this.chorbiService.findByPrincipal();
 		final int beforeSave = principal.getGivenTastes().size();
@@ -114,7 +114,7 @@ public class TasteServiceTest extends AbstractTest {
 		System.out.println("El chorbi que da el like es (se espera chorbi 4): " + principal.getName());
 		System.out.println("El momento del like es (se espera el momento actual): " + like.getMoment());
 		System.out.println("El comentario del like es (se espera comentario de test de creación): " + like.getComment());
-		System.out.println("El chorbi al que se da like es (se espera el chorbi 5 con id 67): " + like.getChorbi().getName() + " y tiene id: " + like.getChorbi().getId());
+		System.out.println("El chorbi al que se da like es (se espera el chorbi 5 con id 263): " + like.getChorbi().getName() + " y tiene id: " + like.getChorbi().getId());
 
 		this.unauthenticate();
 
@@ -138,7 +138,7 @@ public class TasteServiceTest extends AbstractTest {
 
 		this.unauthenticate();
 
-		final Chorbi chorbiToLike = this.chorbiService.findOne(67);
+		final Chorbi chorbiToLike = this.chorbiService.findOne(263);
 
 		final Taste new_like = this.tasteService.create(chorbiToLike);
 		new_like.setComment("comentario de test de creación");
@@ -157,7 +157,7 @@ public class TasteServiceTest extends AbstractTest {
 
 		this.authenticate("chorbi5");
 
-		final Chorbi chorbiToLike = this.chorbiService.findOne(67);
+		final Chorbi chorbiToLike = this.chorbiService.findOne(263);
 
 		final Taste new_like = this.tasteService.create(chorbiToLike);
 		new_like.setComment("comentario de test de creación");
@@ -176,7 +176,7 @@ public class TasteServiceTest extends AbstractTest {
 
 		this.authenticate("chorbi1");
 
-		final Chorbi chorbiToLike = this.chorbiService.findOne(64);
+		final Chorbi chorbiToLike = this.chorbiService.findOne(260);
 
 		final Taste new_like = this.tasteService.create(chorbiToLike);
 		new_like.setComment("comentario de test de creación");
@@ -195,7 +195,7 @@ public class TasteServiceTest extends AbstractTest {
 
 		this.authenticate("chorbi1");
 
-		final Chorbi chorbiToLike = this.chorbiService.findOne(65);
+		final Chorbi chorbiToLike = this.chorbiService.findOne(261);
 
 		final Taste new_like = this.tasteService.create(chorbiToLike);
 		new_like.setComment("comentario de test de creación");
@@ -215,7 +215,7 @@ public class TasteServiceTest extends AbstractTest {
 		this.authenticate("chorbi1");
 		final Chorbi principal = this.chorbiService.findByPrincipal();
 		final int numlikesdados_before = principal.getGivenTastes().size();
-		final Chorbi chorbiWithLikeToCancel = this.chorbiService.findOne(64);
+		final Chorbi chorbiWithLikeToCancel = this.chorbiService.findOne(260);
 		this.tasteService.delete(chorbiWithLikeToCancel);
 		this.tasteService.flush();
 		final int numlikesdados_after = principal.getGivenTastes().size();
@@ -236,7 +236,7 @@ public class TasteServiceTest extends AbstractTest {
 
 		this.unauthenticate();
 
-		final Chorbi chorbiWithLikeToCancel = this.chorbiService.findOne(64);
+		final Chorbi chorbiWithLikeToCancel = this.chorbiService.findOne(260);
 		this.tasteService.delete(chorbiWithLikeToCancel);
 		this.tasteService.flush();
 
@@ -248,7 +248,7 @@ public class TasteServiceTest extends AbstractTest {
 
 		this.authenticate("chorbi1");
 
-		final Chorbi chorbiWithLikeToCancel = this.chorbiService.findOne(63);
+		final Chorbi chorbiWithLikeToCancel = this.chorbiService.findOne(259);
 		this.tasteService.delete(chorbiWithLikeToCancel);
 		this.tasteService.flush();
 
@@ -262,7 +262,7 @@ public class TasteServiceTest extends AbstractTest {
 
 		this.authenticate("chorbi1");
 
-		final Chorbi chorbiWithLikeToCancel = this.chorbiService.findOne(68);
+		final Chorbi chorbiWithLikeToCancel = this.chorbiService.findOne(263);
 		this.tasteService.delete(chorbiWithLikeToCancel);
 		this.tasteService.flush();
 
@@ -276,7 +276,7 @@ public class TasteServiceTest extends AbstractTest {
 
 		this.authenticate("chorbi1");
 
-		final Chorbi chorbiWithLikeToCancel = this.chorbiService.findOne(65);
+		final Chorbi chorbiWithLikeToCancel = this.chorbiService.findOne(261);
 		this.tasteService.delete(chorbiWithLikeToCancel);
 		this.tasteService.flush();
 
