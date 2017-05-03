@@ -58,6 +58,8 @@ public class EventService {
 
 	public Event create() {
 		Event result;
+		final Manager principal = this.managerService.findByPrincipal();
+		Assert.notNull(principal);
 
 		result = new Event();
 
@@ -150,6 +152,7 @@ public class EventService {
 		event.setTotalChargedFee(feeCurrent);
 		m.setTotalChargedFee(m.getTotalChargedFee() + feeCurrent);
 		event = this.eventRepository.save(event);
+		m.getEvents().add(event);
 		this.managerService.save(m);
 		return event;
 

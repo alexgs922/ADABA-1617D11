@@ -1,7 +1,10 @@
 
 package funcionalTesting;
 
+import java.util.Calendar;
 import java.util.Collection;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.transaction.Transactional;
 
@@ -11,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
+import org.springframework.validation.BindingResult;
 
+import services.ConfigurationService;
 import services.EventService;
 import services.ManagerService;
 import utilities.AbstractTest;
@@ -28,12 +33,15 @@ public class EventServiceTest extends AbstractTest {
 	//The SUT ---------------------------------------------------------------------------------
 
 	@Autowired
-	private EventService	eventService;
+	private EventService			eventService;
 
 	//Auxiliar services ---------------------------------------------------------------------------------
 
 	@Autowired
-	private ManagerService	managerService;
+	private ManagerService			managerService;
+
+	@Autowired
+	private ConfigurationService	configurationService;
 
 
 	//CASO DE USO 1 : Browse a listing that includes every event that was registered in the system. 
@@ -195,9 +203,224 @@ public class EventServiceTest extends AbstractTest {
 	}
 
 	// CASO DE USO 3: UN MANAGER PUEDE GESTIONAR SUS EVENTOS, LO QUE INCLUYE CREARLOS :
+	//Para este caso de uso se comprobará que:
+	//El evento se crea correctamente
+	//El evento se añade a la lista de eventos del manager autenticado como principal y que el evento pertenece a él
+	//Que la fee del manager que crea el evento se ve incrementado tanto como indique la fee total en la configuración del sistema
+	//Que la fee que se asocia a ese evento sea la que se indica en configuration y sea la misma que se le imputa al manager
+	//Que la fecha del evento sea posterior a la actual (Se hace en servicios)
+	//Que si se introduce información de contacto no permitida se enmascare
+	//Que sólo se permite crear eventos cuando el manager tiene una credit card válida (Se hace en servicios)
 
 	@Test
 	public void testCreateEvent() {
 
+		this.authenticate("manager1");
+
+		final Manager principal = this.managerService.findByPrincipal();
+		final double fee = this.configurationService.findConfiguration().getManagersFee();
+
+		final int before_save = principal.getEvents().size();
+		final int before_save_all = this.eventService.findAll().size();
+		final double fee_before = principal.getTotalChargedFee();
+
+		Event new_event = this.eventService.create();
+		new_event.setDescription("Descripción de evento de pruebas");
+		Date moment = new Date();
+		final Calendar momento = new GregorianCalendar();
+		momento.set(2018, 05, 15);
+		moment = momento.getTime();
+		new_event.setMoment(moment);
+		new_event.setNumberSeatsOffered(25);
+		new_event.setPicture("https://c1.staticflickr.com/4/3637/3357716385_8030394343_m.jpg");
+		new_event.setTitle("Titulo del evento mi email es belramgut@alum.us.es");
+
+		final BindingResult b = null;
+		new_event = this.eventService.reconstruct(new_event, b);
+		new_event = this.eventService.save2(new_event);
+
+		this.eventService.flush();
+
+		final int after_save = principal.getEvents().size();
+		final int after_save_all = this.eventService.findAll().size();
+		final double fee_after = principal.getTotalChargedFee();
+
+		Assert.isTrue(after_save_all == 10);
+		Assert.isTrue(after_save_all > before_save_all);
+		Assert.isTrue(after_save_all == (before_save_all + 1));
+
+		Assert.isTrue(after_save == 5);
+		Assert.isTrue(before_save < after_save);
+		Assert.isTrue(after_save == (before_save + 1));
+
+		Assert.isTrue(principal.getEvents().contains(new_event));
+		Assert.isTrue(new_event.getManager().getId() == principal.getId());
+
+		Assert.isTrue(new_event.getTotalChargedFee() == fee);
+		Assert.isTrue(fee_before < fee_after);
+		Assert.isTrue(fee_after == (fee_before + fee));
+
+		//Comprobemos que el email del titulo se ha enmascarado
+		Assert.isTrue(new_event.getTitle().contains("*"));
+
 	}
+
+	//No crea el evento porque el manager2 tiene una tarjeta de crédito caducada
+	@Test(expected = IllegalArgumentException.class)
+	public void testCreateEvent2() {
+
+		this.authenticate("manager2");
+
+		final Manager principal = this.managerService.findByPrincipal();
+		final double fee = this.configurationService.findConfiguration().getManagersFee();
+
+		final int before_save = principal.getEvents().size();
+		final int before_save_all = this.eventService.findAll().size();
+		final double fee_before = principal.getTotalChargedFee();
+
+		Event new_event = this.eventService.create();
+		new_event.setDescription("Descripción de evento de pruebas");
+		Date moment = new Date();
+		final Calendar momento = new GregorianCalendar();
+		momento.set(2018, 05, 15);
+		moment = momento.getTime();
+		new_event.setMoment(moment);
+		new_event.setNumberSeatsOffered(25);
+		new_event.setPicture("https://c1.staticflickr.com/4/3637/3357716385_8030394343_m.jpg");
+		new_event.setTitle("Titulo del evento mi email es belramgut@alum.us.es");
+
+		final BindingResult b = null;
+		new_event = this.eventService.reconstruct(new_event, b);
+		new_event = this.eventService.save2(new_event);
+
+		this.eventService.flush();
+
+		final int after_save = principal.getEvents().size();
+		final int after_save_all = this.eventService.findAll().size();
+		final double fee_after = principal.getTotalChargedFee();
+
+		Assert.isTrue(after_save_all > before_save_all);
+		Assert.isTrue(after_save_all == (before_save_all + 1));
+
+		Assert.isTrue(before_save < after_save);
+		Assert.isTrue(after_save == (before_save + 1));
+
+		Assert.isTrue(principal.getEvents().contains(new_event));
+		Assert.isTrue(new_event.getManager().getId() == principal.getId());
+
+		Assert.isTrue(new_event.getTotalChargedFee() == fee);
+		Assert.isTrue(fee_before < fee_after);
+		Assert.isTrue(fee_after == (fee_before + fee));
+
+		//Comprobemos que el email del titulo se ha enmascarado
+		Assert.isTrue(new_event.getTitle().contains("*"));
+
+	}
+
+	//No permite crear el evento porque el manager3 no tiene tarjeta de crédito registrada en el sistema
+	@Test(expected = IllegalArgumentException.class)
+	public void testCreateEvent3() {
+
+		this.authenticate("manager3");
+
+		final Manager principal = this.managerService.findByPrincipal();
+		final double fee = this.configurationService.findConfiguration().getManagersFee();
+
+		final int before_save = principal.getEvents().size();
+		final int before_save_all = this.eventService.findAll().size();
+		final double fee_before = principal.getTotalChargedFee();
+
+		Event new_event = this.eventService.create();
+		new_event.setDescription("Descripción de evento de pruebas");
+		Date moment = new Date();
+		final Calendar momento = new GregorianCalendar();
+		momento.set(2018, 05, 15);
+		moment = momento.getTime();
+		new_event.setMoment(moment);
+		new_event.setNumberSeatsOffered(25);
+		new_event.setPicture("https://c1.staticflickr.com/4/3637/3357716385_8030394343_m.jpg");
+		new_event.setTitle("Titulo del evento mi email es belramgut@alum.us.es");
+
+		final BindingResult b = null;
+		new_event = this.eventService.reconstruct(new_event, b);
+		new_event = this.eventService.save2(new_event);
+
+		this.eventService.flush();
+
+		final int after_save = principal.getEvents().size();
+		final int after_save_all = this.eventService.findAll().size();
+		final double fee_after = principal.getTotalChargedFee();
+
+		Assert.isTrue(after_save_all > before_save_all);
+		Assert.isTrue(after_save_all == (before_save_all + 1));
+
+		Assert.isTrue(before_save < after_save);
+		Assert.isTrue(after_save == (before_save + 1));
+
+		Assert.isTrue(principal.getEvents().contains(new_event));
+		Assert.isTrue(new_event.getManager().getId() == principal.getId());
+
+		Assert.isTrue(new_event.getTotalChargedFee() == fee);
+		Assert.isTrue(fee_before < fee_after);
+		Assert.isTrue(fee_after == (fee_before + fee));
+
+		//Comprobemos que el email del titulo se ha enmascarado
+		Assert.isTrue(new_event.getTitle().contains("*"));
+
+	}
+
+	//No permite crear el evento con una fecha anterior a la actual
+	@Test(expected = IllegalArgumentException.class)
+	public void testCreateEvent4() {
+
+		this.authenticate("manager1");
+
+		final Manager principal = this.managerService.findByPrincipal();
+		final double fee = this.configurationService.findConfiguration().getManagersFee();
+
+		final int before_save = principal.getEvents().size();
+		final int before_save_all = this.eventService.findAll().size();
+		final double fee_before = principal.getTotalChargedFee();
+
+		Event new_event = this.eventService.create();
+		new_event.setDescription("Descripción de evento de pruebas");
+		Date moment = new Date();
+		final Calendar momento = new GregorianCalendar();
+		momento.set(2015, 05, 15);
+		moment = momento.getTime();
+		new_event.setMoment(moment);
+		new_event.setNumberSeatsOffered(25);
+		new_event.setPicture("https://c1.staticflickr.com/4/3637/3357716385_8030394343_m.jpg");
+		new_event.setTitle("Titulo del evento mi email es belramgut@alum.us.es");
+
+		final BindingResult b = null;
+		new_event = this.eventService.reconstruct(new_event, b);
+		new_event = this.eventService.save2(new_event);
+
+		this.eventService.flush();
+
+		final int after_save = principal.getEvents().size();
+		final int after_save_all = this.eventService.findAll().size();
+		final double fee_after = principal.getTotalChargedFee();
+
+		Assert.isTrue(after_save_all == 10);
+		Assert.isTrue(after_save_all > before_save_all);
+		Assert.isTrue(after_save_all == (before_save_all + 1));
+
+		Assert.isTrue(after_save == 5);
+		Assert.isTrue(before_save < after_save);
+		Assert.isTrue(after_save == (before_save + 1));
+
+		Assert.isTrue(principal.getEvents().contains(new_event));
+		Assert.isTrue(new_event.getManager().getId() == principal.getId());
+
+		Assert.isTrue(new_event.getTotalChargedFee() == fee);
+		Assert.isTrue(fee_before < fee_after);
+		Assert.isTrue(fee_after == (fee_before + fee));
+
+		//Comprobemos que el email del titulo se ha enmascarado
+		Assert.isTrue(new_event.getTitle().contains("*"));
+
+	}
+
 }
