@@ -16,10 +16,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.util.Assert;
 import org.springframework.validation.BindingResult;
 
+import services.ChirpService;
+import services.ChorbiService;
 import services.ConfigurationService;
 import services.EventService;
 import services.ManagerService;
 import utilities.AbstractTest;
+import domain.Chorbi;
 import domain.Event;
 import domain.Manager;
 
@@ -42,6 +45,12 @@ public class EventServiceTest extends AbstractTest {
 
 	@Autowired
 	private ConfigurationService	configurationService;
+
+	@Autowired
+	private ChirpService			chirpService;
+
+	@Autowired
+	private ChorbiService			chorbiService;
 
 
 	//CASO DE USO 1 : Browse a listing that includes every event that was registered in the system. 
@@ -202,6 +211,7 @@ public class EventServiceTest extends AbstractTest {
 
 	}
 
+	// ---------------------------------------------------------------------------------------------------------------------------------------------
 	// CASO DE USO 3: UN MANAGER PUEDE GESTIONAR SUS EVENTOS, LO QUE INCLUYE CREARLOS :
 	//Para este caso de uso se comprobará que:
 	//El evento se crea correctamente
@@ -271,13 +281,6 @@ public class EventServiceTest extends AbstractTest {
 
 		this.authenticate("manager2");
 
-		final Manager principal = this.managerService.findByPrincipal();
-		final double fee = this.configurationService.findConfiguration().getManagersFee();
-
-		final int before_save = principal.getEvents().size();
-		final int before_save_all = this.eventService.findAll().size();
-		final double fee_before = principal.getTotalChargedFee();
-
 		Event new_event = this.eventService.create();
 		new_event.setDescription("Descripción de evento de pruebas");
 		Date moment = new Date();
@@ -294,26 +297,6 @@ public class EventServiceTest extends AbstractTest {
 		new_event = this.eventService.save2(new_event);
 
 		this.eventService.flush();
-
-		final int after_save = principal.getEvents().size();
-		final int after_save_all = this.eventService.findAll().size();
-		final double fee_after = principal.getTotalChargedFee();
-
-		Assert.isTrue(after_save_all > before_save_all);
-		Assert.isTrue(after_save_all == (before_save_all + 1));
-
-		Assert.isTrue(before_save < after_save);
-		Assert.isTrue(after_save == (before_save + 1));
-
-		Assert.isTrue(principal.getEvents().contains(new_event));
-		Assert.isTrue(new_event.getManager().getId() == principal.getId());
-
-		Assert.isTrue(new_event.getTotalChargedFee() == fee);
-		Assert.isTrue(fee_before < fee_after);
-		Assert.isTrue(fee_after == (fee_before + fee));
-
-		//Comprobemos que el email del titulo se ha enmascarado
-		Assert.isTrue(new_event.getTitle().contains("*"));
 
 	}
 
@@ -323,13 +306,6 @@ public class EventServiceTest extends AbstractTest {
 
 		this.authenticate("manager3");
 
-		final Manager principal = this.managerService.findByPrincipal();
-		final double fee = this.configurationService.findConfiguration().getManagersFee();
-
-		final int before_save = principal.getEvents().size();
-		final int before_save_all = this.eventService.findAll().size();
-		final double fee_before = principal.getTotalChargedFee();
-
 		Event new_event = this.eventService.create();
 		new_event.setDescription("Descripción de evento de pruebas");
 		Date moment = new Date();
@@ -347,26 +323,6 @@ public class EventServiceTest extends AbstractTest {
 
 		this.eventService.flush();
 
-		final int after_save = principal.getEvents().size();
-		final int after_save_all = this.eventService.findAll().size();
-		final double fee_after = principal.getTotalChargedFee();
-
-		Assert.isTrue(after_save_all > before_save_all);
-		Assert.isTrue(after_save_all == (before_save_all + 1));
-
-		Assert.isTrue(before_save < after_save);
-		Assert.isTrue(after_save == (before_save + 1));
-
-		Assert.isTrue(principal.getEvents().contains(new_event));
-		Assert.isTrue(new_event.getManager().getId() == principal.getId());
-
-		Assert.isTrue(new_event.getTotalChargedFee() == fee);
-		Assert.isTrue(fee_before < fee_after);
-		Assert.isTrue(fee_after == (fee_before + fee));
-
-		//Comprobemos que el email del titulo se ha enmascarado
-		Assert.isTrue(new_event.getTitle().contains("*"));
-
 	}
 
 	//No permite crear el evento con una fecha anterior a la actual
@@ -374,13 +330,6 @@ public class EventServiceTest extends AbstractTest {
 	public void testCreateEvent4() {
 
 		this.authenticate("manager1");
-
-		final Manager principal = this.managerService.findByPrincipal();
-		final double fee = this.configurationService.findConfiguration().getManagersFee();
-
-		final int before_save = principal.getEvents().size();
-		final int before_save_all = this.eventService.findAll().size();
-		final double fee_before = principal.getTotalChargedFee();
 
 		Event new_event = this.eventService.create();
 		new_event.setDescription("Descripción de evento de pruebas");
@@ -399,28 +348,111 @@ public class EventServiceTest extends AbstractTest {
 
 		this.eventService.flush();
 
-		final int after_save = principal.getEvents().size();
-		final int after_save_all = this.eventService.findAll().size();
-		final double fee_after = principal.getTotalChargedFee();
+	}
 
-		Assert.isTrue(after_save_all == 10);
-		Assert.isTrue(after_save_all > before_save_all);
-		Assert.isTrue(after_save_all == (before_save_all + 1));
+	// ---------------------------------------------------------------------------------------------------------------------------------------------
+	//CASO DE USO: UN MANAGER PUEDE GESTIONAR SUS EVENTOS, LO QUE INCLUYE MODIFICARLOS : 
+	//Para este caso de uso debemos tener en cuenta algunas reglas de negocio que hemos acordado introducir: 
+	//1. No es posible modificar un evento pasado	
+	//2. No es posible modificar a fecha anterior a la presente
+	//3. No es posible cambiar el número de plazas libres a un número menor del número de chorbies ya registrados en él.
 
-		Assert.isTrue(after_save == 5);
-		Assert.isTrue(before_save < after_save);
-		Assert.isTrue(after_save == (before_save + 1));
+	//En estos tests comprobaremos que :
+	//El evento se modifique correctamente
+	//La fee del evento y del manager no cambia (no se imputa de nuevo cada vez que se modifica)
+	//Se envían los chirps correspondientes a los chorbies afectados
+	//Sólo el manager que es autor del evento puede editarlo
+	//Si se introduce información de contacto no permitida, se enmascare
 
-		Assert.isTrue(principal.getEvents().contains(new_event));
-		Assert.isTrue(new_event.getManager().getId() == principal.getId());
+	@Test
+	public void testEditEvent1() {
 
-		Assert.isTrue(new_event.getTotalChargedFee() == fee);
-		Assert.isTrue(fee_before < fee_after);
-		Assert.isTrue(fee_after == (fee_before + fee));
+		this.authenticate("manager1");
 
-		//Comprobemos que el email del titulo se ha enmascarado
-		Assert.isTrue(new_event.getTitle().contains("*"));
+		final Event eventoToEdit = this.eventService.findOne(287);
+
+		final Manager principal_before = this.managerService.findByPrincipal();
+
+		eventoToEdit.setTitle("Tests funcionales prueba");
+		eventoToEdit.setDescription("mi número de teléfono es 685487595");
+
+		final Event reconstructed = this.eventService.reconstruct(eventoToEdit, null);
+		this.eventService.saveEdit(reconstructed);
+		this.eventService.flush();
+		this.chirpService.flush();
+
+		final Event editedEvent = this.eventService.findOne(287);
+
+		final Manager principal_after = this.managerService.findByPrincipal();
+
+		Assert.isTrue(editedEvent.getTitle().equals("Tests funcionales prueba"));
+		//Contendrá el caracter * si se ha enmascarado el teléfono introducido en la edición de la descripción
+		Assert.isTrue(editedEvent.getDescription().contains("*"));
+
+		//Comprobamos que por ejemplo para el chorbi 5, registrado en el evento, su lista de mensajes recibidos ha aumentado en 1 
+		final Chorbi c = this.chorbiService.findOne(263);
+		//No tiene ningún mensaje recibido, ahora debería tener 1
+		Assert.isTrue(c.getChirpReceives().size() == 1);
+
+		//Comprobamos que no aumentan los cargos con cada edición
+		Assert.isTrue(eventoToEdit.getTotalChargedFee() == editedEvent.getTotalChargedFee());
+		Assert.isTrue(principal_before.getTotalChargedFee() == principal_after.getTotalChargedFee());
 
 	}
 
+	//Test negativo : un manager intenta editar un evento que no es suyo
+	@Test(expected = IllegalArgumentException.class)
+	public void testEditEvent2() {
+
+		this.authenticate("manager2");
+
+		final Event eventoToEdit = this.eventService.findOne(287);
+
+		eventoToEdit.setTitle("Tests funcionales prueba");
+		eventoToEdit.setDescription("mi número de teléfono es 685487595");
+
+		final Event reconstructed = this.eventService.reconstruct(eventoToEdit, null);
+		this.eventService.saveEdit(reconstructed);
+		this.eventService.flush();
+		this.chirpService.flush();
+
+	}
+
+	//Test negativo : un manager intenta editar un evento y dejar menos plazas libres que chorbies ya registrados
+	@Test(expected = IllegalArgumentException.class)
+	public void testEditEvent3() {
+
+		this.authenticate("manager1");
+
+		final Event eventoToEdit = this.eventService.findOne(287);
+
+		eventoToEdit.setNumberSeatsOffered(eventoToEdit.getRegistered().size() - 1);
+
+		final Event reconstructed = this.eventService.reconstruct(eventoToEdit, null);
+		this.eventService.saveEdit(reconstructed);
+		this.eventService.flush();
+		this.chirpService.flush();
+
+	}
+
+	//Test negativo : un manager intenta editar un evento y poner una fecha anterior a la actual
+	@Test(expected = IllegalArgumentException.class)
+	public void testEditEvent4() {
+
+		this.authenticate("manager1");
+
+		final Event eventoToEdit = this.eventService.findOne(287);
+
+		Date moment = new Date();
+		final Calendar momento = new GregorianCalendar();
+		momento.set(2017, 04, 04);
+		moment = momento.getTime();
+		eventoToEdit.setMoment(moment);
+
+		final Event reconstructed = this.eventService.reconstruct(eventoToEdit, null);
+		this.eventService.saveEdit(reconstructed);
+		this.eventService.flush();
+		this.chirpService.flush();
+
+	}
 }
