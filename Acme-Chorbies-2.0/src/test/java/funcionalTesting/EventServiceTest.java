@@ -455,4 +455,63 @@ public class EventServiceTest extends AbstractTest {
 		this.chirpService.flush();
 
 	}
+
+	// ---------------------------------------------------------------------------------------------------------------------------------------------
+	//CASO DE USO: UN MANAGER PUEDE GESTIONAR SUS EVENTOS, LO QUE INCLUYE ELIMINARLOS : 
+	//Para este caso de uso debemos tener en cuenta algunas reglas de negocio que hemos acordado introducir: 
+	//1. No es posible eliminar un evento pasado	
+
+	//En estos tests comprobaremos que :
+	//El evento se elimine correctamente
+	//Se envían los chirps correspondientes a los chorbies afectados
+
+	@Test
+	public void testDeleteEvent1() {
+
+		this.authenticate("manager1");
+
+		final Event eventoToEdit = this.eventService.findOne(287);
+		final int all_before = this.eventService.findAll().size();
+
+		this.eventService.delete(eventoToEdit);
+		this.eventService.flush();
+
+		final int all_after = this.eventService.findAll().size();
+
+		Assert.isTrue(all_after == (all_before - 1));
+		Assert.isTrue(!this.eventService.findAll().contains(eventoToEdit));
+
+		//Comprobaremos que el chorbi 5, registrado en el evento, tiene un mensaje recibido más que antes de esta operación.
+		final Chorbi c = this.chorbiService.findOne(263);
+		//No tiene ningún mensaje recibido, ahora debería tener 1
+		Assert.isTrue(c.getChirpReceives().size() == 1);
+
+	}
+
+	//Test negativo : el manager 2 intenta eliminar un evento que no es suyo
+	@Test(expected = IllegalArgumentException.class)
+	public void testDeleteEvent2() {
+
+		this.authenticate("manager2");
+
+		final Event eventoToEdit = this.eventService.findOne(287);
+
+		this.eventService.delete(eventoToEdit);
+		this.eventService.flush();
+
+	}
+
+	//Tests negativos : el manager 1 intenta eliminar un evento pasado
+	@Test(expected = IllegalArgumentException.class)
+	public void testDeleteEvent3() {
+
+		this.authenticate("manager1");
+
+		final Event eventoToEdit = this.eventService.findOne(283);
+
+		this.eventService.delete(eventoToEdit);
+		this.eventService.flush();
+
+	}
+
 }
