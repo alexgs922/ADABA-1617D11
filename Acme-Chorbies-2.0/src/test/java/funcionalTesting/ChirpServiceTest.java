@@ -15,9 +15,12 @@ import org.springframework.util.Assert;
 
 import services.ChirpService;
 import services.ChorbiService;
+import services.EventService;
+import services.ManagerService;
 import utilities.AbstractTest;
 import domain.Chirp;
 import domain.Chorbi;
+import domain.Event;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -34,11 +37,17 @@ public class ChirpServiceTest extends AbstractTest {
 	@Autowired
 	private ChorbiService	chorbiService;
 
+	@Autowired
+	private ManagerService	managerService;
 
-	//Chorbi = 63,64,65,66,67,68
+	@Autowired
+	private EventService	eventService;
+
+
+	//Chorbi = 259,260,261,...,264
 
 	//Crear chirp sin errores de validacion y otros casos comunes
-	protected void template(final String username, final int enviarId, final int recibirId, final Class<?> expected) {
+	protected void template1(final String username, final int enviarId, final int recibirId, final Class<?> expected) {
 
 		Class<?> caught;
 
@@ -81,33 +90,33 @@ public class ChirpServiceTest extends AbstractTest {
 
 	}
 
-	//Chorbi = 63,64,65,66,67,68
+	//Chorbi = 259,260,261,...,264
 	@Test
-	public void driver() {
+	public void driver1() {
 
 		final Object testingData[][] = {
 			{   //chorbi 1 envia chirp correcto a chorbi 2
-				"chorbi1", 63, 64, null
+				"chorbi1", 259, 260, null
 			}, {
 				//chorbi 2 enviar chirp correcto a chorbi 1
-				"chorbi2", 64, 63, null
+				"chorbi2", 260, 259, null
 			}, {
 				//chorbi 1 envia chirp correcto a chorbi 3
-				"chorbi1", 63, 65, null
+				"chorbi1", 259, 261, null
 			}, {
 				//Simular post hacking. Logeado como chorbi 3, pero en realidad soy chorbi 2 intentando enviar chirp a chorbi 1
-				"chorbi3", 64, 63, IllegalArgumentException.class
+				"chorbi3", 260, 259, IllegalArgumentException.class
 			}, {
 				//Usuario no autenticado intenta enviar chirp a otro actor.
-				null, 63, 64, IllegalArgumentException.class
+				null, 259, 260, IllegalArgumentException.class
 			}, {
 				//Chorbi 1 intenta enviar a un chorbi que no existe un chirp
-				"chorbi1", 63, 5000, IllegalArgumentException.class
+				"chorbi1", 259, 5000, IllegalArgumentException.class
 			}
 		};
 
 		for (int i = 0; i < testingData.length; i++)
-			this.template((String) testingData[i][0], (int) testingData[i][1], (int) testingData[i][2], (Class<?>) testingData[i][3]);
+			this.template1((String) testingData[i][0], (int) testingData[i][1], (int) testingData[i][2], (Class<?>) testingData[i][3]);
 
 	}
 
@@ -180,26 +189,26 @@ public class ChirpServiceTest extends AbstractTest {
 		this.checkExceptions(expected, caught);
 
 	}
-	//Chorbi = 63,64,65,66,67,68
+	//Chorbi = 259,260,261,...,264
 	@Test
 	public void driver2() {
 
 		final Object testingData[][] = {
 			{
 				//chorbi 2 intenta enviar chirp sin texto a chirp 1
-				"chorbi2", 64, 63, 1, ConstraintViolationException.class
+				"chorbi2", 260, 259, 1, ConstraintViolationException.class
 			}, {
 				//chorbi 2 intenta enviar chirp sin titulo a chorbi 3
-				"chorbi2", 64, 65, 2, ConstraintViolationException.class
+				"chorbi2", 260, 261, 2, ConstraintViolationException.class
 			}, {
 				//chorbi 1 intenta enviar chirp sin recipient
-				"chorbi1", 63, 64, 3, NullPointerException.class
+				"chorbi1", 259, 260, 3, NullPointerException.class
 			}, {
 				//No existe sender
-				"chorbi1", 63, 64, 4, NullPointerException.class
+				"chorbi1", 259, 260, 4, NullPointerException.class
 			}, {
 				//Mensaje vacio
-				"chorbi1", 63, 63, 5, NullPointerException.class
+				"chorbi1", 259, 260, 5, NullPointerException.class
 			}
 
 		};
@@ -237,22 +246,23 @@ public class ChirpServiceTest extends AbstractTest {
 		this.checkExceptions(expected, caught);
 
 	}
-	//Chorbi = 63,64,65,66,67,68
+	//Chorbi = 259,260,261,...,264
+	//chorbi 2 tiene el chirp 266
 	@Test
 	public void driver3() {
 
 		final Object testingData[][] = {
 			{
 				//chorbi 2 elimina un chirp suyo
-				"chorbi2", 70, null
+				"chorbi2", 266, null
 			}, {
 				//chorbi 1 intenta eliminar un chirp que no es suyo
-				"chorbi1", 70, IllegalArgumentException.class
+				"chorbi1", 266, IllegalArgumentException.class
 			}
 
 			, {
 				//chorbi 2 intenta eliminar un chirp que no existe
-				"chorbi2", 1000, IllegalArgumentException.class
+				"chorbi2", 2000, IllegalArgumentException.class
 			}
 
 		};
@@ -290,17 +300,18 @@ public class ChirpServiceTest extends AbstractTest {
 		this.checkExceptions(expected, caught);
 
 	}
-	//Chorbi = 63,64,65,66,67,68
+	//Chorbi = 259,260,261,...,264
+	//chorbi 1 tiene el chirp 265
 	@Test
 	public void driver4() {
 
 		final Object testingData[][] = {
 			{
 				//chorbi 1 elimina un chirp suyo
-				"chorbi1", 69, null
+				"chorbi1", 265, null
 			}, {
 				//chorbi 2 intenta eliminar un chirp que no es suyo
-				"chorbi2", 69, IllegalArgumentException.class
+				"chorbi2", 265, IllegalArgumentException.class
 			}
 
 			, {
@@ -312,6 +323,75 @@ public class ChirpServiceTest extends AbstractTest {
 
 		for (int i = 0; i < testingData.length; i++)
 			this.template4((String) testingData[i][0], (int) testingData[i][1], (Class<?>) testingData[i][2]);
+
+	}
+
+	//Test destinado a probar el bulk chirp enviado por los managers
+	protected void template5(final String username, final int eventId, final Class<?> expected) {
+
+		Class<?> caught;
+
+		caught = null;
+		try {
+
+			this.authenticate(username);
+
+			final Event event = this.eventService.findOne(eventId);
+
+			final Collection<Chorbi> chorbiesEvento = event.getRegistered();
+			final Integer numeroDeChorbies = chorbiesEvento.size();
+
+			final Chirp chirp = this.chirpService.createBulk(event);
+			chirp.setText("Estad atentos a la novedades");
+			chirp.setSubject("Evento 1");
+
+			final Collection<Chirp> todosLosChirps = this.chirpService.findAll();
+
+			this.chirpService.saveBulk(chirp, event);
+
+			final Collection<Chirp> todosLosChirps2 = this.chirpService.findAll();
+
+			Assert.isTrue(todosLosChirps2.size() == todosLosChirps.size() + numeroDeChorbies);
+
+			this.unauthenticate();
+			this.chirpService.flush();
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.checkExceptions(expected, caught);
+
+	}
+	//Event 283,284,285,286,287,288,289,290,291 9 eventos en total
+	//manager1 = 250,..,manager 3=252
+	//manager 1 tiene los eventos 1,5,6,7
+	//manager 2 tiene los eventos 2,9
+	@Test
+	public void driver5() {
+
+		final Object testingData[][] = {
+			{
+				//Manager 1 enviar un bulk chirp a todos los registrados en su evento
+				"manager1", 283, null
+			}, {
+				//Manager 2 enviar un bulk chirp a todos los registrados en su evento
+				"manager2", 284, null
+			}, {
+				//Manager 1 intenta enviar un bulk chirp sobre un evento que no es suyo
+				"manager1", 284, IllegalArgumentException.class
+			}, {
+				//Usuario no autenticado intenta enviar un bulk chirp
+				null, 283, IllegalArgumentException.class
+			}, {
+				//Manager 1 intenta enviar un bulk chirp sobre un evento que no existe
+				"manager1", 5000, IllegalArgumentException.class
+			}
+
+		};
+
+		for (int i = 0; i < testingData.length; i++)
+			this.template5((String) testingData[i][0], (int) testingData[i][1], (Class<?>) testingData[i][2]);
 
 	}
 

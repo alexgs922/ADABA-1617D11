@@ -80,7 +80,7 @@ public class TemplateServiceTest extends AbstractTest {
 
 	}
 
-	// templateChorbi1=57, templateChorbi2=58,...,etc.
+	// templateChorbi1=253, templateChorbi2=254,...,etc.
 	@Test
 	public void driverEditTemplate() {
 
@@ -89,43 +89,43 @@ public class TemplateServiceTest extends AbstractTest {
 			//Editar una template correctamente
 
 			{
-				"chorbi1", Genre.MALE, Relationship.LOVE, 25, "hola", 57, null
+				"chorbi1", Genre.MALE, Relationship.LOVE, 25, "hola", 253, null
 			},
 
 			//Intentar editar un template con genre a null
 
 			{
-				"chorbi1", null, Relationship.ACTIVITIES, 30, "only girls", 57, null
+				"chorbi1", null, Relationship.ACTIVITIES, 30, "only girls", 253, null
 			},
 
 			//Intentar editar un template con relationship a null
 
 			{
-				"chorbi1", Genre.FEMALE, null, 23, "only a coffe", 57, null
+				"chorbi1", Genre.FEMALE, null, 23, "only a coffe", 253, null
 			},
 
 			//Intentar editar un template con approximated age a null
 
 			{
-				"chorbi1", Genre.FEMALE, Relationship.ACTIVITIES, null, "only sport", 57, null
+				"chorbi1", Genre.FEMALE, Relationship.ACTIVITIES, null, "only sport", 253, null
 			},
 
 			//Intentar editar un template con keyword vacia
 
 			{
-				"chorbi1", Genre.FEMALE, Relationship.FRIENDSHIP, 21, "", 57, null
+				"chorbi1", Genre.FEMALE, Relationship.FRIENDSHIP, 21, "", 253, null
 			},
 
 			//Intentar editar un template con todos los parametros vacios 
 
 			{
-				"chorbi1", null, null, null, "", 57, null
+				"chorbi1", null, null, null, "", 253, null
 			},
 
 			//Intentar editar un template que no es del usuario principal 
 
 			{
-				"chorbi1", Genre.MALE, Relationship.LOVE, 25, "hola", 58, IllegalArgumentException.class
+				"chorbi1", Genre.MALE, Relationship.LOVE, 25, "hola", 254, IllegalArgumentException.class
 			},
 
 			//Intentar editar un template que no existe
@@ -183,7 +183,7 @@ public class TemplateServiceTest extends AbstractTest {
 	@Test
 	public void driverEditCoordinate() {
 
-		final Template template1 = this.chorbiService.findOneToSent(63).getTemplate(); // Template del chorbi con id = 63
+		final Template template1 = this.chorbiService.findOneToSent(259).getTemplate(); // Template del chorbi con id = 259
 
 		final Object testingData[][] = {
 
@@ -298,7 +298,7 @@ public class TemplateServiceTest extends AbstractTest {
 
 	}
 	// templateChorbi1=57, templateChorbi2=58,...,etc.
-	//Chorbi = 63,64,65,66,67,68
+	//Chorbi1= 259 chorbi5=263
 	@Test
 	public void driverTemplateSearch() {
 
@@ -306,13 +306,13 @@ public class TemplateServiceTest extends AbstractTest {
 
 			{
 				//destinado a mostrar los mismo resultados ya almacenados, debido a que la hora de cacheo no ha sido superada
-				"chorbi1", 63, 0, null
+				"chorbi1", 259, 0, null
 			}, {
 				//destinado a mostrar que los resultados de busqueda son distintos, debido a que la hora de cacheo ha sido superada
-				"chorbi1", 63, 1, null
+				"chorbi1", 259, 1, null
 			}, {
 				//destinado a probar una busqueda cuando el usuario tiene una tarjeta de credito invalida, no debe mostrar nada.
-				"chorbi5", 67, 1, IllegalArgumentException.class
+				"chorbi5", 263, 1, IllegalArgumentException.class
 			}, {
 				//Realiza una busqueda un chorbi que no existe en el sistema
 				"chorbi1", 5000, 1, IllegalArgumentException.class
