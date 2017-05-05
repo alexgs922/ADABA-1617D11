@@ -40,7 +40,7 @@
 								code="master.page.administrator.list.manager" /></a></li>
 				</ul>
 			</li>
-			<li><a class="fNiv" href="manager/register.do"><spring:message
+			<li><a class="fNiv" href="managerDomain/register.do"><spring:message
 						code="master.page.registerManager" /></a>
 			</li>
 		</security:authorize>
@@ -57,7 +57,7 @@
 								code="master.page.list.create.event" /></a></li>			
 
 				</ul></li>
-				<li><a class="fNiv" href="manager/viewProfile.do"><spring:message
+				<li><a class="fNiv" href="managerDomain/viewProfile.do"><spring:message
 						code="master.page.viewMyProfile" /></a>
 			</li>
 				
