@@ -32,7 +32,7 @@ public class ChorbiServiceTest extends AbstractTest {
 
 		this.authenticate("chorbi1");
 
-		final Chorbi c = this.chorbiService.findOne(64);
+		final Chorbi c = this.chorbiService.findOne(260);
 
 		System.out.println("-----------------------------------------------------------------------------------");
 		System.out.println("--------------------------------FIND ONE CHORBI------------------------------------");

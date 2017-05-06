@@ -230,6 +230,7 @@ public class ChirpService {
 	}
 
 	public void editEventChirp(final Event event, final Manager principal) {
+		Assert.isTrue(principal.getEvents().contains(event));
 		final Collection<Chorbi> chorbiesToChirp = event.getRegistered();
 		for (final Chorbi chorbi : chorbiesToChirp) {
 			final Chirp mensaje = this.create();
@@ -251,6 +252,7 @@ public class ChirpService {
 	}
 
 	public void deleteEventChirp(final Event event, final Manager principal) {
+		Assert.isTrue(principal.getEvents().contains(event));
 		final Collection<Chorbi> chorbiesToChirp = event.getRegistered();
 		for (final Chorbi chorbi : chorbiesToChirp) {
 			final Chirp mensaje = this.create();

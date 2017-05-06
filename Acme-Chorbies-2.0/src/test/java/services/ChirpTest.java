@@ -1,7 +1,9 @@
 
 package services;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.transaction.Transactional;
 
@@ -10,10 +12,13 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.Assert;
 
 import utilities.AbstractTest;
 import domain.Chirp;
 import domain.Chorbi;
+import domain.Event;
+import domain.Manager;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {
@@ -27,6 +32,12 @@ public class ChirpTest extends AbstractTest {
 
 	@Autowired
 	private ChorbiService	chorbiService;
+
+	@Autowired
+	private ManagerService	managerService;
+
+	@Autowired
+	private EventService	eventService;
 
 
 	//Find one positivo: con usuario logueado
@@ -144,4 +155,111 @@ public class ChirpTest extends AbstractTest {
 
 	}
 
+	//Test positivo : funcionamiento del envío de mensaje a todos los chorbies registrados en un evento cuando éste se modifica.
+	@Test
+	public void testEditEventChirp() {
+
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("               TEST EDIT EVENT CHIRP");
+		System.out.println("-------------------------------------------------------------");
+
+		this.authenticate("manager1");
+
+		final Manager principal = this.managerService.findByPrincipal();
+
+		final Event evento = this.eventService.findOne(287);
+
+		final Collection<Chorbi> ch1 = evento.getRegistered();
+		final List<Integer> lista = new ArrayList<Integer>();
+		for (final Chorbi c : ch1)
+			lista.add(c.getChirpReceives().size());
+
+		this.chirpService.editEventChirp(evento, principal);
+
+		final Collection<Chorbi> ch2 = evento.getRegistered();
+
+		System.out.println("Comprobaremos que los chorbies afectados por el evento ahora tienen un chirp más:");
+
+		int count = 0;
+		for (final Chorbi c : ch2) {
+			System.out.println("El chorbi " + c.getName() + " tenía " + lista.get(count) + " chirps recibidos, y ahora tiene " + c.getChirpReceives().size());
+			Assert.isTrue(lista.get(count) == c.getChirpReceives().size() - 1);
+			count = count + 1;
+		}
+	}
+
+	//Test negativo : funcionamiento del envío de mensaje a todos los chorbies registrados en un evento cuando éste se modifica.
+	//El manager 2 intenta enviar un chirp para anunciar un cambio en  un evento que no es suyo
+	@Test(expected = IllegalArgumentException.class)
+	public void testEditEventChirp2() {
+
+		this.authenticate("manager2");
+
+		final Manager principal = this.managerService.findByPrincipal();
+
+		final Event evento = this.eventService.findOne(287);
+
+		final Collection<Chorbi> ch1 = evento.getRegistered();
+		final List<Integer> lista = new ArrayList<Integer>();
+		for (final Chorbi c : ch1)
+			lista.add(c.getChirpReceives().size());
+
+		this.chirpService.editEventChirp(evento, principal);
+
+	}
+
+	//Test positivo : funcionamiento del envío de mensaje a todos los chorbies registrados en un evento cuando éste se elimina.
+	@Test
+	public void testDeleteEventChirp() {
+
+		System.out.println("-------------------------------------------------------------");
+		System.out.println("               TEST DELETE EVENT CHIRP");
+		System.out.println("-------------------------------------------------------------");
+
+		this.authenticate("manager1");
+
+		final Manager principal = this.managerService.findByPrincipal();
+
+		final Event evento = this.eventService.findOne(287);
+
+		final Collection<Chorbi> ch1 = evento.getRegistered();
+		final List<Integer> lista = new ArrayList<Integer>();
+		for (final Chorbi c : ch1)
+			lista.add(c.getChirpReceives().size());
+
+		this.chirpService.deleteEventChirp(evento, principal);
+
+		final Collection<Chorbi> ch2 = evento.getRegistered();
+
+		System.out.println("Comprobaremos que los chorbies afectados por el evento ahora tienen un chirp más:");
+
+		int count = 0;
+		for (final Chorbi c : ch2) {
+			System.out.println("El chorbi " + c.getName() + " tenía " + lista.get(count) + " chirps recibidos, y ahora tiene " + c.getChirpReceives().size());
+			Assert.isTrue(lista.get(count) == c.getChirpReceives().size() - 1);
+			count = count + 1;
+		}
+	}
+
+	//Test negativo : funcionamiento del envío de mensaje a todos los chorbies registrados en un evento cuando éste se elimina.
+	//El manager 2 intenta informar de la cancelación de un evento del manager1
+	@Test(expected = IllegalArgumentException.class)
+	public void testDeleteEventChirp2() {
+
+		this.authenticate("manager2");
+
+		final Manager principal = this.managerService.findByPrincipal();
+
+		final Event evento = this.eventService.findOne(287);
+
+		final Collection<Chorbi> ch1 = evento.getRegistered();
+		final List<Integer> lista = new ArrayList<Integer>();
+		for (final Chorbi c : ch1)
+			lista.add(c.getChirpReceives().size());
+
+		this.chirpService.deleteEventChirp(evento, principal);
+
+		final Collection<Chorbi> ch2 = evento.getRegistered();
+
+	}
 }
