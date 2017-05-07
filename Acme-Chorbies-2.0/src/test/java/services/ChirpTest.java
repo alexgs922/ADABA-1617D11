@@ -46,13 +46,13 @@ public class ChirpTest extends AbstractTest {
 
 		this.authenticate("chorbi1");
 
-		final Chirp c = this.chirpService.findOne(69);
+		final Chirp c = this.chirpService.findOne(265);
 
 		System.out.println("-----------------------------------------------------------------------------------");
 		System.out.println("--------------------------------FIND ONE CHIRP------------------------------------");
 		System.out.println("-----------------------------------------------------------------------------------");
 
-		System.out.println("Se espera obtener el Chirp 1 con id 69: ");
+		System.out.println("Se espera obtener el Chirp 1 con id 265: ");
 		System.out.println("Subject: " + c.getSubject());
 		System.out.println("Id: " + c.getId());
 
@@ -107,10 +107,10 @@ public class ChirpTest extends AbstractTest {
 		System.out.println("-------------------------------------------------------------");
 		System.out.println("               TEST CHIRP.CREATE2()");
 		System.out.println("-------------------------------------------------------------");
-		System.out.println("Se esperan los atributos ID = 0 y recipient con id=63");
+		System.out.println("Se esperan los atributos ID = 0 y recipient con id=249");
 
 		this.authenticate("chorbi1");
-		final Chorbi c = this.chorbiService.findOne(63);
+		final Chorbi c = this.chorbiService.findOne(259);
 
 		final Chirp result = this.chirpService.create(c);
 		System.out.println("ID: " + result.getId());

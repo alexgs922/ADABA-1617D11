@@ -35,7 +35,7 @@ public class TemplateTest extends AbstractTest {
 
 		this.authenticate("chorbi1");
 
-		final Chorbi c = this.chorbiService.findOne(63);
+		final Chorbi c = this.chorbiService.findOne(259);
 
 		final Template t = c.getTemplate();
 
