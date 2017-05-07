@@ -21,6 +21,7 @@ import security.Authority;
 import security.LoginService;
 import security.UserAccount;
 import domain.Actor;
+import domain.Administrator;
 import domain.Chorbi;
 import domain.Configuration;
 import domain.Coordinate;
@@ -62,6 +63,9 @@ public class ChorbiService {
 
 	@Autowired
 	private ConfigurationService	configurationService;
+
+	@Autowired
+	private AdministratorService	administratorService;
 
 
 	// Simple CRUD methods ----------------------------------------------------
@@ -365,7 +369,20 @@ public class ChorbiService {
 
 	}
 
+	public boolean checkAdminPrincipal() {
+		final boolean res;
+		Administrator principal;
+
+		principal = this.administratorService.findByPrincipal();
+
+		res = principal != null;
+
+		return res;
+	}
+
 	public void calculateFee() {
+
+		Assert.isTrue(this.checkAdminPrincipal());
 
 		Double res = 0.0;
 		Integer months = 0;
@@ -388,9 +405,6 @@ public class ChorbiService {
 				this.flush();
 
 			} else {
-
-				//	if (actualDate.get(Calendar.YEAR) == updateDate.get(Calendar.YEAR))
-				//		Assert.isTrue(updateDate.get(Calendar.MONTH) != actualDate.get(Calendar.MONTH));
 
 				if (updateDate.get(Calendar.YEAR) == actualDate.get(Calendar.YEAR))
 					months = actualDate.get(Calendar.MONTH) - updateDate.get(Calendar.MONTH);

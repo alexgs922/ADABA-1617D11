@@ -342,7 +342,7 @@ public class ChorbiServiceTest extends AbstractTest {
 	public void banChorbi() {
 		this.authenticate("admin");
 
-		final Chorbi chorbi = this.chorbiService.findOneToSent(63);
+		final Chorbi chorbi = this.chorbiService.findOneToSent(259);
 
 		boolean haSidoBanneado = false;
 
@@ -350,7 +350,7 @@ public class ChorbiServiceTest extends AbstractTest {
 
 		this.unauthenticate();
 
-		final Chorbi bannedChorbi = this.chorbiService.findOneToSent(63);
+		final Chorbi bannedChorbi = this.chorbiService.findOneToSent(259);
 
 		if (bannedChorbi.isBan() == true)
 			haSidoBanneado = true;
@@ -370,7 +370,7 @@ public class ChorbiServiceTest extends AbstractTest {
 	public void banChorbiNegative() {
 		this.authenticate("admin");
 
-		final Chorbi chorbi = this.chorbiService.findOneToSent(65);
+		final Chorbi chorbi = this.chorbiService.findOneToSent(261);
 
 		boolean haSidoBanneado = false;
 
@@ -378,7 +378,7 @@ public class ChorbiServiceTest extends AbstractTest {
 
 		this.unauthenticate();
 
-		final Chorbi bannedChorbi = this.chorbiService.findOneToSent(65);
+		final Chorbi bannedChorbi = this.chorbiService.findOneToSent(261);
 
 		if (bannedChorbi.isBan() == true)
 			haSidoBanneado = true;
@@ -396,7 +396,7 @@ public class ChorbiServiceTest extends AbstractTest {
 	public void unBanChorbi() {
 		this.authenticate("admin");
 
-		final Chorbi chorbi = this.chorbiService.findOneToSent(65);
+		final Chorbi chorbi = this.chorbiService.findOneToSent(261);
 
 		boolean haSidoPermitido = false;
 
@@ -404,7 +404,7 @@ public class ChorbiServiceTest extends AbstractTest {
 
 		this.unauthenticate();
 
-		final Chorbi bannedChorbi = this.chorbiService.findOneToSent(65);
+		final Chorbi bannedChorbi = this.chorbiService.findOneToSent(261);
 
 		if (bannedChorbi.isBan() == false)
 			haSidoPermitido = true;
@@ -414,7 +414,7 @@ public class ChorbiServiceTest extends AbstractTest {
 		System.out.println("-----------------------------------------------------------------------------------");
 
 		System.out.println("Se espera obtener un true ");
-		System.out.println("¿El chorbi ha sido banneado? : " + haSidoPermitido);
+		System.out.println("¿El chorbi ha sido permitido? : " + haSidoPermitido);
 
 	}
 
@@ -424,7 +424,7 @@ public class ChorbiServiceTest extends AbstractTest {
 	public void unBanChorbiNegative() {
 		this.authenticate("admin");
 
-		final Chorbi chorbi = this.chorbiService.findOneToSent(63);
+		final Chorbi chorbi = this.chorbiService.findOneToSent(259);
 
 		boolean haSidoPermitido = false;
 
@@ -432,7 +432,7 @@ public class ChorbiServiceTest extends AbstractTest {
 
 		this.unauthenticate();
 
-		final Chorbi bannedChorbi = this.chorbiService.findOneToSent(63);
+		final Chorbi bannedChorbi = this.chorbiService.findOneToSent(259);
 
 		if (bannedChorbi.isBan() == true)
 			haSidoPermitido = true;

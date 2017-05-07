@@ -1,6 +1,7 @@
 
 package funcionalTesting;
 
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 
@@ -473,6 +474,10 @@ public class ChorbiServiceTest extends AbstractTest {
 
 	}
 
+	// El siguiente test comprueba que el proceso por el cual el sistema calcula la fee total del chorbi, funciona correctamente.
+	// Ejecuta el proceso comprobando que todas las fechas se han actualizado correctamente.
+	// Ademas también se comprueba que dicho proceso no lo puede ejecutar otro usuario que no sea administrador.
+
 	protected void templateCalculateFeeChorbiUseCase(final String username, final Class<?> expected) {
 
 		Class<?> caught;
@@ -482,8 +487,22 @@ public class ChorbiServiceTest extends AbstractTest {
 
 			this.authenticate(username);
 
+			final Collection<Chorbi> allChorbies = this.chorbiService.findAll();
+
 			this.chorbiService.calculateFee();
 
+			//Despues de hacer el ejecutar el proceso comprobamos que todas las fechas de actualización de los chorbies son iguales que la fecha actual.
+
+			for (final Chorbi c : allChorbies) {
+
+				final Calendar updateDate = Calendar.getInstance();
+				final Calendar actualDate = Calendar.getInstance();
+
+				updateDate.setTime(c.getUpdateDate());
+				actualDate.setTime(new Date());
+
+				Assert.isTrue(actualDate.get(Calendar.YEAR) == updateDate.get(Calendar.YEAR) && updateDate.get(Calendar.MONTH) == actualDate.get(Calendar.MONTH));
+			}
 			this.unauthenticate();
 			this.chorbiService.flush();
 
@@ -498,23 +517,25 @@ public class ChorbiServiceTest extends AbstractTest {
 	@Test
 	public void driverCalculateFeeChorbiUseCase() {
 
-		final Chorbi chorbi1 = this.chorbiService.findOneToSent(259); // Obtenemos un chorbi con una fecha de actualización correcta chorbiId = 259
-
-		final Chorbi chorbi2 = this.chorbiService.findOneToSent(264); // Obtenemos un chorbi con una fecha de actualización igual a la fecha actual chorbiId = 264
+		// En esta caso de uso solo tendremos un test positivo. En nuestro sistema este caso de uso un muestra ninguna excepción, ya que solo tiene 2 casos;
+		// 1º - El administrador pulsa en el boton de calcular fee y las fee se calculan correctamente. El administrador pulsa en el boton de calcular fee 
+		//      habiendo sido pulsado hace poco, el sistema no hace nada vuelve a mostrar todos los chorbies con las mismas fechas de actualización. Es decir, 
+		//      el sistema no notifica nada, hace el calculo comprobando que es igual que el anterior calculo y no cambia nada.
+		// 2ª - Cualquier usuario que no sea administrador intenta ejecutar el proceso de manera ilegal, y el sistema no se lo permite.
 
 		final Object testingData[][] = {
-			// TEST POSITIVO: calulamos la fee del chorbi que se ecuentra en un rango de fechas correcto.
+			// TEST POSITIVO: calculamos la fee total de todos los chorbies del sistema.
+
 			{
-				"admin", chorbi1, null
-			},
-			// TEST NEGATIVO: Intentamos calcular la fee del chorbi sin ser admin
-			{
-				"chorbi1", chorbi2, IllegalArgumentException.class
+				"admin", null
+			}, {
+				"chorbi1", IllegalArgumentException.class
 			}
 
 		};
 
 		for (int i = 0; i < testingData.length; i++)
-			this.templateCalculateFeeChorbiUseCase((String) testingData[i][0], ((Class<?>) testingData[i][1]));
+			this.templateCalculateFeeChorbiUseCase((String) testingData[i][0], (Class<?>) testingData[i][1]);
 	}
+
 }
