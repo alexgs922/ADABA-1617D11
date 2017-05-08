@@ -514,4 +514,73 @@ public class EventServiceTest extends AbstractTest {
 
 	}
 
+	//CASO DE USO: Register Event
+
+	protected void templateRegisterEvent(final String username, final String title, final String description, final Date moment, final String picture, final int freeSeats, final Class<?> expected) {
+
+		Class<?> caught;
+
+		caught = null;
+		try {
+
+			this.authenticate(username);
+
+			final Event evento = this.eventService.create();
+
+			final Manager manager = this.managerService.findByPrincipal();
+
+			evento.setDescription(description);
+			evento.setMoment(moment);
+			evento.setNumberSeatsOffered(freeSeats);
+			evento.setPicture(picture);
+			evento.setTitle(title);
+			evento.setManager(manager);
+
+			final Event eventoRec = this.eventService.reconstruct(evento, null);
+
+			this.eventService.save2(eventoRec);
+			this.eventService.flush();
+
+			this.unauthenticate();
+
+		} catch (final Throwable oops) {
+			caught = oops.getClass();
+		}
+
+		this.checkExceptions(expected, caught);
+
+	}
+
+	@Test
+	public void RegisterAEvent() {
+
+		final Object testingData[][] = {
+			// Crear un evento válido
+			{
+				"manager1", "eventoPrueba", "eventoPrueba", new Date("2017/06/01"), "http://www.google.com", 5, null
+			},
+			// Crear un vento con una fecha en el pasado.
+			{
+				"manager1", "eventoPrueba", "eventoPrueba", new Date("2017/03/01"), "http://www.google.com", 5, IllegalArgumentException.class
+			},
+			// Crear un vento con compos vacíos.
+			{
+				"", "", "", new Date("2017/06/01"), "", 5, IllegalArgumentException.class
+			},
+			//Crear un evento con una url incorrecta
+			{
+				"manager1", "eventoPrueba", "eventoPrueba", new Date("2017/03/01"), "www.google.com", 5, NullPointerException.class
+			},
+			//Crear un evento con sitios negativos
+			{
+				"manager1", "eventoPrueba", "eventoPrueba", new Date("2017/03/01"), "http://www.google.com", -5, NullPointerException.class
+			}
+
+		};
+
+		for (int i = 0; i < testingData.length; i++)
+			this.templateRegisterEvent((String) testingData[i][0], (String) testingData[i][1], (String) testingData[i][2], (Date) testingData[i][3], (String) testingData[i][4], (int) testingData[i][5], (Class<?>) testingData[i][6]);
+
+	}
+
 }
