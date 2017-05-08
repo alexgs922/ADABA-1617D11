@@ -66,19 +66,19 @@ public class CreditCardServiceTest extends AbstractTest {
 		final Object testingData[][] = {
 			// Cambiar la creditCard valida
 			{
-				"chorbi1", 63, BrandName.VISA, 151, 12, 2019, "Alvaro Gonzalez Jimenez", "4024007166826882", null
+				"chorbi1", 259, BrandName.VISA, 151, 12, 2019, "Alvar Gonzalez Jimnez", "4024007166826882", null
 			},
 			// Cambiar la credit card con un cvv no valido
 			{
-				"chorbi1", 63, BrandName.VISA, 01, 12, 2019, "Alvaro Gonzalez Jimenez", "4024007166826882", ConstraintViolationException.class
+				"chorbi1", 259, BrandName.VISA, 01, 12, 2019, "Avaro Gonzalez Jienez", "4024007166826882", ConstraintViolationException.class
 			},
 			// Cambiar la credit card con un numero no valido
 			{
-				"chorbi1", 63, BrandName.VISA, 151, 12, 2015, "Alvaro Gonzalez Jimenez", "1233342314321444", ConstraintViolationException.class
+				"chorbi1", 259, BrandName.VISA, 151, 12, 2015, "Alvaro Gonzlez Jimenz", "1233342314321444", ConstraintViolationException.class
 			},
 			// Cambiar la credit card con un campo en blanco
 			{
-				"chorbi1", 63, BrandName.VISA, 151, 12, 2015, " ", "4024007166826882", ConstraintViolationException.class
+				"chorbi1", 259, BrandName.VISA, 151, 12, 2015, " ", "4024007166826882", ConstraintViolationException.class
 			},
 
 		};
