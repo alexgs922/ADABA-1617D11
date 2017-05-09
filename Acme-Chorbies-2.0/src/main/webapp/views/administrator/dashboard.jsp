@@ -423,7 +423,7 @@
 <h3>
 	<spring:message code="administrator.maxStars" />
 </h3>
-
+<jstl:if test="${maxStars != null }">
 <display:table class="displaytag" name="maxStars" id="row">
 
 		<spring:message code="administrator.maxStars" var="maxStars" />
@@ -432,6 +432,7 @@
 		</display:column>
 		
 </display:table>
+</jstl:if>
 
 
 <h3>

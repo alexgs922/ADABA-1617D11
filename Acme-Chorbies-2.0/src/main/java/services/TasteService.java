@@ -174,7 +174,8 @@ public class TasteService {
 	public Long maxStars() {
 		Long res = null;
 		final List<Long> maxMin = (List<Long>) this.tasteRepository.minMaxStars();
-		res = maxMin.get(maxMin.size() - 1);
+		if (maxMin.size() > 1)
+			res = maxMin.get(maxMin.size() - 1);
 		return res;
 	}
 
