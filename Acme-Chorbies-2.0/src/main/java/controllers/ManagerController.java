@@ -96,7 +96,7 @@ public class ManagerController extends AbstractController {
 		if (creditCard != null)
 			toCreditCard = true;
 
-		result = new ModelAndView("manager/displayProfile");
+		result = new ModelAndView("managerDomain/displayProfile");
 		result.addObject("manager", manager);
 		result.addObject("principal", principal);
 		result.addObject("creditCard", creditCard);
@@ -122,7 +122,7 @@ public class ManagerController extends AbstractController {
 
 	protected ModelAndView createEditModelAndView(final RegistrationFormManager manager, final String message) {
 		ModelAndView result;
-		result = new ModelAndView("manager/register");
+		result = new ModelAndView("managerDomain/register");
 		result.addObject("manager", manager);
 		result.addObject("message", message);
 		return result;

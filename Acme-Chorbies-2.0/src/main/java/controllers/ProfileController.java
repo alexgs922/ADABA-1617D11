@@ -199,7 +199,7 @@ public class ProfileController extends AbstractController {
 		else
 			try {
 				this.managerService.saveAndFlush2(manager, creditCard);
-				result = new ModelAndView("redirect:../manager/profile.do?managerId=" + manager.getId());
+				result = new ModelAndView("redirect:../managerDomain/profile.do?managerId=" + manager.getId());
 
 			} catch (final Throwable th) {
 				result = this.editCreditCardManagerModelAndView(res, "creditCard.commit.error");
@@ -242,7 +242,7 @@ public class ProfileController extends AbstractController {
 				t.setCreditCard(creditCard);
 				this.managerService.save(t);
 				this.creditCardService.save(creditCard);
-				result = new ModelAndView("redirect:../manager/profile.do?managerId=" + t.getId());
+				result = new ModelAndView("redirect:../managerDomain/profile.do?managerId=" + t.getId());
 			} catch (final Throwable oops) {
 				result = new ModelAndView("profile/editCreditCardManager");
 				result.addObject("creditCard", creditCard);

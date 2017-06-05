@@ -11,7 +11,7 @@
 
 
 
-<form:form action="manager/register.do" modelAttribute="manager">
+<form:form action="managerDomain/register.do" modelAttribute="manager">
 	<fieldset>
 		<legend><spring:message code="manager.userAccountInfo"/></legend>
 		<acme:textbox code="manager.username" path="username"/>
